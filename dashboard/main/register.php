@@ -8,8 +8,7 @@ if($data != null)
 {
     header("location: login.php");
 }
-$pregunta_seg = null;
-$respuesta = null;
+
 if(!empty($_POST))
 {
     $_POST = Validator::validateForm($_POST);
@@ -93,6 +92,9 @@ else
     $apellidos = null;
     $correo = null;
     $alias = null;
+    $nacimiento = null;
+    $pregunta_seg = null;
+    $respuesta = null;
 }
 ?>
 
@@ -101,6 +103,10 @@ else
 <div class="card-panel">
     <h3 class= "center-align">Registro de usuario</h3>
     <form method='post'>
+        <div class='row'>
+            <h5>Foto de perfil</h5>
+            
+        </div>
         <div class='row'>
             <h5>Datos personales</h5>
             <div class='input-field col s12 m6'>
@@ -135,13 +141,14 @@ else
             </div>
             <div class='input-field col s12 m6 '>
                 <i class='material-icons prefix'>perm_contact_calendar</i>
-                <input id="nacimiento" name="nacimiento" type="date" class="datepicker">  
+                <input id="nacimiento" name="nacimiento" type="date" class="datepicker validate">  
             </div>
         </div>
         <div class="row">
 
 
             <h5>Recuperación de contraseña</h5>
+            <br>
             <div class='input-field col s12 m6'>
                 <i class='material-icons prefix'>security</i>
                 <?php
@@ -156,7 +163,7 @@ else
             </div>
         </div>
         <div class='row center-align'>
-            <button type='submit' class='btn waves-effect'><i class='material-icons'>send</i></button>
+            <button type='submit' class='btn waves-effect'><i class='material-icons'></i>Guardar</button>
         </div>
     </form>
 </div>

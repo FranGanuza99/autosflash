@@ -14,7 +14,7 @@ class Page
 					<meta charset='utf-8'/>
 					<!--Import Google Icon Font-->
 					
-					<title>Inicio</title>
+					<title>".$title. " - Dashboard</title>
 					<!--Let browser know website is optimized for mobile-->
 					<meta name='viewport' content='width=device-width, initial-scale=1.0'/>
 
@@ -34,12 +34,12 @@ class Page
 					<li class='user-details'>
 						<div class='row'>
 							<div class='col col s4 m4 l4'>
-								<img id='profile' src='../img/avatar.jpg' alt=' class='circle responsive-img valign profile-image'>
+								<img id='profile' src='data:image/*;base64,".$_SESSION['foto_perfil']."' alt=' class='circle responsive-img valign profile-image'>
 							</div>
 							<div class='col col s8 m8 l8 '>
 
 								<ul id='profile-dropdown' class='dropdown-content'>
-									<li><a href='#'><i class='user-icons material-icons'>person</i> Perfil</a>
+									<li><a href='profile.php'><i class='user-icons material-icons'>person</i> Perfil</a>
 									</li>
 									<li><a href='#'><i class='user-icons material-icons'>settings</i> Ajustes</a>
 									</li>
@@ -49,8 +49,8 @@ class Page
 									<li><a href='../main/logout.php'><i class='user-icons material-icons'>input</i> Salir</a>
 									</li>
 								</ul>
-								<a class='btn-flat dropdown-button waves-effect waves-light white-text profile-btn'  data-activates='profile-dropdown'>".$_SESSION['nombre_usuario']."<i class='tiny material-icons right'>settings</i></a>
-								<p class='user-roal'>Administrador</p>
+								<a class='btn-flat dropdown-button waves-effect waves-light white-text profile-btn'  data-activates='profile-dropdown'>".$_SESSION['nombre_usuario']."<i class='tiny material-icons right'>details</i></a>
+								<p class='user-roal'>".$_SESSION['cargo']."</p>
 							</div>
 						</div>
 					</li>
@@ -63,18 +63,10 @@ class Page
 						<li class='bold'><i class='material-icons iconos-menu'>view_module</i><a class='collapsible-header  waves-effect waves-teal'>Vehiculos</a>
 						<div class='collapsible-body'>
 							<ul>
-							<li><a href='badges.html'>Badges</a></li>
-							<li><a href='buttons.html'>Buttons</a></li>
-							<li><a href='breadcrumbs.html'>Breadcrumbs</a></li>
-							<li><a href='cards.html'>Cards</a></li>
-							<li><a href='chips.html'>Chips</a></li>
-							<li><a href='collections.html'>Collections</a></li>
-							<li><a href='footer.html'>Footer</a></li>
-							<li><a href='forms.html'>Forms</a></li>
-							<li><a href='icons.html'>Icons</a></li>
-							<li><a href='navbar.html'>Navbar</a></li>
-							<li><a href='pagination.html'>Pagination</a></li>
-							<li><a href='preloader.html'>Preloader</a></li>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='#'> Todos los vehiculos</a></li>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='#'> Marcas</a></li>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='#'> Series</a></li>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='#'> Modelos</a></li>
 							</ul>
 						</div>
 						</li>
@@ -93,7 +85,7 @@ class Page
 					<div class='navbar'>
 						<nav class=''>
 							<div class='nav-wrapper'>
-								<a href='index.php' class='brand-logo'><h3 class='title-txt black-text'>Dashboard</h3></a>
+								<a href='index.php' class='brand-logo'><h3 class='title-txt center-align black-text'>".$title."</h3></a>
 								<a href='#' data-activates='mobile-menu' class='button-collapse'><i class='large material-icons black-text'>menu</i></a>   
 							</div>
 						</nav>  

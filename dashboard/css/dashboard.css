@@ -181,7 +181,7 @@ ul.side-nav.fixed li.active {
 
 ul.side-nav.fixed ul.collapsible-accordion .collapsible-body li a {
     font-weight: 400;
-    padding: 0 37.5px 0 70px;
+    padding: 0 0px 0 70px;
 }
 
 /*body::-webkit-scrollbar {
@@ -228,3 +228,20 @@ img#profile {
     width: 100%;
     border-radius: 50%;
 }
+
+.sub-iconos {
+    position: fixed;
+    margin: 8px 3px 9px 40px;
+}
+
+.sub-menu {
+    padding-left: 40px;
+}
+
+@media only screen and (min-width: 601px) {
+
+    .row #profile-img.col.m6 {
+        margin-top: 150px;
+    }
+}
+

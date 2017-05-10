@@ -18,7 +18,7 @@ if(!empty($_POST))
     {
       	if($alias != "" && $clave != "")
   		{
-  			$sql = "SELECT * FROM usuarios WHERE usuario = ?";
+  			$sql = "SELECT * FROM cargos_usuarios, usuarios WHERE usuarios.codigo_cargo = cargos_usuarios.codigo_cargo AND usuarios.usuario = ?";
 		    $params = array($alias);
 		    $data = Database::getRow($sql, $params);
 		    if($data != null)
@@ -26,15 +26,11 @@ if(!empty($_POST))
 		    	$hash = $data['contrasenia_usuario'];
 		    	if(password_verify($clave, $hash)) 
 		    	{
-			    	$_SESSION['id_usuario'] = $data['codigo_usuario'];
+			    	//Ponerlos tambien en perfil
+                    $_SESSION['cargo'] = $data['cargo_usuario'];
+                    $_SESSION['id_usuario'] = $data['codigo_usuario'];
 			      	$_SESSION['nombre_usuario'] = $data['nombre_usuario']." ".$data['apellido_usuario'];
-			      	
-
-                    /*$sql = "SELECT cargo_usuario FROM cargos_usuarios, usuarios WHERE usuarios.codigo_cargo = cargos_usuarios.codigo_cargo AND usuarios.usuario = ?"
-                    $params = array($alias);
-                    $data = Database::getRow($sql, $params);
-                    $_SESSION['cargo'] = $data['cargo_usuario'];*/
-
+                    $_SESSION['foto_perfil'] = $data['url_foto'];
                     header("location: index.php");
 				}
 				else 
