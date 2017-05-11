@@ -92,7 +92,7 @@ class Page
 					</div>
 				</div>
 
-				<div class='containter' id='main'>
+				<div class='pagina'>
 
 			");
 		}
@@ -129,6 +129,7 @@ class Page
 	{
 		print("
 			</div>
+			<div class = 'end'>
 			<footer class='page-footer black'>
 				<div class='container'>
 					<div class='row'>
@@ -149,6 +150,7 @@ class Page
 					</div>
 				</div>
 			</footer>
+			</div>
 			<script type='text/javascript' src='../../js/jquery-2.1.1.min.js'></script>
 			<script type='text/javascript' src='../../js/materialize.min.js'></script>
 			<script type='text/javascript' src='../js/myjs.js'></script>

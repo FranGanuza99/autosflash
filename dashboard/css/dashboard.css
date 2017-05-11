@@ -1,4 +1,4 @@
-body.swal2-shown {
+body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
@@ -245,3 +245,41 @@ img#profile {
     }
 }
 
+div.pagina {
+    flex: 1 0 auto;
+    margin-top: 50px;
+    margin-bottom: 40px; 
+}
+
+
+/*  Acciones de la pagina principal */
+@media only screen and (min-width : 320px) and (max-width : 602px) {
+
+    div.pagina {
+        width: 100%;
+        padding: 20px;
+    }
+
+}
+
+@media only screen and (min-width : 603px) and (max-width : 990px) {
+
+    div.pagina {
+        width: 100%;
+        padding: 30px;
+    }
+}
+
+@media only screen and (min-width : 991px) {
+    
+    div.pagina {
+        width: 100%;
+        padding-left: 310px;
+        padding-right: 65px;
+    }
+
+    div.end {
+        width: 100%;
+        padding-left: 250px;
+    }
+}
