@@ -4,7 +4,7 @@ Page::header("Bienvenid@");
 ?>
 
                 <!--start container-->
-                <div id="main" class="container">
+                
 
                     <!--chart dashboard start-->
                     <div id="chart-dashboard">

@@ -116,7 +116,6 @@ if(!empty($_POST)) {
 ?>
 
     <!--start container-->
-    <div id="main" class="container">
         <h3 class= "center-align">Registro de usuario</h3>
         <form method='post' enctype='multipart/form-data'>
             <div class='row'>
@@ -184,9 +183,6 @@ if(!empty($_POST)) {
         </form>
 
         
-
-    </div>
-    <!--end container-->
 
 <!--Aqui se muestra el pie de pagina-->
 <?php
