@@ -1,4 +1,5 @@
 <?php
+ob_start();
 require("../lib/page.php");
 if(empty($_GET['id'])) 
 {

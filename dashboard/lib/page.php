@@ -39,7 +39,7 @@ class Page
 							<div class='col col s8 m8 l8 '>
 
 								<ul id='profile-dropdown' class='dropdown-content'>
-									<li><a href='profile.php'><i class='user-icons material-icons'>person</i> Perfil</a>
+									<li><a href='../main/profile.php'><i class='user-icons material-icons'>person</i> Perfil</a>
 									</li>
 									<li><a href='#'><i class='user-icons material-icons'>settings</i> Ajustes</a>
 									</li>
@@ -54,11 +54,11 @@ class Page
 							</div>
 						</div>
 					</li>
-					<li class=bold active><i class='material-icons iconos-menu'>dashboard</i><a href='index.php' class='waves-effect waves-teal'>Dashboard</a></li>
-					<li class=bold><i class='material-icons iconos-menu'>supervisor_account</i><a href='getting-started.html' class='waves-effect waves-teal'>Usuarios</a></li>
+					<li class=bold active><i class='material-icons iconos-menu'>dashboard</i><a href='../main/index.php' class='waves-effect waves-teal'>Dashboard</a></li>
+					<li class=bold><i class='material-icons iconos-menu'>supervisor_account</i><a href='../usuarios/index.php' class='waves-effect waves-teal'>Usuarios</a></li>
 					<li class=bold'>
 					<ul class='collapsible collapsible-accordion'>
-						<li class='bold'><i class='material-icons iconos-menu'>contacts</i><a class='                    waves-effect waves-teal'>Proveedores</a>
+						<li class='bold'><i class='material-icons iconos-menu'>contacts</i><a href='../proveedores/index.php' class='waves-effect waves-teal'>Proveedores</a>
 						</li>
 						<li class='bold'><i class='material-icons iconos-menu'>view_module</i><a class='collapsible-header  waves-effect waves-teal'>Vehiculos</a>
 						<div class='collapsible-body'>
@@ -98,6 +98,7 @@ class Page
 		}
 		else
 		{
+			
 			print("
 				<div class='navbar-fixed'>
 					<nav id='out'>
@@ -127,9 +128,18 @@ class Page
 
 	public static function footer()
 	{
+		if (isset($_SESSION['nombre_usuario'])) {
+			print("
+				</div>
+				<div class = 'end'>");
+		} else {
+			print("
+				</div>
+				<div>");
+		}
 		print("
-			</div>
-			<div class = 'end'>
+			
+			
 			<footer class='page-footer black'>
 				<div class='container'>
 					<div class='row'>

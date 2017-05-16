@@ -116,7 +116,6 @@ if(!empty($_POST)) {
 ?>
 
     <!--start container-->
-        <h3 class= "center-align">Registro de usuario</h3>
         <form method='post' enctype='multipart/form-data'>
             <div class='row'>
                 <h5>Foto de perfil</h5>

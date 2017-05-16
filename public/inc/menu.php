@@ -1,3 +1,6 @@
+<?php 
+session_start();
+?>
 <div class="navbar-fixed">
     <nav>
     <div class="nav-wrapper blue" >
@@ -9,13 +12,29 @@
             <li><a href="informacion.php">Nuestra empresa</a></li>
             <li><a href="contacto.php">Contáctenos</a></li>
             <li><a href="pregunta.php">Preguntas frecuentes</a></li>
-            <li><a href="sesion.php">Iniciar sesión</a></li>
+            <?php
+            if (isset($_SESSION['nombre_usuario'])){
+                print("
+                
+
+                <li><a data-activates='dropdown1'>hola</a></li>");
+            } else {
+                print("<li><a href='sesion.php'>Iniciar sesión</a></li>");
+            }
+            ?>
+            
         </ul>
         
         </div>
     </div>
     </nav>
-    
+
+    <ul id='dropdown1' class='dropdown-content'>
+        <li><a href='#!'>one</a></li>
+        <li><a href='#!'>two</a></li>
+        <li class='divider'></li>
+        <li><a href='#!'>three</a></li>
+    </ul>
 </div>
 
 <ul class="side-nav" id="mobile-menu">

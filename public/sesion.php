@@ -20,6 +20,55 @@
         <?php
         include("inc/menu.php");
         ?>
+
+        <?php
+        require("../lib/database.php");
+        require("../lib/validator.php");
+
+        if(!empty($_POST))
+        {
+            $_POST = validator::validateForm($_POST);
+            $correo = $_POST['correo'];
+            $clave = $_POST['clave'];
+            try
+            {
+                if($correo != "" && $clave != "")
+                {
+                    $sql = "SELECT * FROM clientes WHERE clientes.correo_cliente = ?";
+                    $params = array($correo);
+                    $data = Database::getRow($sql, $params);
+                    if($data != null)
+                    {
+                        $hash = $data['contrasenia'];
+                        if(password_verify($clave, $hash)) 
+                        {
+                            //Ponerlos tambien en perfil
+                            $_SESSION['id_usuario'] = $data['codigo_cliente'];
+                            $_SESSION['nombre_usuario'] = $data['nombre_cliente']." ".$data['apellido_cliente'];
+                            $_SESSION['foto_perfil'] = $data['foto'];
+                            header("location: index.php");
+                        }
+                        else 
+                        {
+                            throw new Exception("La clave ingresada es incorrecta");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("El correo ingresado no existe");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Debe ingresar un correo y una clave");
+                }
+            }
+            catch (Exception $error)
+            {
+                //Page::showMessage(2, $error->getMessage(), null);
+            }
+        }
+        ?>
         
         <!--Aqui comienza la pagina-->
         <div class="container">
@@ -35,24 +84,23 @@
                             <img src = "img/sesion/usuario.png" width="200px">
                         </div>
                         <!--Inicio del formulario-->
-                        <form action="">
+                        <form  method='post'>
                             <div class="input-field col s12">
-                                <input type="email" id="email" class="validate">
-                                <label for="email" data-error="wrong" data-success="right">Correo eléctronico:</label>
+                                <input type="email" id="correo" name="correo" class="validate" required/>
+                                <label for="correo" data-error="wrong" data-success="right">Correo eléctronico:</label>
                             </div>
                             <div class="input-field col s12">
-                                <input id="password" type="password" class="validate">
-                                <label for="password">Contraseña:</label>
+                                <input id="clave" name="clave" type="password" class="validate" required/>
+                                <label for="clave">Contraseña:</label>
                             </div>
                             
-                        </form>
-                        <!--botones-->
-                        <div class="center">
-                            <div class="center-sesion">
-                                <a href="#" class="waves-effect waves-light btn-large green">Iniciar Sesión</a>
-                                <a href="#" class="waves-effect waves-light btn-large red">Cancelar</a>
+                        
+                            <!--botones-->
+                            <div class="center">
+                                <button type='submit' class='btn waves-effect'>Iniciar Sesion</button>
+                                <button type='submit' class='btn waves-effect'>Cancelar</button>
                             </div>
-                        </div>
+                        </form>
                         <br>
                         <!--redireccion al registro-->
                         <div class="center">

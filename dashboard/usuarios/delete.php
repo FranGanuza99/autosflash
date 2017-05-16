@@ -1,7 +1,7 @@
 <?php
 ob_start();
 require("../lib/page.php");
-Page::header("Eliminar proveedor");
+Page::header("Eliminar usuarios");
 
 if(!empty($_GET['id'])) 
 {
@@ -14,18 +14,24 @@ else
 
 if(!empty($_POST))
 {
-	$id = $_POST['id'];
-	try 
-	{
-		$sql = "DELETE FROM proveedores WHERE codigo_proveedor = ?";
-	    $params = array($id);
-	    Database::executeRow($sql, $params);
-	    header("location: index.php");
+	if ($id == $_SESSION['id_usuario']){
+		Page::showMessage(2, "No puede eliminar este usuario", null);
+		header("location: index.php");
+	} else {
+		$id = $_POST['id'];
+		try 
+		{
+			$sql = "UPDATE usuarios set estado_usuario = 0 where codigo_usuario = ?";
+			$params = array($id);
+			Database::executeRow($sql, $params);
+			header("location: index.php");
+		}
+		catch (Exception $error) 
+		{
+			Page::showMessage(2, $error->getMessage(), "index.php");
+		}
 	}
-	catch (Exception $error) 
-	{
-		Page::showMessage(2, $error->getMessage(), "index.php");
-	}
+	
 }
 ?>
 

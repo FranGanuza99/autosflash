@@ -1,17 +1,17 @@
 <?php
 ob_start();
 require("../lib/page.php");
-Page::header("Proveedores");
+Page::header("Usuarios");
 
 if(!empty($_POST))
 {
 	$search = trim($_POST['buscar']);
-	$sql = "SELECT * FROM proveedores WHERE nombre_proveedor LIKE ? ORDER BY nombre_proveedor";
+	$sql = "SELECT * FROM usuarios, cargos_usuarios WHERE usuarios.codigo_cargo = cargos_usuarios.codigo_cargo AND nombre_usuario LIKE ? ORDER BY nombre_usuario";
 	$params = array("%$search%");
 }
 else
 {
-	$sql = "SELECT * FROM proveedores ORDER BY nombre_proveedor";
+	$sql = "SELECT * FROM usuarios, cargos_usuarios WHERE usuarios.codigo_cargo = cargos_usuarios.codigo_cargo ORDER BY nombre_usuario";
 	$params = null;
 }
 $data = Database::getRows($sql, $params);
@@ -21,7 +21,7 @@ if($data != null)
 
 
 
-<form method='post'>
+<form method='post' >
 	<div class='row'>
 		<div class='input-field col s6 m4'>
 			<i class='material-icons prefix'>search</i>
@@ -39,10 +39,10 @@ if($data != null)
 <table class='striped'>
 	<thead>
 		<tr>
-			<th>EMPRESA</th>
-			<th>CONTACTO</th>
-			<th>TELEFONO</th>
-			<th>DIRECCIÓN</th>
+			<th>IMAGEN</th>
+			<th>NOMBRE</th>
+			<th>CORREO</th>
+			<th>CARGO</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -53,14 +53,14 @@ if($data != null)
 		print("
         
 			<tr>
-				<td>".$row['nombre_proveedor']."</td>
-				<td>".$row['contacto_proveedor']."</td>
-				<td>".$row['telefono_proveedor']."</td>
-				<td>".$row['direccion_provedor']."</td>
+				<td><img src='data:image/*;base64,".$row['url_foto']."' class='materialboxed' width='100' height='100'></td>
+				<td>".$row['nombre_usuario']." ".$row['apellido_usuario']."</td>
+				<td>".$row['correo_usuario']."</td>
+				<td>".$row['cargo_usuario']."</td>
 				
 				<td>
-					<a href='save.php?id=".$row['codigo_proveedor']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
-					<a href='delete.php?id=".$row['codigo_proveedor']."' class='red-text'><i class='material-icons'>delete</i></a>
+					<a href='save.php?id=".$row['codigo_usuario']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
+					<a href='delete.php?id=".$row['codigo_usuario']."' class='red-text'><i class='material-icons'>delete</i></a>
 				</td>
 			</tr>
 		");
