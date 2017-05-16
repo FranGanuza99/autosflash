@@ -63,10 +63,11 @@ class Page
 						<li class='bold'><i class='material-icons iconos-menu'>view_module</i><a class='collapsible-header  waves-effect waves-teal'>Vehiculos</a>
 						<div class='collapsible-body'>
 							<ul>
-							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='#'> Todos los vehiculos</a></li>
-							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='#'> Marcas</a></li>
-							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='#'> Series</a></li>
-							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='#'> Modelos</a></li>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../vehiculos/'> Todos los vehiculos</a></li>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../marcas/'> Marcas</a></li>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../series/'> Series</a></li>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../modelos/'> Modelos</a></li>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../tipos_vehiculos/'> Tipo de Vehiculos</a></li>
 							</ul>
 						</div>
 						</li>
