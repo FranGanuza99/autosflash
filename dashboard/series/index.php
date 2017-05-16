@@ -1,17 +1,17 @@
 <?php
 ob_start();
 require("../lib/page.php");
-Page::header("MARCAS DE VEHICULOS");
+Page::header("SERIES DE VEHICULOS");
 
 if(!empty($_POST))
 {
 	$search = trim($_POST['buscar']);
-	$sql = "SELECT * FROM marcas WHERE marca LIKE ? ORDER BY marca";
+	$sql = "SELECT codigo_serie, nombre_serie, marca FROM series, marcas WHERE series.codigo_marca = marcas.codigo_marca AND nombre_serie LIKE ? ORDER BY nombre_serie";
 	$params = array("%$search%");
 }
 else
 {
-	$sql = "SELECT * FROM marcas ORDER BY marca";
+	$sql = "SELECT codigo_serie, nombre_serie, marca FROM series, marcas WHERE series.codigo_marca = marcas.codigo_marca ORDER BY nombre_serie";
 	$params = null;
 }
 $data = Database::getRows($sql, $params);
@@ -36,6 +36,7 @@ if($data != null)
 <table class='striped'>
 	<thead>
 		<tr>
+			<th>SERIES DE VEHICULO</th>
 			<th>MARCA DE VEHICULO</th>
 		</tr>
 	</thead>
@@ -47,9 +48,10 @@ if($data != null)
 		print("
         
 			<tr>
+				<td>".$row['nombre_serie']."</td>
 				<td>".$row['marca']."</td>
 				<td>
-					<a href='save.php?id=".$row['codigo_marca']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
+					<a href='save.php?id=".$row['codigo_serie']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
 					
 				</td>
 			</tr>

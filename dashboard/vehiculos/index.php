@@ -1,17 +1,17 @@
 <?php
 ob_start();
 require("../lib/page.php");
-Page::header("MARCAS DE VEHICULOS");
+Page::header("VEHICULOS");
 
 if(!empty($_POST))
 {
 	$search = trim($_POST['buscar']);
-	$sql = "SELECT * FROM marcas WHERE marca LIKE ? ORDER BY marca";
+	$sql = "SELECT* FROM vehiculos AND nombre_vehiculo LIKE ? ";
 	$params = array("%$search%");
 }
 else
 {
-	$sql = "SELECT * FROM marcas ORDER BY marca";
+	$sql = "SELECT * FROM vehiculos ";
 	$params = null;
 }
 $data = Database::getRows($sql, $params);
@@ -36,7 +36,10 @@ if($data != null)
 <table class='striped'>
 	<thead>
 		<tr>
-			<th>MARCA DE VEHICULO</th>
+			<th>NOMBRE DE VEHICULO</th>
+			<th>PRECIO DE VEHICULO ($)</th>
+			<th>CANTIDAD DISPONIBLE</th>
+			<th>AÑO DE VEHICULO ($)</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -47,10 +50,25 @@ if($data != null)
 		print("
         
 			<tr>
-				<td>".$row['marca']."</td>
+				<td>".$row['nombre_vehiculo']."</td>
+				<td>".$row['precio_vehiculo']."</td>
+				<td>".$row['cantidad_disponible']."</td>
+				<td>".$row['anio_vehiculo']."</td>
 				<td>
-					<a href='save.php?id=".$row['codigo_marca']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
-					
+				");
+		if($row['estado_vehiculo'] == 1)
+		{
+			print("<i class='material-icons'>visibility</i>");
+		}
+		else
+		{
+			print("<i class='material-icons'>visibility_off</i>");
+		}
+		print("
+				</td>
+				<td>
+					<a href='save.php?id=".$row['codigo_vehiculo']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
+					<a href='delete.php?id=".$row['codigo_vehiculo']."' class='red-text'><i class='material-icons'>delete</i></a>
 				</td>
 			</tr>
 		");
