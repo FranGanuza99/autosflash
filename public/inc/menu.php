@@ -17,7 +17,7 @@ session_start();
                 print("
                 
 
-                <li><a data-activates='dropdown1'>hola</a></li>");
+                <li><a data-activates='dropdown1'><img src='data:image/*;base64,".$_SESSION['foto_perfil']."' class='circle' width='55' height='55'></a></li>");
             } else {
                 print("<li><a href='sesion.php'>Iniciar sesión</a></li>");
             }
@@ -28,7 +28,7 @@ session_start();
         </div>
     </div>
     </nav>
-
+    
     <ul id='dropdown1' class='dropdown-content'>
         <li><a href='#!'>one</a></li>
         <li><a href='#!'>two</a></li>
