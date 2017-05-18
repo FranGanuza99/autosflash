@@ -9,7 +9,7 @@ class Validator
 		}
 		return $fields;
 	}
-
+//se valida la imagen
 	public static function validateImage($file)
 	{
 		$img_size = $file["size"];
@@ -36,7 +36,7 @@ class Validator
      		throw new Exception("El tamaño de la imagen debe ser como máximo 2MB");
      	}
 	}
-
+//se valida la imagen el el tamaño y resolucion
 	public static function validateImageProfile($file)
 	{
 		$img_size = $file["size"];
