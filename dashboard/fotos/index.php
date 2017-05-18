@@ -69,7 +69,7 @@ $id = $_GET['id'];
 	<h2>Galeria</h2>
 	<?php
 		print("
-		<a href='save.php?id=$id' class='waves-effect waves-light btn'><i class='material-icons left'>add</i>Agregar</a>
+		<a href='vista.php?id=$id' class='waves-effect waves-light btn'><i class='material-icons left'>add</i>Ver imagenes</a>
 		<div id='imagesv' class='row'>
 		");
 
@@ -98,7 +98,7 @@ $id = $_GET['id'];
 	<h2>Slider</h2> 
 	<?php
 		print("
-		<a href='save.php?id=$id' class='waves-effect waves-light btn'><i class='material-icons left'>add</i>Agregar</a>
+		<a href='vista.php?id=$id' class='waves-effect waves-light btn'><i class='material-icons left'>add</i>Ver imagenes</a>
 		<div id='imagesv' class='row'>");
 
 		$sql = "SELECT url_foto FROM fotos_vehiculos, tipos_fotos WHERE tipos_fotos.codigo_tipo_foto = fotos_vehiculos.codigo_tipo_foto and codigo_vehiculo = ? and fotos_vehiculos.codigo_tipo_foto = 3";

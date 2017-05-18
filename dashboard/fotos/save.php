@@ -2,19 +2,34 @@
 ob_start();
 require("../lib/page.php");
 
-Page::header("Agregar Imagenes");
-$id = $_GET['id'];
-
-$tipo = null;
 $foto = null;
+$tipo = 2;
+    
+if(empty($_GET['id'])) 
+{
+    Page::header("Agregar imagenes");
+    $id = null;
+    
+}
+else
+{
+    Page::header("Modificar imagenes");
+    $id = $_GET['id'];
+
+    $sql = "SELECT * FROM fotos_vehiculos WHERE codigo_foto = ?";
+    $params = array($id);
+    $data = Database::getRow($sql, $params);
+    $tipo = $data['codigo_tipo_foto'];
+
+}
+
 
 if(!empty($_POST))
 {
     
     $_POST = Validator::validateForm($_POST);
     $archivo =  $_FILES['foto'];
-    $tipo =  $_POST['tipo'];
-    
+    $tipo = $_POST['tipo'];
      
     try 
     {
@@ -41,12 +56,21 @@ if(!empty($_POST))
                 }
             }
 
-            
+            if($id == null)
+            {
                 $sql = "INSERT INTO fotos_vehiculos(codigo_vehiculo, url_foto, codigo_tipo_foto) VALUES (?, ?, ?)";
                 $params = array($id, $foto, $tipo);
+            } else {
+                $sql = "UPDATE fotos_vehiculos SET url_foto = ?, codigo_tipo_foto = ? WHERE codigo_foto = ?";
+                $params = array($foto, $tipo, $id);
+            }
             
             Database::executeRow($sql, $params);
-            header("location: index.php?id=$id");
+
+            $sql = "SELECT codigo_vehiculo FROM fotos_vehiculos WHERE codigo_foto = ?";
+            $params = array($id);
+            $id = Database::getRow($sql, $params);
+            header("location: index.php?id=$id[codigo_vehiculo]");
                                                                                                       
                       
         }    

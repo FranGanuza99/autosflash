@@ -1,7 +1,7 @@
 <?php
 ob_start();
 require("../lib/page.php");
-Page::header("Eliminar Vehiculo");
+Page::header("Eliminar Imagen");
 
 if(!empty($_GET['id'])) 
 {
@@ -17,7 +17,7 @@ if(!empty($_POST))
 	$id = $_POST['id'];
 	try 
 	{
-		$sql = "DELETE FROM vehiculos WHERE codigo_vehiculo = ?";
+		$sql = "DELETE FROM fotos_vehiculos WHERE codigo_foto = ?";
 	    $params = array($id);
 	    Database::executeRow($sql, $params);
 	    header("location: index.php");
