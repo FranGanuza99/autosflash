@@ -16,15 +16,14 @@
     </head>
     <body>
 
-        <!--Aqui se muestra el menu-->
         <?php
+        //Aqui se muestra el menu
         include("inc/menu.php");
-        ?>
-
-        <?php
+        //Se elanzan archivos necesarios
         require("../lib/database.php");
         require("../lib/validator.php");
 
+        //valida si el post esta vacio y enlaza las variables con el campo
         if(!empty($_POST))
         {
             $_POST = validator::validateForm($_POST);
@@ -32,8 +31,10 @@
             $clave = $_POST['clave'];
             try
             {
+                //valida campos
                 if($correo != "" && $clave != "")
                 {
+                    //consulta al cliente ingresado
                     $sql = "SELECT * FROM clientes WHERE clientes.correo_cliente = ?";
                     $params = array($correo);
                     $data = Database::getRow($sql, $params);
@@ -42,7 +43,7 @@
                         $hash = $data['contrasenia'];
                         if(password_verify($clave, $hash)) 
                         {
-                            //Ponerlos tambien en perfil
+                            //Asigna el valor a las variables de sesion
                             $_SESSION['id_usuario'] = $data['codigo_cliente'];
                             $_SESSION['nombre_usuario'] = $data['nombre_cliente']." ".$data['apellido_cliente'];
                             $_SESSION['foto_perfil'] = $data['foto'];

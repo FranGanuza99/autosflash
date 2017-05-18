@@ -1,9 +1,12 @@
 <?php
 ob_start();
 require("../lib/page.php");
+
+//valida si se ha recibido el id
 if(empty($_GET['id'])) 
 {
     Page::header("Agregar proveedores");
+    //asigna null a las variables
     $id = null;
     $nombre = null;
     $contacto = null;
@@ -12,6 +15,7 @@ if(empty($_GET['id']))
 }
 else
 {
+    //realiza la consulta y llena las variavles con los datos de la consulta
     Page::header("Modificar proveedores");
     $id = $_GET['id'];
     $sql = "SELECT * FROM proveedores WHERE codigo_proveedor = ?";
@@ -24,6 +28,7 @@ else
     $direccion = $data['direccion_provedor'];
 }
 
+//valida si post esta vacio y enlaza las variables con el campo
 if(!empty($_POST))
 {
     $_POST = Validator::validateForm($_POST);
@@ -44,17 +49,18 @@ if(!empty($_POST))
                     {
                         if($id == null)
                         {
+                            //inserta datos nuevos
                             $sql = "INSERT INTO proveedores(nombre_proveedor, contacto_proveedor, telefono_proveedor, direccion_provedor) VALUES(?, ?, ?, ?)";
                             $params = array($nombre, $contacto, $telefono, $direccion);
                         }
                         else
                         {
+                            //actualiza datos existentes
                             $sql = "UPDATE proveedores SET nombre_proveedor = ?, contacto_proveedor = ?, telefono_proveedor = ?, direccion_provedor = ? WHERE codigo_proveedor = ?";
                             $params = array($nombre, $contacto, $telefono, $direccion, $id);
                         }
                         Database::executeRow($sql, $params);
-                        header("location: index.php");
-                        
+                        header("location: index.php");     
                     }
                     else
                     {
@@ -83,7 +89,7 @@ if(!empty($_POST))
 }
 ?>
 
-
+<!-- Inicio del formulario -->
 <form method='post'>
     <div class='row'>
         <div class='input-field col s12 m6'>
@@ -114,7 +120,7 @@ if(!empty($_POST))
     </div>
 </form>
 
-
+<!-- Se muestra el footer -->
 <?php
 Page::footer();
 ?>

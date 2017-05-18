@@ -1,29 +1,25 @@
 <?php
 ob_start();
 require("../lib/page.php");
-
 Page::header("Agregar Imagenes");
 $id = $_GET['id'];
 
+//inicializando variables
 $foto1 = null;
 $foto2 = null;
 $foto3 = null;
 $foto4 = null;
 
+//validando los campos de imagen
 if(!empty($_FILES))
 {
-    
-    $_POST = Validator::validateForm($_POST);
+    //instanciando variables
     $archivo1 =  $_FILES['perfil'];
     $archivo2 =  $_FILES['general1'];
     $archivo3 =  $_FILES['general2'];
     $archivo4 =  $_FILES['general3'];
-
-    
-     
     try 
-    {
-        
+    { 
         //perfil
         if($archivo1['name'] != null)
         {
@@ -104,6 +100,7 @@ if(!empty($_FILES))
             }
         }
 
+        //validacion de foto para agregar o modificar
         $sql = "SELECT url_foto FROM fotos_vehiculos WHERE codigo_vehiculo = ? AND codigo_tipo_foto = 1";
         $params = array($id);
         $data = Database::getRows($sql, $params);
@@ -117,12 +114,10 @@ if(!empty($_FILES))
             Database::executeRow($sql, $params);
         }
 
-        
-
+        //ingreso de fotos dentro de vehiculos
         $sql = "UPDATE vehiculos SET foto_general1 = ?, foto_general2 = ?, foto_general3 = ? WHERE codigo_vehiculo = ?";
         $params = array($foto2, $foto3, $foto4, $id);
         Database::executeRow($sql, $params);
-
         header("location: index.php?id=$id");
                                                                                                       
     }
@@ -133,7 +128,9 @@ if(!empty($_FILES))
 }
 ?>
 
+<!-- Incio del formulario -->
 <form method='post' enctype='multipart/form-data'>
+    <!-- Primera imagen -->
     <div class='row'>
         <div class='col s12 m5'>
             <h5>Foto principal:</h5>
@@ -149,6 +146,8 @@ if(!empty($_FILES))
             </div>
         </div>
     </div>
+
+    <!-- Segunda imagen -->
     <div class='row'>
         <div class='col s12 m5'>
             <h5>Foto general 1:</h5>
@@ -164,6 +163,8 @@ if(!empty($_FILES))
             </div>
         </div>
     </div>
+
+    <!-- Tercera imagen -->
     <div class='row'>
         <div class='col s12 m5'>
             <h5>Foto general 2:</h5>
@@ -179,6 +180,8 @@ if(!empty($_FILES))
             </div>
         </div>
     </div>
+
+    <!-- Cuarta imagen -->
     <div class='row'>
         <div class='col s12 m5'>
             <h5>Foto general 3:</h5>
@@ -200,6 +203,8 @@ if(!empty($_FILES))
         <button type='submit' class='btn waves-effect blue'><i class='material-icons'>save</i></button>
     </div>
 </form>
+
+<!-- se muestra el footer -->
 <?php
 Page::footer();
 ?>

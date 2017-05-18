@@ -3,6 +3,7 @@ ob_start();
 require("../lib/page.php");
 Page::header("Eliminar usuarios");
 
+//valida si se ha obtenido el id
 if(!empty($_GET['id'])) 
 {
     $id = $_GET['id'];
@@ -12,15 +13,18 @@ else
     header("location: index.php");
 }
 
+//valida si el post esta vacio
 if(!empty($_POST))
 {
+	//validacion al eliminar el mismo usuario
 	if ($id == $_SESSION['id_usuario']){
 		Page::showMessage(2, "No puede eliminar este usuario", null);
 		header("location: index.php");
 	} else {
 		$id = $_POST['id'];
 		try 
-		{
+		{	
+			//elimina el registro
 			$sql = "UPDATE usuarios set estado_usuario = 0 where codigo_usuario = ?";
 			$params = array($id);
 			Database::executeRow($sql, $params);
@@ -35,6 +39,7 @@ if(!empty($_POST))
 }
 ?>
 
+<!-- inicio de formulario (botones) -->
 <form method='post'>
 	<div class='row center-align'>
 		<input type='hidden' name='id' value='<?php print($id); ?>'/>
@@ -43,6 +48,7 @@ if(!empty($_POST))
 	</div>
 </form>
 
+<!-- Se muestra el footer -->
 <?php
 Page::footer();
 ?>

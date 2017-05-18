@@ -1,11 +1,13 @@
 <?php
 ob_start();
 require("../lib/page.php");
+
+//valida si se ha recibido el id
 if(empty($_GET['id'])) 
 {
+    //asigna null a las variables
     Page::header("Agregar usuarios");
     $id = null;
-
     $nombre = null;
     $apellido = null;
     $correo = null;
@@ -19,9 +21,11 @@ else
 {
     Page::header("Modificar usuarios");
     $id = $_GET['id'];
+    //valida si el id es el mismo del usuario 
     if ($id == $_SESSION['id_usuario']){
         header("location: ../main/profile.php");
     } else {
+        //realiza la consulta y llena las variavles con los datos de la consulta
         $sql = "SELECT * FROM usuarios WHERE codigo_usuario = ?";
         $params = array($id);
         $data = Database::getRow($sql, $params);
@@ -34,10 +38,10 @@ else
         $cargo = $data['codigo_cargo'];
         $foto = $data['url_foto'];
         $estado = $data['estado_usuario'];
-    }
-    
+    }  
 }
 
+//valida si post esta vacio y enlaza las variables con el campo
 if(!empty($_POST))
 {
     $_POST = Validator::validateForm($_POST);
@@ -64,7 +68,7 @@ if(!empty($_POST))
                         {
                             if($cargo > 0)
                             {
-                                
+                                //validacion de foto
                                 if($archivo['name'] != null)
                                 {
                                     $base64 = Validator::validateImageProfile($archivo);
@@ -78,17 +82,20 @@ if(!empty($_POST))
                                     }
                                 }
                                 
+                                //valida si es un nuevo usuario o una modificacion
                                 if($id == null)
                                 {
                                     $usuario = $_POST['usuario'];
                                     if($usuario != "")
-                                    {
+                                    {   
                                         $clave1 = $_POST['clave1'];
                                         $clave2 = $_POST['clave2'];
+                                        //valida claves
                                         if($clave1 != "" && $clave2 != "")
                                         {
                                             if($clave1 == $clave2)
                                             {
+                                                //inserta datos nuevos
                                                 $clave = password_hash($clave1, PASSWORD_DEFAULT);
                                                 $sql = "INSERT INTO usuarios(nombre_usuario, apellido_usuario, correo_usuario, usuario, contrasenia_usuario, fecha_nacimiento, codigo_cargo, url_foto, estado_usuario) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
                                                 $params = array($nombre, $apellido, $correo, $usuario, $clave, $nacimiento, $cargo, $foto, $estado);
@@ -110,6 +117,7 @@ if(!empty($_POST))
                                 }
                                 else
                                 {
+                                    //actializa un registro existente
                                     $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, fecha_nacimiento = ?, codigo_cargo = ?, url_foto = ?, estado_usuario = ? WHERE codigo_usuario = ?";
                                     $params = array($nombre, $apellido, $correo, $usuario, $nacimiento, $cargo, $foto, $estado, $id);
                                 }
@@ -155,9 +163,10 @@ if(!empty($_POST))
 }
 ?>
 
-
+<!-- Inicia el formulario -->
 <form method='post' enctype='multipart/form-data'>
     <div class='row'>
+        <!-- Muestra la foto -->
         <h5>Foto de perfil</h5>
         <div class="col s12 m3">
         <?php
@@ -173,8 +182,9 @@ if(!empty($_POST))
                 <input class='file-path validate' type='text' placeholder='Seleccione una imagen'/>
             </div>
         </div>
-
 	</div>
+
+    <!-- Muestra la info personal -->
     <div class='row'>
         <h5>Datos personales</h5>
         <div class='input-field col s12 m6'>
@@ -198,8 +208,9 @@ if(!empty($_POST))
         </div>
     </div>
 
+    <!-- Muestra la info de usuario -->
     <div class = 'row'>
-        <h5>Datos personales</h5>
+        <h5>Datos de Usuario</h5>
         <div class='input-field col s12 m6'>
             <i class='material-icons prefix'>description</i>
             <input id='usuario' type='text' name='usuario' class='validate' value='<?php print($usuario); ?>' required/>
@@ -214,6 +225,7 @@ if(!empty($_POST))
         </div>
 
         <?php
+        //valida que no pueda cambiar contrasena a otros usuarios
         if($id == null)
         {
         ?>
@@ -249,7 +261,7 @@ if(!empty($_POST))
     </div>
 </form>
 
-
+<!-- Se muestra el footer -->
 <?php
 Page::footer();
 ?>

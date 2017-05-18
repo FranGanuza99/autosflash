@@ -2,6 +2,7 @@
 require("../lib/page.php");
 Page::header("Iniciar sesión");
 
+//consulta los usuarios
 $sql = "SELECT * FROM usuarios";
 $data = Database::getRows($sql, null);
 if($data == null)
@@ -9,6 +10,7 @@ if($data == null)
     header("location: register.php");
 }
 
+//valida si el post esta vacio
 if(!empty($_POST))
 {
 	$_POST = validator::validateForm($_POST);
@@ -18,6 +20,7 @@ if(!empty($_POST))
     {
       	if($alias != "" && $clave != "")
   		{
+            //Consulta los registros de usuario
   			$sql = "SELECT * FROM cargos_usuarios, usuarios WHERE usuarios.codigo_cargo = cargos_usuarios.codigo_cargo AND usuarios.usuario = ?";
 		    $params = array($alias);
 		    $data = Database::getRow($sql, $params);
@@ -26,7 +29,7 @@ if(!empty($_POST))
 		    	$hash = $data['contrasenia_usuario'];
 		    	if(password_verify($clave, $hash)) 
 		    	{
-			    	//Ponerlos tambien en perfil
+			    	//Llenando variables de sesion
                     $_SESSION['cargo'] = $data['cargo_usuario'];
                     $_SESSION['id_usuario'] = $data['codigo_usuario'];
 			      	$_SESSION['nombre_usuario'] = $data['nombre_usuario']." ".$data['apellido_usuario'];

@@ -3,6 +3,7 @@ ob_start();
 require("../lib/page.php");
 Page::header("Proveedores");
 
+//valida si el post esta vacio para la busqueda
 if(!empty($_POST))
 {
 	$search = trim($_POST['buscar']);
@@ -14,13 +15,14 @@ else
 	$sql = "SELECT * FROM proveedores ORDER BY nombre_proveedor";
 	$params = null;
 }
+//ejecuta la consulta
 $data = Database::getRows($sql, $params);
 if($data != null)
 {
 ?>
 
 
-
+<!-- Inicio del formulario -->
 <form method='post'>
 	<div class='row'>
 		<div class='input-field col s6 m4'>
@@ -36,6 +38,7 @@ if($data != null)
 		</div>
 	</div>
 </form>
+<!-- Encabezados de la tabla -->
 <table class='striped'>
 	<thead>
 		<tr>
@@ -48,6 +51,7 @@ if($data != null)
 	<tbody>
 
 <?php
+	//se muestran las filas de registros
 	foreach($data as $row)
 	{
 		print("
@@ -75,5 +79,7 @@ else
 {
 	Page::showMessage(4, "No hay registros disponibles", "save.php");
 }
+
+//se muestra el footer
 Page::footer();
 ?>

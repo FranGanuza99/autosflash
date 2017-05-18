@@ -2,6 +2,7 @@
 require("../lib/page.php");
 Page::header("Registrar primer usuario");
 
+//consulta si hay algun usuario
 $sql = "SELECT * FROM usuarios";
 $data = Database::getRows($sql, null);
 if($data != null)
@@ -9,9 +10,11 @@ if($data != null)
     header("location: login.php");
 }
 
+//valida si post esta vacio
 if(!empty($_POST))
 {
     $_POST = Validator::validateForm($_POST);
+    //elaza las variables con los campos
   	$nombres = $_POST['nombres'];
   	$apellidos = $_POST['apellidos'];
     $correo = $_POST['correo'];
@@ -19,7 +22,6 @@ if(!empty($_POST))
     $clave1 = $_POST['clave1'];
     $clave2 = $_POST['clave2'];
     $nacimiento =$_POST['nacimiento'];
-
 
     try 
     {
@@ -36,6 +38,7 @@ if(!empty($_POST))
                         {
                             if($clave1 == $clave2)
                             {
+                                //Inserta el registro del nuevo usuario
                                 $clave = password_hash($clave1, PASSWORD_DEFAULT);
                                 $sql = "INSERT INTO usuarios(nombre_usuario, apellido_usuario, correo_usuario, usuario, contrasenia_usuario, fecha_nacimiento, codigo_pregunta, respuesta_usuario, codigo_cargo, estado_usuario) VALUES(?, ?, ?, ?, ?, ?, ?, ?, 1, 1)";
                                 $params = array($nombres, $apellidos, $correo, $alias, $clave, $nacimiento, $pregunta_seg, $respuesta);
@@ -49,8 +52,7 @@ if(!empty($_POST))
                         }
                         else {
                             throw new Exception("Debe ingresar ambas contraseñas");
-                        }
-                                
+                        }      
                             
                     }
                     else {
@@ -79,6 +81,7 @@ if(!empty($_POST))
 }
 else
 {
+    //asigna null a las variables
     $nombres = null;
     $apellidos = null;
     $correo = null;
@@ -88,15 +91,15 @@ else
 }
 ?>
 
-
-
+<!-- Inicio del panel -->
 <div class="card-panel">
     <h3 class= "center-align">Registro de usuario</h3>
+    <!-- Inicio del formulario -->
     <form method='post'>
         <div class='row'>
-            <h5>Foto de perfil</h5>
-            
+            <h5>Foto de perfil</h5>  
         </div>
+        <!-- campos -->
         <div class='row'>
             <h5>Datos personales</h5>
             <div class='input-field col s12 m6'>
@@ -141,6 +144,7 @@ else
     </form>
 </div>
 
+<!-- Se muestra el footer -->
 <?php
 Page::footer();
 ?>

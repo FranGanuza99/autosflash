@@ -3,6 +3,7 @@ ob_start();
 require("../lib/page.php");
 Page::header("Eliminar proveedor");
 
+//valida si se ha obtenido el id
 if(!empty($_GET['id'])) 
 {
     $id = $_GET['id'];
@@ -12,11 +13,13 @@ else
     header("location: index.php");
 }
 
+//valida si el post esta vacio
 if(!empty($_POST))
 {
 	$id = $_POST['id'];
 	try 
 	{
+		//Borra el registro
 		$sql = "DELETE FROM proveedores WHERE codigo_proveedor = ?";
 	    $params = array($id);
 	    Database::executeRow($sql, $params);
@@ -29,6 +32,7 @@ if(!empty($_POST))
 }
 ?>
 
+<!-- inicio de formulario (botones) -->
 <form method='post'>
 	<div class='row center-align'>
 		<input type='hidden' name='id' value='<?php print($id); ?>'/>
@@ -37,6 +41,7 @@ if(!empty($_POST))
 	</div>
 </form>
 
+<!-- Se muestra el footer -->
 <?php
 Page::footer();
 ?>
