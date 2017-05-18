@@ -68,6 +68,7 @@ class Page
 							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../series/'> Series</a></li>
 							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../modelos/'> Modelos</a></li>
 							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../tipos_vehiculos/'> Tipo de Vehiculos</a></li>
+							
 							</ul>
 						</div>
 						</li>
