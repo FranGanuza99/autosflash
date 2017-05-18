@@ -1,6 +1,7 @@
 <?php
 ob_start();
 require("../lib/page.php");
+//se obtiene el id para luego usarlo para modifcar el vehiculo
 if(empty($_GET['id'])) 
 {
     Page::header("Agregar Marca de Vehiculo");
@@ -14,12 +15,11 @@ else
     $sql = "SELECT * FROM marcas WHERE codigo_marca = ?";
     $params = array($id);
     $data = Database::getRow($sql, $params);
-
     $marca_vehiculo = $data['marca'];
 }
-
 if(!empty($_POST))
 {
+    // se ejecuta la validacion para agregar o modificar la marca
     $_POST = Validator::validateForm($_POST);
   	$marca_vehiculo = $_POST['marca'];
     try 
@@ -37,8 +37,7 @@ if(!empty($_POST))
              $params = array($marca_vehiculo, $id);
              }
              Database::executeRow($sql, $params);
-             header("location: index.php");
-                        
+             header("location: index.php"); 
          }    
         else
         {
@@ -51,8 +50,6 @@ if(!empty($_POST))
     }
 }
 ?>
-
-
 <form method='post'>
     <div class='row'>
         <div class='input-field col s12 m6'>
@@ -66,7 +63,6 @@ if(!empty($_POST))
         <button type='submit' class='btn waves-effect blue'><i class='material-icons'>save</i></button>
     </div>
 </form>
-
 
 <?php
 Page::footer();

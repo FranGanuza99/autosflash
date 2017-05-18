@@ -1,6 +1,9 @@
 <?php
 ob_start();
 require("../lib/page.php");
+//se realiza la conexion
+//se captura el id en caso que se modifique
+//se crean las variables
 if(empty($_GET['id'])) 
 {
     Page::header("Agregar Vehiculo");
@@ -29,6 +32,7 @@ if(empty($_GET['id']))
 }
 else
 {
+    //se le asignas valores a las variables
     Page::header("Modificar Vehiculos");
     $id = $_GET['id'];
     $sql = "SELECT * FROM vehiculos WHERE codigo_vehiculo= ?";
@@ -53,13 +57,12 @@ else
     $general2_vehiculo =  $data['general2_vehiculo'];
     $general3_vehiculo =  $data['general3_vehiculo'];
     $descuento_vehiculo =  $data['descuento_vehiculo'];
-    $estado = $data['estado_vehiculo'];
-   
+    $estado = $data['estado_vehiculo']; 
 }
 
 if(!empty($_POST))
 {
-    
+    //se guardan en las varibles los datos para luego hacer el insert
     $_POST = Validator::validateForm($_POST);
     $nombre_vehiculo =  $_POST['nombre_vehiculo'];
     $precio_vehiculo =  $_POST['precio_vehiculo'];
@@ -82,6 +85,7 @@ if(!empty($_POST))
     $descuento_vehiculo =  $_POST['descuento_vehiculo'];
     $estado = $_POST['estado'];
      
+     //se hace una validacion que los campos no esten vacion
     try 
     {
         if($nombre_vehiculo != "")
@@ -100,7 +104,7 @@ if(!empty($_POST))
                                   {
                                       if($codigo_modelo != "")
                                       {
-                                                    if($anio_vehiculo != "")
+                                                if($anio_vehiculo != "")
                                                     {
                                                         if($potencia_vehiculo != "")
                                                         {
@@ -234,6 +238,7 @@ if(!empty($_POST))
 }
 ?>
 <form method='post'>
+<!--se crea formulario en el cual despues se capturan los datos y tambien se hace un select de las tablas padres-->
     <div class='row'>
         <div class='input-field col s12 m6'>
             <i class='material-icons prefix'>note_add</i>
@@ -342,7 +347,7 @@ if(!empty($_POST))
             <input id='inactivo' type='radio' name='estado' class='with-gap' value='0' <?php print(($estado == 0)?"checked":""); ?>/>
             <label for='inactivo'><i class='material-icons left'>visibility_off</i></label>
         </div>    
-        
+        <!--se muestran los botones-->
     </div>
     <div class='row center-align'>
         <a href='index.php' class='btn waves-effect grey'><i class='material-icons'>cancel</i></a>
