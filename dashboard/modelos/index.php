@@ -2,7 +2,7 @@
 ob_start();
 require("../lib/page.php");
 Page::header("MODELOS DE VEHICULOS");
-
+//se consultan los modelos y ademas se crea un select para buscar un producto en especifico
 if(!empty($_POST))
 {
 	$search = trim($_POST['buscar']);
@@ -16,6 +16,7 @@ else
 }
 $data = Database::getRows($sql, $params);
 if($data != null)
+//se valida que la data sea difente de null para mostrarla en la tabla o caso contrario agrefar otro modelo
 {
 ?>
 <form method='post'>

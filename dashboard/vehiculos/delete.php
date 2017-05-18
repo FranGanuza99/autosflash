@@ -11,7 +11,7 @@ else
 {
     header("location: index.php");
 }
-
+//se captura el id
 if(!empty($_POST))
 {
 	$id = $_POST['id'];
@@ -28,7 +28,6 @@ if(!empty($_POST))
 	}
 }
 ?>
-
 <form method='post'>
 	<div class='row center-align'>
 		<input type='hidden' name='id' value='<?php print($id); ?>'/>

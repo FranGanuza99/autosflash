@@ -2,7 +2,7 @@
 ob_start();
 require("../lib/page.php");
 Page::header("Eliminar Tipo Vehiculo");
-
+//se obtiene el id
 if(!empty($_GET['id'])) 
 {
     $id = $_GET['id'];
@@ -11,7 +11,7 @@ else
 {
     header("location: index.php");
 }
-
+//se ejecuta la consulta
 if(!empty($_POST))
 {
 	$id = $_POST['id'];
@@ -28,7 +28,6 @@ if(!empty($_POST))
 	}
 }
 ?>
-
 <form method='post'>
 	<div class='row center-align'>
 		<input type='hidden' name='id' value='<?php print($id); ?>'/>

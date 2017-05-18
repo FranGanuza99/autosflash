@@ -2,9 +2,11 @@
 ob_start();
 require("../lib/page.php");
 Page::header("VEHICULOS");
-
+//se hace un select de todos los vehiculos
+//se inicia conexion
 if(!empty($_POST))
 {
+	//se crea un buscador
 	$search = trim($_POST['buscar']);
 	$sql = "SELECT* FROM vehiculos AND nombre_vehiculo LIKE ? ";
 	$params = array("%$search%");
@@ -14,6 +16,7 @@ else
 	$sql = "SELECT * FROM vehiculos ";
 	$params = null;
 }
+//se guarda la informacion en la variable data
 $data = Database::getRows($sql, $params);
 if($data != null)
 {
@@ -45,6 +48,8 @@ if($data != null)
 	<tbody>
 
 <?php
+//se recorre data y al final todo se muestra en una tabla
+//se mandan los id
 	foreach($data as $row)
 	{
 		print("

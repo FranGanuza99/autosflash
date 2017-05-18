@@ -2,7 +2,8 @@
 ob_start();
 require("../lib/page.php");
 Page::header("TIPOS DE VEHICULOS");
-
+//se consultan todos los vehiculo
+//se verifica que exitan registros
 if(!empty($_POST))
 {
 	$search = trim($_POST['buscar']);
@@ -14,6 +15,7 @@ else
 	$sql = "SELECT * FROM tipos_vehiculos ORDER BY tipo_vehiculo";
 	$params = null;
 }
+//se guarda en una variable la data
 $data = Database::getRows($sql, $params);
 if($data != null)
 {
@@ -42,6 +44,7 @@ if($data != null)
 	<tbody>
 
 <?php
+//se comienzan a cargar los productos en la tabla
 	foreach($data as $row)
 	{
 		print("

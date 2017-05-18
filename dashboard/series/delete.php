@@ -2,7 +2,7 @@
 ob_start();
 require("../lib/page.php");
 Page::header("Eliminar Marca de Vehiculo");
-
+//se 
 if(!empty($_GET['codigo_marca'])) 
 {
     $id = $_GET['codigo_marca'];
