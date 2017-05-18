@@ -24,6 +24,7 @@
               ob_start();
               require("../lib/database.php");
               $id = $_GET['id'];
+              $data1 = null;
               $sql = "SELECT nombre_vehiculo, precio_vehiculo, descripcion_vehiculo, anio_vehiculo, potencia_vehiculo, manejo_vehiculo,rueda_vehiculo, comodida_vehiculo, apariencia_vehiculo, ventana_vehiculo, general1_vehiculo, general2_vehiculo, general3_vehiculo, foto_general1, foto_general2, foto_general3  FROM vehiculos WHERE codigo_vehiculo = ?";
               $params = array($id);
               $data = Database::getRows($sql, $params);
@@ -61,12 +62,8 @@
                   print("
                    
                     <li>
-                    <img src='data:image/*;base64,$row[url_foto]'alt=''>
-                  <div class='caption center-align'>
-                    <h3>This is our big Tagline!</h3>
-                    <h5 class='light grey-text text-lighten-3'>Here's our small slogan.</h5>
-                  </div>
-                </li>
+                        <img src='data:image/*;base64,$row[url_foto]'alt=''>
+                    </li>
                     
                     
                   ");
@@ -192,6 +189,8 @@
 
                  <?php
               ob_start();
+
+              //consulta foto perfil
               $sql3 = "SELECT fotos_vehiculos.url_foto FROM fotos_vehiculos,tipos_fotos WHERE  fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND fotos_vehiculos.codigo_vehiculo =?";
               $data3 = Database::getRows($sql3, $params);
               ?>
@@ -219,15 +218,17 @@
               </div>
                 <h4>Sabias que.</h4>
                 <?php print("<p>".$row1['general1_vehiculo']."</p> ");?>
-              
+          
           <?php
-             if($data1 != null)
+            $sql = "SELECT nombre_vehiculo, precio_vehiculo, descripcion_vehiculo, anio_vehiculo, potencia_vehiculo, manejo_vehiculo,rueda_vehiculo, comodida_vehiculo, apariencia_vehiculo, ventana_vehiculo, general1_vehiculo, general2_vehiculo, general3_vehiculo, foto_general1, foto_general2, foto_general3  FROM vehiculos WHERE codigo_vehiculo = ?";
+            $data1 = Database::getRows($sql, $params);
+              if($data1 != null)
               {
                 foreach ($data1 as $row1) 
                 {
                   print("
-                    <div class='col s12 m6 l3'>
-                        <img class='responsive-img' src='data:image/*;base64,$row[foto_general1]'>
+                    <div class='col s12 m12'>
+                        <img class='responsive-img' src='data:image/*;base64,$row1[foto_general1]'>
                     
                     </div>
                   ");
@@ -237,19 +238,19 @@
               {
                 print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
               }
-              ?>
-              <hr size="2">
-              <br>
-              <h4>Datos interesantes</h4>
-              <?php print("<p>".$row1['general2_vehiculo']."</p> ");?>
-              <?php
+            ?>
+            <hr size="2">
+            <br>
+            <h4>Datos interesantes</h4>
+            <?php print("<p>".$row1['general2_vehiculo']."</p> ");?>
+            <?php
              if($data1 != null)
               {
                 foreach ($data1 as $row1) 
                 {
                   print("
-                    <div class='col s12 m6 l3'>
-                        <img class='responsive-img' src='data:image/*;base64,$row[foto_general2]'>
+                    <div class='col s12 m12'>
+                        <img class='responsive-img' src='data:image/*;base64,$row1[foto_general2]' width='100%' height='20' >
                     
                     </div>
                   ");
@@ -270,8 +271,8 @@
                 foreach ($data1 as $row1) 
                 {
                   print("
-                    <div class='col s12 m6 l3'>
-                        <img class='responsive-img' src='data:image/*;base64,$row[foto_general3]'>
+                    <div class='col s12 m12'>
+                        <img class='responsive-img' src='data:image/*;base64,$row1[foto_general3]'>
                     
                     </div>
                   ");
@@ -420,7 +421,7 @@
                 {
                   print("
                     <div class='col s12 m6 l3'>
-                        <img class='materialboxed' width='260' src='data:image/*;base64,$row[url_foto]'>
+                        <img class='materialboxed' width='150' height='150' src='data:image/*;base64,$row[url_foto]'>
                     
                     </div>
                   ");

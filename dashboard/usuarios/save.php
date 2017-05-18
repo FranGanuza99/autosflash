@@ -67,7 +67,7 @@ if(!empty($_POST))
                                 
                                 if($archivo['name'] != null)
                                 {
-                                    $base64 = Validator::validateImage($archivo);
+                                    $base64 = Validator::validateImageProfile($archivo);
                                     if($base64 != false)
                                     {
                                         $foto = $base64;

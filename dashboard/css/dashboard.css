@@ -283,3 +283,8 @@ div.pagina {
         padding-left: 250px;
     }
 }
+
+div#imagesv {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}

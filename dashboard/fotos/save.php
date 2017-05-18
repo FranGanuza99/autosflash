@@ -42,7 +42,7 @@ if(!empty($_POST))
             }
 
             
-                $sql = "INSERT fotos_vehiculos(codigo_vehiculo, url_foto, codigo_tipo_foto) VALUES (?, ?, ?)";
+                $sql = "INSERT INTO fotos_vehiculos(codigo_vehiculo, url_foto, codigo_tipo_foto) VALUES (?, ?, ?)";
                 $params = array($id, $foto, $tipo);
             
             Database::executeRow($sql, $params);
@@ -75,9 +75,9 @@ if(!empty($_POST))
         </div>
         <div class='input-field col s12 m6'>
             <h6>Tipo:</h6>
-            <input name="tipo" type="radio" id="activo" value='1' class='with-gap' <?php print(($tipo == 1)?"checked":""); ?> />
+            <input name="tipo" type="radio" id="activo" value='2' class='with-gap' <?php print(($tipo == 2)?"checked":""); ?> />
             <label for="activo">Galeria</label>
-            <input name="tipo" type="radio" id="inactivo" value='2' class='with-gap' <?php print(($tipo == 2)?"checked":""); ?> />
+            <input name="tipo" type="radio" id="inactivo" value='3' class='with-gap' <?php print(($tipo == 3)?"checked":""); ?> />
             <label for="inactivo">Slider</label>
         </div>
     </div>
