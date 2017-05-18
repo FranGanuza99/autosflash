@@ -20,32 +20,63 @@
         include("inc/menu.php");
         ?>
 
+        <?php
+              ob_start();
+              require("../lib/database.php");
+              $id = $_GET['id'];
+              $sql = "SELECT nombre_vehiculo, precio_vehiculo, descripcion_vehiculo, anio_vehiculo, potencia_vehiculo, manejo_vehiculo,rueda_vehiculo, comodida_vehiculo, apariencia_vehiculo, ventana_vehiculo, general1_vehiculo, general2_vehiculo, general3_vehiculo, foto_general1, foto_general2, foto_general3  FROM vehiculos WHERE codigo_vehiculo = ?";
+              $params = array($id);
+              $data = Database::getRows($sql, $params);
+              if($data != null)
+              {
+                foreach ($data as $row1) 
+                {
+                  
+                }
+              }
+              else
+              {
+               throw new Exception("Vehiculo no encotrado");
+              }
+              ?>
+
+
         <!--Aqui comienza la pagina-->
         <div class="container">
+        <div class="slider">
+        <ul class="slides">
+         <?php
+              ob_start();
+              $sql2 = "SELECT fotos_vehiculos.url_foto FROM fotos_vehiculos,tipos_fotos WHERE  fotos_vehiculos.codigo_tipo_foto=3 AND tipos_fotos.codigo_tipo_foto= 3 AND fotos_vehiculos.codigo_vehiculo =?";
+              $data2 = Database::getRows($sql2, $params);
+              ?>
             
-            <div class="slider">
-              <ul class="slides">
-                <li>
-                  <img src="img/sliders/ford/img1.png" alt=""> <!-- random image -->
-                  <div class="caption center-align">
+               <?php
+
+               
+             if($data2 != null)
+              {
+                foreach ($data2 as $row) 
+                {
+                  print("
+                   
+                    <li>
+                    <img src='data:image/*;base64,$row[url_foto]'alt=''>
+                  <div class='caption center-align'>
                     <h3>This is our big Tagline!</h3>
-                    <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+                    <h5 class='light grey-text text-lighten-3'>Here's our small slogan.</h5>
                   </div>
                 </li>
-                <li>
-                  <img src="img/sliders/ford/img2.png" alt=""> <!-- random image -->
-                  <div class="caption left-align">
-                    <h3>Left Aligned Caption</h3>
-                    <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                  </div>
-                </li>
-                <li>
-                  <img src="img/sliders/ford/img3.png" alt=""> <!-- random image -->
-                  <div class="caption right-align">
-                    <h3>Right Aligned Caption</h3>
-                    <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-                  </div>
-                </li>
+                    
+                    
+                  ");
+                }
+              }
+              else
+              {
+                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+              }
+              ?>
               </ul>
             </div>
             <!--Mediante un tab se organiza un submenu para los detalles e imagenes de cada vehiculo-->
@@ -70,7 +101,8 @@
                 <div id="modal1" class="modal">
                   <div class="modal-content">
                     <h4>Compra de Automovil</h4>
-                    <h5>Monto a Cancelar $13,600</h5>
+                    <?php print("<h5>Monto a Cancelar: $".$row1['precio_vehiculo']."</h5> ");?>
+                   
                     <!--Se crea un formulario para la compra del vehiculo-->
                      <div class="row">
                       <form class="col s12">
@@ -137,10 +169,10 @@
                   </div>
                 </div>
                 <div class="center-align">
-                <h3>FORD FIESTA</h3>
+                <?php print("<h4>".$row1['nombre_vehiculo']."</h4> ");?>
                 </div>
                 <h5>PRECIO:</h5>
-                <h4>Desde $13,600</h4>
+                <?php print("<h4>Desde: $".$row1['precio_vehiculo']."</h4> ");?>
                 <h5>Modelo:</h5>
                 <!--Se crea un combobox para mostrar las versiones de los vehiculos-->
                 <div class="input-field">
@@ -157,24 +189,99 @@
                   <label>Materialize Select</label>
                   </div>
                 </div>
+
+                 <?php
+              ob_start();
+              $sql3 = "SELECT fotos_vehiculos.url_foto FROM fotos_vehiculos,tipos_fotos WHERE  fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND fotos_vehiculos.codigo_vehiculo =?";
+              $data3 = Database::getRows($sql3, $params);
+              ?>
                 <div class="col s5 pull-s7"> 
-                <img class="responsive-img" src="img/autos/ford_fiesta/img2.jpg">
+
+              <?php
+             if($data3 != null)
+              {
+                foreach ($data3 as $row) 
+                {
+                  print("
+                    <div>
+                        <img class='responsive-img'  src='data:image/*;base64,$row[url_foto]'>
+                    
+                    </div>
+                  ");
+                }
+              }
+              else
+              {
+                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+              }
+              ?>
                 </div>
               </div>
-                <h4>Divertido. Por Diseño.</h4>
-                <p>Diversión. Eso es lo que sientes cuando conduces un Fiesta. Su manejo ágil y mayor potencia significan que puedes contar con un vehículo con respuesta. Combínalo con conectividad inteligente a través de SYNC® 327 y la comodidad de asientos delanteros tapizados en cuero con calefacción disponibles. Luego, añade una gran potencia, para que toda la diversión esté en el viaje.</p>
-              <img class="responsive-img" src="img/autos/ford_fiesta/img3.jpeg">
+                <h4>Sabias que.</h4>
+                <?php print("<p>".$row1['general1_vehiculo']."</p> ");?>
+              
+          <?php
+             if($data1 != null)
+              {
+                foreach ($data1 as $row1) 
+                {
+                  print("
+                    <div class='col s12 m6 l3'>
+                        <img class='responsive-img' src='data:image/*;base64,$row[foto_general1]'>
+                    
+                    </div>
+                  ");
+                }
+              }
+              else
+              {
+                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+              }
+              ?>
               <hr size="2">
               <br>
-              <h4>Personalizar Fiesta</h4>
-              <p>Deja que el Fiesta refleje tu actitud elegante y deportiva. El Paquete de Apariencia SE incluye sistema de entretenimiento y comunicaciones de reconocimiento de voz mejorado SYNC® 3, Radio SiriusXM®, alerón trasero disponible, ruedas de aluminio pintado en Sparkle Silver de 16”, perilla de la palanca de cambios forrada de cuero (con transmisión automática) y mucho más.</p>
-              <img class="responsive-img" src="img/autos/ford_fiesta/img4.jpeg">
-              <h4>SYNC® 3 con SYNC AppLink®</h4>
+              <h4>Datos interesantes</h4>
+              <?php print("<p>".$row1['general2_vehiculo']."</p> ");?>
+              <?php
+             if($data1 != null)
+              {
+                foreach ($data1 as $row1) 
+                {
+                  print("
+                    <div class='col s12 m6 l3'>
+                        <img class='responsive-img' src='data:image/*;base64,$row[foto_general2]'>
+                    
+                    </div>
+                  ");
+                }
+              }
+              else
+              {
+                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+              }
+              ?>
+              <h4>Es importante que conozcas todo</h4>
               <hr size="2">
               <br>
-              <p>Hardware inteligente. Software inteligente. Diseño inteligente.
-                SYNC® 3 es nuestra tecnología sensible activada por voz y fácil de usar. Descubre las rápidas reacciones del sistema a tus comandos de voz coloquiales. Experimenta la pantalla táctil con una impresionante respuesta, similar a la de un smartphone. También encontrarás una elegante interfaz fácil de usar que te ayudará a contectarte y controlar tu smartphone. Localiza tus restaurantes favoritos con simple entrada de destino a través de la navegación opcional. SYNC 3 es rápido, inteligente y fácil de usar.</p>
-              <img class="responsive-img" src="img/autos/ford_fiesta/img5.jpeg">
+              <?php print("<p>".$row1['general3_vehiculo']."</p> ");?>
+             <?php
+             if($data1 != null)
+              {
+                foreach ($data1 as $row1) 
+                {
+                  print("
+                    <div class='col s12 m6 l3'>
+                        <img class='responsive-img' src='data:image/*;base64,$row[foto_general3]'>
+                    
+                    </div>
+                  ");
+                }
+              }
+              else
+              {
+                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+              }
+              ?>
               <br>
               <hr size="2">
               <br>
@@ -252,100 +359,35 @@
                     <div class="collapsible-header"><i class="material-icons"></i>Potencia y Manejo</div>
                     <div class="collapsible-body">
                     <h5>Potencia</h5>
-                    <ul>
-                      <li> -Motor Ti-VCT I-4 de 1.6L</li>
-                      <li> -Transmisión manual de cinco velocidades</li>
-                    </ul>
-                    <h5>Opcional</h5>
-                    <ul>
-                       <li>-Transmisión Automática PowerShift de 6 Velocidades con SelectShift</li>
-                    </ul>
+                    <?php print("<p>".$row1['potencia_vehiculo']."</p> ");?>
+                    
                     <br>
                     <hr size="2">
                     <h5>Manejo</h5>
-                    <ul>
-                      <li> -Dirección Eléctrica Asistida (EPAS)</li>
-                      <li> -Sistema Electrónico de Distribución de la Fuerza de Frenado (EBD)</li>
-                      <li> -Sistema de Frenos Antibloqueo (ABS) en las Cuatro Ruedas</li>
-                      <li> -Frenos de disco delantero/tambor trasero</li>
-                      <li> -Tracción delantera (FWD)</li>
-                      <li> -Asistencia de Arranque en Pendiente</li>
-                      <li> -Suspensión delantera independiente MacPherson</li>
-                      <li> -Suspensión trasera con barra de torsión</li>
-                      <li> -Torque Vectoring Control</li>
-                    </ul>
+                    <?php print("<p>".$row1['manejo_vehiculo']."</p> ");?>
                     <br>
                     <hr size="2">
                     <h5>Ruedas y Neumáticos</h5>
-                    <ul>
-                      <li> -Ruedas de Acero de 15” con Tapas Pintadas en Silver</li>
-                      <li> -Rueda de Repuesto de Acero (Mini)</li>
-                      <li> -Neumáticos p/ todas las estaciones c/ lateral negro P185/60R15</li>
-                    </ul>
+                    <?php print("<p>".$row1['rueda_vehiculo']."</p> ");?>
                     </div> 
                   </li>
                   <li>
                     <div class="collapsible-header"><i class="material-icons"></i>Caracteristicas Interiores</div>
                     <div class="collapsible-body">
-                    <h5>Asientos</h5>
-                    <ul>
-                      <li> -Asiento con ajuste manual en 4 direcciones para el pasajero delantero</li>
-                      <li> -Asiento Trasero con Separación 60/40</li>
-                      <li> -Asiento con ajuste manual en 6 direcciones para el conductor</li>
-                      <li> -Asientos Delanteros Individuales de Tela con Refuerzos</li>
-                      <li> -Apoyacabezas delanteros ajustables en 2 direcciones</li>
-                    </ul>
-                    <br>
-                    <hr size="2">
-                    <h5>Sistemas Entretenimiento</h5>
-                    <ul>
-                      <li> -Estéreo AM/FM/Para Un CD/Capacidad para MP3</li>
-                      <li> -SYNC® con SYNC Applink®</li>
-                    </ul>
-                    <br>
-                    <hr size="2">
+                    
                     <h5>Comodidad y Conveniencia</h5>
-                    <ul>
-                      <li> -Tomacorrientes auxiliar delantero de 12 voltios</li>
-                      <li> -Adaptador Auxiliar para Entrada de Sonido</li>
-                      <li> -Tapetes delanteros alfombrados</li>
-                      <li> -Luz de techo central c/ luces de lectura</li>
-                      <li> -Espejo retrovisor día/noche</li>
-                      <li> -Viseras para conductor y pasajero delantero con espejos cubiertos</li>
-                      <li> -Apoyo para pie izquierdo del conductor</li>
-                      <li> -Consola delantera central en el piso con dos portavasos delanteros y uno trasero y soporte para teléfono celular</li>
-                      <li> -Compartimientos, portavasos e inserciones de tela suave en puertas delanteras</li>
-                      <li> -Bolsillo para mapas en el respaldo del asiento del pasajero delantero</li>
-                      <li> -Iluminación del grupo de instrumentos Ice Blue®</li>
-                      <li> -Guantera y cajuela iluminadas</li>
-                      <li> -Limpiaparabrisas delanteros intermitentes con función antigoteo</li>
-                      <li> -Aire acondicionado manual con accionamiento electrónico</li>
-                      <li> -Volante inclinable/telescópico manual</li>
-                    </ul>
+                   <?php print("<p>".$row1['comodida_vehiculo']."</p> ");?>
                     </div>
                   </li>
                   <li>
                     <div class="collapsible-header"><i class="material-icons"></i>Caracteristicas Exteriores</div>
                     <div class="collapsible-body">
                     <h5>Apariencia</h5>
-                    <ul>
-                      <li> -Pintura negra</li>
-                      <li> -Parrilla superior con barras y bordes cromados</li>
-                      <li> -Parrilla inferior Carbon Black</li>
-                      <li> -Manijas del Color de la Carrocería</li>
-                      <li> -Defensas delanteras y traseras del color de la carrocería</li>
-                      <li> -Sistema de Llenado de Combustible sin Tapón Easy Fuel</li>
-                      <li> -Faros delanteros halógenos con biseles negros</li>
-                      <li> -Faros delanteros halógenos de cuatro haces de caja doble, faros delanteros brillantes con bisel negro y detalles cromados</li>
-                      <li> -Espejos Eléctricos del Color de la Carrocería con Espejos de Punto Ciego Integrados</li>
-                    </ul>
+                   <?php print("<p>".$row1['apariencia_vehiculo']."</p> ");?>
                     <br>
                     <hr size="2">
                     <h5>Ventanas y Vidrios</h5>
-                    <ul>
-                      <li> -Parabrisas laminado acústico</li>
-                      <li> -Vidrios solares polarizados</li>
-                    </ul>                   
+                    <?php print("<p>".$row1['ventana_vehiculo']."</p> ");?>                  
                     </div>
                   </li>
                 </ul>
@@ -354,6 +396,14 @@
               <div id="galeria" class="col s12">
               <!--Se crea un galeria de fotos-->
                <h5>Galería</h5>
+              
+              <?php
+              ob_start();
+              $sql = "SELECT fotos_vehiculos.url_foto FROM fotos_vehiculos,tipos_fotos WHERE  fotos_vehiculos.codigo_tipo_foto=2 AND tipos_fotos.codigo_tipo_foto= 2 AND fotos_vehiculos.codigo_vehiculo =?";
+              $data = Database::getRows($sql, $params);
+              ?>
+                
+              <!-- Fin de row -->
         <!--mediante la herramienta collapsible se muestra de forma organizada los albumes de fotos, adicionalmente se encuentan divididos por las columnas imaginarias-->
         <ul class="collapsible popout" data-collapsible="accordion">
             <li>
@@ -361,90 +411,28 @@
                 <div class="collapsible-body"><span>
          <div class="row">
              <!--se inicia la organizacion de las fotos-->
-            <div class="col s12 m6 l3">
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img1.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img2.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img3.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img4.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img5.jpg">         
-           </div>
-            <div class="col s12 m6 l3">
-            <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img6.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img7.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img8.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img9.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img10.jpg">            
-           </div>
-            <div class="col s12 m6 l3">
-            <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img11.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img12.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img13.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img14.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img15.jpg">              
-           </div>
-            <div class="col s12 m6 l3">
-              <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img16.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img17.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img18.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img19.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img20.jpg">
-            </div>
-        </div>     
-          </span></div>
-            </li>
-            <li>
-                <div class="collapsible-header">Galeria del interior</div>
-                <div class="collapsible-body"><span>
-           <div class="row">
-           <div class="col s12 m6 l3">
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img21.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img22.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img23.jpg">            
-           </div>
-            <div class="col s12 m6 l3">
-            <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img24.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img25.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img26.jpg">        
-           </div>
-            <div class="col s12 m6 l3">
-            <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img27.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img28.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img29.jpg">
-            
-           </div>
-            <div class="col s12 m6 l3">
-              <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img30.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img31.jpg">
-                <br>
-                <img class="materialboxed" width="260" src="img/autos/ford_fiesta/img32.jpg">       
-            </div>
-          </div>     
-          </span></div>
+
+
+            <?php
+             if($data != null)
+              {
+                foreach ($data as $row) 
+                {
+                  print("
+                    <div class='col s12 m6 l3'>
+                        <img class='materialboxed' width='260' src='data:image/*;base64,$row[url_foto]'>
+                    
+                    </div>
+                  ");
+                }
+              }
+              else
+              {
+                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+              }
+              ?>
+
+
          </li>
         </ul>
       </div>
