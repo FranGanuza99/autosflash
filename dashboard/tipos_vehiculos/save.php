@@ -1,6 +1,7 @@
 <?php
 ob_start();
 require("../lib/page.php");
+//se obtiene el id para modificar
 if(empty($_GET['id'])) 
 {
     Page::header("Agregar Tipos de Vehiculo");
@@ -20,6 +21,7 @@ else
 
 if(!empty($_POST))
 {
+    //se validan los datos para luego guardarlos o modificarlos
     $_POST = Validator::validateForm($_POST);
   	$tipo_vehiculo = $_POST['tipo_vehiculo'];
     try 
@@ -37,8 +39,7 @@ if(!empty($_POST))
              $params = array($tipo_vehiculo, $id);
              }
              Database::executeRow($sql, $params);
-             header("location: index.php");
-                        
+             header("location: index.php");                
          }    
         else
         {
@@ -51,8 +52,6 @@ if(!empty($_POST))
     }
 }
 ?>
-
-
 <form method='post'>
     <div class='row'>
         <div class='input-field col s12 m6'>
@@ -66,8 +65,6 @@ if(!empty($_POST))
         <button type='submit' class='btn waves-effect blue'><i class='material-icons'>save</i></button>
     </div>
 </form>
-
-
 <?php
 Page::footer();
 ?>

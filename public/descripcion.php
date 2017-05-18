@@ -19,8 +19,8 @@
         <?php
         include("inc/menu.php");
         ?>
-
         <?php
+        //se inica la coneccion y se realiza una consulta con toda la informacion relaciona al id del vehiculo
               ob_start();
               require("../lib/database.php");
               $id = $_GET['id'];
@@ -30,42 +30,35 @@
               $data = Database::getRows($sql, $params);
               if($data != null)
               {
-                foreach ($data as $row1) 
-                {
-                  
-                }
+                  foreach ($data as $row1) 
+                  {     
+                  }
               }
               else
               {
                throw new Exception("Vehiculo no encotrado");
               }
-              ?>
-
-
+          ?>
         <!--Aqui comienza la pagina-->
         <div class="container">
         <div class="slider">
         <ul class="slides">
          <?php
               ob_start();
+              //se inicia nuevamente la conexion pero se le cambia el nombre a la
               $sql2 = "SELECT fotos_vehiculos.url_foto FROM fotos_vehiculos,tipos_fotos WHERE  fotos_vehiculos.codigo_tipo_foto=3 AND tipos_fotos.codigo_tipo_foto= 3 AND fotos_vehiculos.codigo_vehiculo =?";
               $data2 = Database::getRows($sql2, $params);
               ?>
-            
                <?php
-
-               
+               //se cargan las imagenes a partir de la variable data2
              if($data2 != null)
               {
                 foreach ($data2 as $row) 
                 {
                   print("
-                   
                     <li>
                         <img src='data:image/*;base64,$row[url_foto]'alt=''>
                     </li>
-                    
-                    
                   ");
                 }
               }
@@ -189,7 +182,6 @@
 
                  <?php
               ob_start();
-
               //consulta foto perfil
               $sql3 = "SELECT fotos_vehiculos.url_foto FROM fotos_vehiculos,tipos_fotos WHERE  fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND fotos_vehiculos.codigo_vehiculo =?";
               $data3 = Database::getRows($sql3, $params);
@@ -197,6 +189,7 @@
                 <div class="col s5 pull-s7"> 
 
               <?php
+              //se muestran los datos generelas del vehiculo y sus fotos
              if($data3 != null)
               {
                 foreach ($data3 as $row) 
@@ -204,7 +197,6 @@
                   print("
                     <div>
                         <img class='responsive-img'  src='data:image/*;base64,$row[url_foto]'>
-                    
                     </div>
                   ");
                 }
@@ -355,7 +347,7 @@
               <div id="especificaciones" class="col s12">
               <h3>Especificaciones</h3>
                <ul class="collapsible" data-collapsible="accordion">
-               <!--Mediante listas se muestran las especificaciones del vehiculo ademas de collapsibles-->
+               <!--se cargan los detalles del vehiculo mediante parrafos-->
                   <li>
                     <div class="collapsible-header"><i class="material-icons"></i>Potencia y Manejo</div>
                     <div class="collapsible-body">
@@ -392,12 +384,11 @@
                     </div>
                   </li>
                 </ul>
-        
               </div>
               <div id="galeria" class="col s12">
               <!--Se crea un galeria de fotos-->
                <h5>Galería</h5>
-              
+              <!--se manda hacer un select y se inicia la conexion-->
               <?php
               ob_start();
               $sql = "SELECT fotos_vehiculos.url_foto FROM fotos_vehiculos,tipos_fotos WHERE  fotos_vehiculos.codigo_tipo_foto=2 AND tipos_fotos.codigo_tipo_foto= 2 AND fotos_vehiculos.codigo_vehiculo =?";
@@ -412,9 +403,8 @@
                 <div class="collapsible-body"><span>
          <div class="row">
              <!--se inicia la organizacion de las fotos-->
-
-
             <?php
+            //se corre data para mostrar todas las imagenes
              if($data != null)
               {
                 foreach ($data as $row) 
@@ -432,20 +422,15 @@
                 print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
               }
               ?>
-
-
          </li>
         </ul>
       </div>
     </div>
   </div>
-  </div>
-        
+  </div>   
       <!--Aqui se muestra el pie de pagina-->
       <?php
       include("inc/footer.php");
       ?>
-        
-
     </body>
 </html>

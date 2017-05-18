@@ -2,7 +2,7 @@
 ob_start();
 require("../lib/page.php");
 Page::header("MARCAS DE VEHICULOS");
-
+//se consulta y verifican de marcas em la tabla
 if(!empty($_POST))
 {
 	$search = trim($_POST['buscar']);
@@ -16,6 +16,7 @@ else
 }
 $data = Database::getRows($sql, $params);
 if($data != null)
+// se cargan los datos en la tabla y se ejecuta el diseño de la pagina
 {
 ?>
 <form method='post'>
@@ -40,7 +41,6 @@ if($data != null)
 		</tr>
 	</thead>
 	<tbody>
-
 <?php
 	foreach($data as $row)
 	{
@@ -61,6 +61,7 @@ if($data != null)
 
 	");
 } //Fin de if que comprueba la existencia de registros.
+//se redirecciona si no se encuentran datos
 else
 {
 	Page::showMessage(4, "No hay registros disponibles", "save.php");

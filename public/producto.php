@@ -42,11 +42,14 @@
              <div class='row'>
               <?php
               ob_start();
+              //se llama la conexion a la base de datos
               require("../lib/database.php");
+              //se consultan los productos a mostrar
               $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 1 AND vehiculos.estado_vehiculo =1";
               $data = Database::getRows($sql, null);
               if($data != null)
               {
+                //se carga la data en las tarjetas
                 foreach ($data as $row) 
                 {
                   print("
@@ -82,6 +85,7 @@
             
              <div class='row'>
               <?php
+              //se inica la conexion de nuevo pero en esta consulta verifica otro tipo de vehiculo
               ob_start();
               $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 2 AND vehiculos.estado_vehiculo =1";
               $data = Database::getRows($sql, null);
@@ -121,6 +125,7 @@
           <div class='row'>
               <?php
               ob_start();
+               //se inica la conexion de nuevo pero en esta consulta verifica otro tipo de vehiculo
               $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 3 AND vehiculos.estado_vehiculo =1";
               $data = Database::getRows($sql, null);
               if($data != null)
@@ -158,6 +163,7 @@
           <div class='row'>
               <?php
               ob_start();
+               //se inica la conexion de nuevo pero en esta consulta verifica otro tipo de vehiculo
               $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 4 AND vehiculos.estado_vehiculo =1";
               $data = Database::getRows($sql, null);
               if($data != null)
@@ -188,7 +194,6 @@
               }
               ?>
               </div><!-- Fin de row -->
-          
           </div>
         </div>
    </div>
