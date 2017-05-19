@@ -7,19 +7,22 @@ $foto = null;
 $tipo = 2;
 
 //validando si se recibio un id
-if(empty($_GET['id'])) 
+if(empty($_GET['img'])) 
 {
     Page::header("Agregar imagenes");
-    $id = null; 
+    $img = null;
+    $id = $_GET['id'];
 }
 else
 {
     Page::header("Modificar imagenes");
     $id = $_GET['id'];
+    $img = $_GET['img'];
     $sql = "SELECT * FROM fotos_vehiculos WHERE codigo_foto = ?";
-    $params = array($id);
+    $params = array($img);
     $data = Database::getRow($sql, $params);
     $tipo = $data['codigo_tipo_foto'];
+    $foto = $data['url_foto'];
 }
 
 //validando los campos con el post
@@ -55,21 +58,19 @@ if(!empty($_POST))
             }
 
             //ingreso o actualizacion de registros
-            if($id == null)
+            if($img == null)
             {
                 $sql = "INSERT INTO fotos_vehiculos(codigo_vehiculo, url_foto, codigo_tipo_foto) VALUES (?, ?, ?)";
                 $params = array($id, $foto, $tipo);
             } else {
                 $sql = "UPDATE fotos_vehiculos SET url_foto = ?, codigo_tipo_foto = ? WHERE codigo_foto = ?";
-                $params = array($foto, $tipo, $id);
+                $params = array($foto, $tipo, $img);
             }
             Database::executeRow($sql, $params);
 
             //consulta de id de retorno
-            $sql = "SELECT codigo_vehiculo FROM fotos_vehiculos WHERE codigo_foto = ?";
-            $params = array($id);
-            $id = Database::getRow($sql, $params);
-            header("location: index.php?id=$id[codigo_vehiculo]");       
+
+            header("location: vista.php?id=$id");       
         }    
         else
         {
@@ -108,7 +109,15 @@ if(!empty($_POST))
         </div>
     </div>
     <div class='row center-align'>
-        <a href='index.php' class='btn waves-effect grey'><i class='material-icons'>cancel</i></a>
+        
+        <?php
+            $sql = "SELECT codigo_vehiculo FROM fotos_vehiculos WHERE codigo_foto = ?";
+            $params = array($id);
+            $id = Database::getRow($sql, $params);
+
+            print("<a href='vista.php?id=".$id['codigo_vehiculo']."' class='btn waves-effect grey'><i class='material-icons'>cancel</i></a>");
+        ?>
+        
         <button type='submit' class='btn waves-effect blue'><i class='material-icons'>save</i></button>
     </div>
 </form>

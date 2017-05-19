@@ -39,7 +39,7 @@
           <div id="carros" class="col s12">
              <img class="responsive-img" src="img/autos/logos/ford.png" width="220" height="150">
            
-             <div class='row'>
+              <div class='row'>
               <?php
               ob_start();
               //se llama la conexion a la base de datos
@@ -53,9 +53,9 @@
                 foreach ($data as $row) 
                 {
                   print("
-                    <div class='card hoverable col s12 m6 l4'>
+                    <div class='card hoverable col s12 m6 l4 fijo2'>
                       <div class='card-image waves-effect waves-block waves-light'>
-                        <img class='activator' src='data:image/*;base64,$row[url_foto]'>
+                        <img class='activator fijo' src='data:image/*;base64,$row[url_foto]'>
                       </div>
                       <div class='card-content'>
                         <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>

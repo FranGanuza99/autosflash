@@ -191,7 +191,7 @@
               <?php
               //se muestran los datos generelas del vehiculo y sus fotos
              if($data3 != null)
-              {
+             {
                 foreach ($data3 as $row) 
                 {
                   print("
@@ -279,21 +279,106 @@
               <hr size="2">
               <br>
               <!--Se crea un formulario de comentarios y calificacion-->
+              <?php 
+                require('../lib/validator.php');
+                try {
+                  if (isset($_SESSION['id_usuario'])){
+                    $cliente = $_SESSION['id_usuario'];
+                  } else {
+                    $cliente = null;
+                    throw new Exception("Debe de iniciar sesion primero");
+                    header ("location: sesion.php");
+                  }
+                } catch (Exception $error){
+                  
+                }
+                
+                //calculo de fecha
+                $fecha = getdate();
+                $registro = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+                if(!empty($_POST))
+                {
+                  $_POST = Validator::validateForm($_POST);
+                  $mensaje = $_POST['mensaje'];
+                  try 
+                  {
+                      if ($cliente != "") 
+                      {              
+                        if ($mensaje != "") 
+                        { 
+                          $sql = "INSERT INTO comentarios(comentario, codigo_cliente, codigo_vehiculo, estado_comentario, fecha) VALUES(?, ?, ?, 1, ?)";
+                          $params2 = array($mensaje, $cliente, $id, $registro);
+                          Database::executeRow($sql, $params2);
+                          $mensaje = null;
+                          $cliente = null;
+                          $registro = null;
+                        }
+                        else 
+                        {
+                          throw new Exception("Debe de escribir un comentario");
+                        }
+                      } 
+                      else 
+                      {
+                        throw new Exception("Debe de iniciar sesion primero");
+                        header ("location: sesion.php");
+                      }
+                  } catch (Exception $error) {
+
+                  }
+                  
+                }
+
+              ?>
               <h5>Escribenos un comentario:</h5>
               <div class="row">
-                <form class="col s12">
+                <form class="col s12" method='post'>
                   <div class="row">
-                    <div class="input-field col s6">
+                    <div class="input-field col s8 m6">
                       <i class="material-icons prefix">mode_edit</i>
-                      <textarea id="icon_prefix2" class="materialize-textarea"></textarea>
+                      <textarea id="icon_prefix2" name='mensaje' class="materialize-textarea"></textarea>
                       <label for="icon_prefix2">Comentario</label>
+                    </div>
+                    <div class="input-field col s4 m3">
+                      <button type='submit' class='btn waves-effect'><i class="material-icons left">cloud</i>Enviar</button>
                     </div>
                   </div>
                 </form>
-                <div class="fb-comments" data-href="https://developers.facebook.com/docs/plugins/comments#configurator" data-numposts="5"></div>
+                <!--<div class="fb-comments" data-href="https://developers.facebook.com/docs/plugins/comments#configurator" data-numposts="5"></div>-->
+              </div>
+
+              <div class='row'>
+              <div class='col s12 m6'>
+              <?php
+              $sql6 = "SELECT * FROM clientes, comentarios WHERE  clientes.codigo_cliente = comentarios.codigo_cliente AND comentarios.codigo_vehiculo = ? ORDER BY codigo_comentario desc";
+              $data6 = Database::getRows($sql6, $params);
+              if($data6 != null)
+             {
+                foreach ($data6 as $row6) 
+                {
+                  print("
+                      <div class='row card-panel'>
+                        <div class='col s3 m3'>
+                          <img id='profile' src='data:image/*;base64,".$row6['foto']."' alt='' class='circle responsive-img valign profile-image' width='70'>
+                        </div> 
+                        <div class='col s9 m9'>
+                          <h6><b>".$row6['nombre_cliente']." ".$row6['apellido_cliente']."</b></h6><h6 class='grey-text'><FONT SIZE=2>".$row6['fecha']."</FONT></h6>
+                          <p>".$row6['comentario']."</p> 
+                        </div>
+                      </div>
+                  ");
+                }
+              }
+              else
+              {
+                print("<div class='card-panel  grey lighten-2'><i class='material-icons left'>warning</i>No hay ningun comentario. Se el primero en opinar.</div>");
+              }
+              ?>
+              
+              </div>  
               </div>
               <!--Se utiliza los radiobutoms para mostrar el rango de la calificacion-->
-              <p>Calificacion</p>
+              <!-- <p>Calificacion</p>
                 <form action="#">
                 <p>
                   <input name="group2" type="radio" id="test6" />
@@ -318,9 +403,9 @@
               </form>
               <br>
               <a class="waves-effect waves-light btn"><i class="material-icons left">chat_bubble_outline</i>enviar</a>
-              <br>
+              <br>-->
               <!--En una tabla se muestran los comentarios de las personas-->
-              <table>
+              <!--<table>
                 <thead>
                   <tr>
                       <th data-field="id">Nombre</th>
@@ -342,7 +427,7 @@
                   </tr>
                 </tbody>
               </table>
-              <p>Calificacion Promedio: 4.5</p>
+              <p>Calificacion Promedio: 4.5</p>-->
               </div>
               <div id="especificaciones" class="col s12">
               <h3>Especificaciones</h3>
@@ -428,9 +513,9 @@
     </div>
   </div>
   </div>   
-      <!--Aqui se muestra el pie de pagina-->
-      <?php
-      include("inc/footer.php");
-      ?>
-    </body>
+  <!--Aqui se muestra el pie de pagina-->
+  <?php
+  include("inc/footer.php");
+  ?>
+</body>
 </html>

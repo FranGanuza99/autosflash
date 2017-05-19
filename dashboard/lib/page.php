@@ -72,7 +72,7 @@ class Page
 							</ul>
 						</div>
 						</li>
-						<li class='bold'><i class='material-icons iconos-menu'>perm_identity</i><a class='waves-effect waves-teal'>Clientes</a></li>
+						<li class='bold'><i class='material-icons iconos-menu'>perm_identity</i><a class='waves-effect waves-teal' href='../clientes/'>Clientes</a></li>
 					</ul>
 					</li>
 					<li class='bold'><i class='material-icons iconos-menu'>library_books</i><a href='http://materializecss.com/mobile.html' class='waves-effect waves-teal'>Reservaciones</a></li>

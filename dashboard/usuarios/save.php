@@ -199,12 +199,12 @@ if(!empty($_POST))
         </div>
         <div class='input-field col s12 m6'>
             <i class='material-icons prefix'>description</i>
-            <input id='correo' type='email' name='correo' class='validate' value='<?php print($correo); ?>' required/>
+            <input id='correo' type='text' name='correo' pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" class='validate' value='<?php print($correo); ?>' required/>
             <label for='correo'>Correo</label>
         </div>
         <div class='input-field col s12 m6 '>
             <i class='material-icons prefix'>perm_contact_calendar</i>
-            <input id="nacimiento" name="nacimiento" type="date" value='<?php print($nacimiento); ?>' class="datepicker validate">  
+            <input id="nacimiento" name="nacimiento" type="date" value='<?php print($nacimiento); ?>' class="datepicker ">  
         </div>
     </div>
 

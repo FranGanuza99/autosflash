@@ -1,7 +1,8 @@
 <?php
 ob_start();
 require("../lib/page.php");
-Page::header("SERIES DE VEHICULOS");
+require("../../lib/zebra.php");
+Page::header("Series de vehiculos");
 
 if(!empty($_POST))
 {
@@ -15,6 +16,21 @@ else
 	$params = null;
 }
 $data = Database::getRows($sql, $params);
+
+//obtenemos el numero de filas y cantidad maxima
+$num_registros = count($data); 
+$resul_x_pagina = 10; 
+
+//instanciando la clase y enviando parametros
+$paginacion = new Zebra_Pagination(); 
+$paginacion->records($num_registros); 
+$paginacion->records_per_page($resul_x_pagina);
+
+//Consulta utilizando limit
+$consulta = $sql.' LIMIT '.(($paginacion->get_page() - 1) * $resul_x_pagina). ',' .$resul_x_pagina;
+//ejecuta la consulta
+$data = Database::getRows($consulta, $params);
+
 if($data != null)
 {
 ?>
@@ -62,6 +78,8 @@ if($data != null)
 	</table>
 
 	");
+
+	$paginacion->render();
 } //Fin de if que comprueba la existencia de registros.
 else
 {

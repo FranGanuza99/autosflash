@@ -1,11 +1,16 @@
 <?php 
 session_start();
 ?>
-<ul id='dropdown1' class='dropdown-content'>
-    <li><a href='#!'>one</a></li>
-    <li><a href='#!'>two</a></li>
+<ul id='dropdown1' class='dropdown-content dropstyle'>
+    <li><a href='#!'>Perfil</a></li>
     <li class='divider'></li>
-    <li><a href='#!'>three</a></li>
+    <li><a href='logout.php'>Cerrar Sesion</a></li>
+</ul>
+
+<ul id='dropdown12' class='dropdown-content dropstyle'>
+    <li><a href='#!'>Perfil</a></li>
+    <li class='divider'></li>
+    <li><a href='logout.php'>Cerrar Sesion</a></li>
 </ul>
 
 <div class="navbar-fixed">
@@ -24,7 +29,7 @@ session_start();
                     if (isset($_SESSION['nombre_usuario'])){
                         //muestra la foto de perfil del cliente
                         print("
-                        <li><a data-activates='dropdown1'><img src='data:image/*;base64,".$_SESSION['foto_perfil']."' class='circle' width='55' height='55'></a></li>");
+                        <li><a class='foto-perfil dropdown-button' data-activates='dropdown1'><img src='data:image/*;base64,".$_SESSION['foto_perfil']."' class='circle' width='48' height='48'></a></li>");
                     } else {
                         print("<li><a href='sesion.php'>Iniciar sesión</a></li>");
                     }
@@ -44,7 +49,14 @@ session_start();
     <li><a href="informacion.php">Nuestra empresa</a></li>
     <li><a href="contacto.php">Contáctenos</a></li>
     <li><a href="pregunta.php">Preguntas frecuentes</a></li>
-    <li><a href="sesion.php">Iniciar sesión</a></li>
+    <?php
+    if (isset($_SESSION['nombre_usuario'])){
+        print("<li class='active'><a class='dropdown-button' data-activates='dropdown12'>".$_SESSION['nombre_usuario']."</a></li>");
+    } else {
+        print("<li><a href='sesion.php'>Iniciar sesión</a></li>");
+    }
+    ?>
+    
 </ul>
 
     

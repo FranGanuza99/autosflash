@@ -179,18 +179,18 @@
                                 </div>
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">account_circle</i>
-                                    <input type="text" id="dui" name="dui" class="validate" value='<?php print($dui); ?>' required />
+                                    <input type="text" id="dui" name="dui" pattern='^[0-9]{8}-[0-9]{1}' class="validate" value='<?php print($dui); ?>' required />
                                     <label for="dui">Dui</label>
                                 </div>
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">account_circle</i>
-                                    <input type="text" id="nit" name="nit" class="validate" value='<?php print($nit); ?>' required />
+                                    <input type="text" id="nit" name="nit" pattern='^[0-9]{4}-[0-9]{6}-[0-9]{3}-[0-9]{1}' class="validate" value='<?php print($nit); ?>' required />
                                     <label for="nit">Nit</label>
                                 </div>
                                 <!--telefono-->
                                 <div class='input-field col s12 m6'>
                                     <i class='material-icons prefix'>description</i>
-                                    <input id='telefono' type='number' name='telefono' class='validate' value='<?php print($telefono); ?>' required/>
+                                    <input id='telefono' type='text' name='telefono' pattern='^[0-9]{8}' class='validate' value='<?php print($telefono); ?>' required/>
                                     <label for='telefono'>Teléfono</label>
                                 </div>
                                 <div class="input-field col s6">
@@ -203,7 +203,7 @@
                                 <!--email-->
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">email</i>
-                                    <input type="email" id="correo" name="correo" class="validate" value='<?php print($correo); ?>' required />
+                                    <input type="email" id="correo" name="correo" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" class="validate" value='<?php print($correo); ?>' required />
                                     <label for="correo" data-error="wrong" data-success="right">Correo electrónico</label>
                                 </div>
                                 <div id='profile-img' class='file-field input-field col s12 m6'>

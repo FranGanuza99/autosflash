@@ -49,72 +49,65 @@
 
           <!--primera fila-->
           <div class= "row">
-            <!--apartado de autos destacados-->
-              <h4 class="center-align">Autos destacados</h4>
-              <div class= "col s12 m4">
-                  <!--1-->
-                  <div class="card small">
-                    <div class="card-image">
-                      <!--imagen-->
-                      <img src="img/autos/ford_c-max/img1.jpg" alt=""/>
-                      <span class="card-title">Ford C-MAX 2017 </span>
-                    </div>
-                    <!--contenido de la carta-->
-                    <div class="card-content">
-                      <p>El C-MAX Energi Plug-In Hybrid te da la opción de enchufarlo o no para cargarlo...</p>
-                    </div>
-                    <div class="card-action">
-                      <a href="#">Seguir leyendo...</a>
-                    </div>
-                  </div>
-              </div>
-              <!--2-->
-              <div class= "col s12 m4">
-                  <div class="card small">
-                    <div class="card-image">
-                      <!--imagen-->
-                      <img src="img/autos/ford_fiesta/img1.jpg" alt=""/>
-                      <span class="card-title">Ford Fiesta </span>
-                    </div>
-                    <!--contenido de la carta-->
-                    <div class="card-content">
-                      <p>Diversión. Eso es lo que sientes cuando conduces un Fiesta. Su manejo ágil y mayor potencia...</p>
-                    </div>
-                    <div class="card-action">
-                      <a href="descripcion.php">Seguir leyendo...</a>
-                    </div>
-                  </div>
-              </div>
-              <!--3-->
-              <div class= "col s12 m4">
-                  <div class="card small">
-                    <div class="card-image">
-                      <!--imagen-->
-                      <img src="img/autos/ford_fusion/img1.jpg" alt=""/>
-                      <span class="card-title">Ford Fusion </span>
-                    </div>
-                    <!--contenido de la carta-->
-                    <div class="card-content">
-                      <p>Los motores EcoBoost disponibles combinan tres tecnologías diferentes: turbocargador...</p>
-                    </div>
-                    <div class="card-action">
-                      <a href="#">Seguir leyendo...</a>
-                    </div>
-                  </div>
-                  
-              </div>
-              <!--paginacion del apartado-->
-              <ul class="pagination center">
-                <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                <li class="active blue"><a href="#!">1</a></li>
-                <li class="waves-effect"><a href="#!">2</a></li>
-                <li class="waves-effect"><a href="#!">3</a></li>
-                <li class="waves-effect"><a href="#!">4</a></li>
-                <li class="waves-effect"><a href="#!">5</a></li>
-                <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-              </ul>
-          </div>
+            <h4 class="center-align">Autos destacados</h4>
+            <?php
+              ob_start();
+              //se llama la conexion a la base de datos
+              require("../lib/database.php");
+              require("../lib/zebra.php");
+              //se consultan los productos a mostrar
+              $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 1 AND vehiculos.estado_vehiculo =1";
+              $data = Database::getRows($sql, null);
 
+              //obtenemos el numero de filas y cantidad maxima
+              $num_registros = count($data); 
+              $resul_x_pagina = 3; 
+
+              //instanciando la clase y enviando parametros
+              $paginacion = new Zebra_Pagination(); 
+              $paginacion->records($num_registros); 
+              $paginacion->records_per_page($resul_x_pagina);
+
+              //Consulta utilizando limit
+              $consulta = $sql.' LIMIT '.(($paginacion->get_page() - 1) * $resul_x_pagina). ',' .$resul_x_pagina;
+              //ejecuta la consulta
+              $params = null;
+              $data = Database::getRows($consulta, $params);
+
+              if($data != null)
+              {
+                //se carga la data en las tarjetas
+                foreach ($data as $row) 
+                {
+                  print("
+                    <div class='card hoverable col s12 m6 l4 fijo2'>
+                      <div class='card-image waves-effect waves-block waves-light'>
+                        <img class='activator fijo' src='data:image/*;base64,$row[url_foto]'>
+                      </div>
+                      <div class='card-content'>
+                        <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>
+                        <p><a href='descripcion.php?id=".$row['codigo_vehiculo']."'><i class='material-icons left'>loupe</i>Seleccionar</a></p>
+                      </div>
+                      <div class='card-reveal'>
+                        <span class='card-title grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>close</i></span>
+                        <p>$row[descripcion_vehiculo]</p>
+                        <p>Precio (US$) $row[precio_vehiculo]</p>
+                      </div>
+                    </div>
+                  ");
+                }
+                
+              }
+              else
+              {
+                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+              }
+              ?>
+              
+          </div>
+          <?php
+          $paginacion->render();
+          ?>
           <!--segunda fila-->
           <div class= "row">
               <!--primera columna-->
@@ -125,7 +118,7 @@
               </div>
               <!--segunda columna-->
               <div class= "col s12 m6">
-                  <div class="card-panel">
+                  <div class="">
                       <h4 class="center-align">Promociones</h4>
                       <img class="responsive-img materialboxed" width="100%" src="img/promociones/img06.jpg" >
                       <br>

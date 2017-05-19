@@ -39,8 +39,8 @@ if($data != null)
 				<td>".$row['tipo_foto']."</td>
 				
 				<td>
-					<a href='save.php?id=".$row['codigo_foto']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
-					<a href='delete.php?id=".$row['codigo_foto']."' class='red-text'><i class='material-icons'>delete</i></a>
+					<a href='save.php?id=".$row['codigo_vehiculo']."&img=".$row['codigo_foto']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
+					<a href='delete.php?id=".$row['codigo_vehiculo']."&img=".$row['codigo_foto']."' class='red-text'><i class='material-icons'>delete</i></a>
 				</td>
 			</tr>
 		");
@@ -83,8 +83,8 @@ if($data != null)
 				<td>".$row['tipo_foto']."</td>
 				
 				<td>
-					<a href='save.php?id=".$row['codigo_foto']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
-					<a href='delete.php?id=".$row['codigo_foto']."' class='red-text'><i class='material-icons'>delete</i></a>
+					<a href='save.php?id=".$row['codigo_vehiculo']."&img=".$row['codigo_foto']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
+					<a href='delete.php?id=".$row['codigo_vehiculo']."&img=".$row['codigo_foto']."' class='red-text'><i class='material-icons'>delete</i></a>
 				</td>
 			</tr>
 		");

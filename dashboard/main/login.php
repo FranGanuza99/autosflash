@@ -1,6 +1,11 @@
 <?php
+ob_start();
 require("../lib/page.php");
 Page::header("Iniciar sesión");
+
+if (isset($_SESSION['nombre_usuario'])){
+    header("location: index.php");
+} 
 
 //consulta los usuarios
 $sql = "SELECT * FROM usuarios";
