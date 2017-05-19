@@ -27,27 +27,50 @@
         <!--se crea una tab la cual lo que hace es hacer como un submenu en el cual se encuentran clasificados los automoviles-->
         <div class="row">
           <div class="col s12">
-            <ul class="tabs">
-              <li class="tab col s3 "><a class="active " href="#carros">Carros</a></li>
-              <li class="tab col s3"><a href="#suv">SUVs y Crossovers</a></li>
-              <li class="tab col s3"><a href="#camion">Camiones y Furgonetas</a></li>
-              <li class="tab col s3"><a href="#hibrido">Híbridos y Electricos</a></li>
+            <ul class="tabs ">
+              <li class="tab col s3 "><a style="color:red" class="active " href="#carros">Carros</a></li>
+              <li class="tab col s3"><a style="color:red" href="#suv">SUVs y Crossovers</a></li>
+              <li class="tab col s3"><a style="color:red" href="#camion">Camiones y Furgonetas</a></li>
+              <li class="tab col s3"><a style="color:red"href="#hibrido">Híbridos y Electricos</a></li>
             </ul>
             <br>
           </div>
+                        
           <!--a cada pestaña se le asigna un id  para luego desplazarse en los submenus-->
           <div id="carros" class="col s12">
-             <img class="responsive-img" src="img/autos/logos/ford.png" width="220" height="150">
-           
+           <form method='post'>
+	<div class='row'>
+    <div class='input-field col s6 m4'>
+			<i class='material-icons prefix'>search</i>
+			<input id='buscar' type='text' name='buscar'/>
+			<label for='buscar'>Buscar</label>
+		</div>
+    <div class='input-field col s6 m4'>
+			<button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
+		</div>
+	</div>
+</form>
              <div class='row'>
               <?php
               ob_start();
               //se llama la conexion a la base de datos
               require("../lib/database.php");
               //se consultan los productos a mostrar
-              $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 1 AND vehiculos.estado_vehiculo =1";
-              $data = Database::getRows($sql, null);
-              if($data != null)
+  
+              
+        if(!empty($_POST))
+        {
+                      $search=trim($_POST['buscar']);
+                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 1 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
+                      $params = array("%$search%");       
+        }
+        else
+        {
+                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 1 AND vehiculos.estado_vehiculo =1";
+                      $params=null;
+        }
+    $data = Database::getRows($sql, $params);
+    if($data != null)
               {
                 //se carga la data en las tarjetas
                 foreach ($data as $row) 
@@ -74,23 +97,48 @@
               {
                 print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
               }
-              ?>
+?>
+
+
               </div><!-- Fin de row -->
 
-           
     <!--se inicia con el siguiente submenu-->
           </div>
           <div id="suv" class="col s12">
-              <img class="responsive-img" src="img/autos/logos/ford.png" width="220" height="150">
             
+          <form method='post'>
+	<div class='row'>
+    <div class='input-field col s6 m4'>
+			<i class='material-icons prefix'>search</i>
+			<input id='buscar' type='text' name='buscar'/>
+			<label for='buscar'>Buscar</label>
+		</div>
+    <div class='input-field col s6 m4'>
+			<button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
+		</div>
+	</div>
+</form>
              <div class='row'>
               <?php
-              //se inica la conexion de nuevo pero en esta consulta verifica otro tipo de vehiculo
               ob_start();
-              $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 2 AND vehiculos.estado_vehiculo =1";
-              $data = Database::getRows($sql, null);
-              if($data != null)
+              //se consultan los productos a mostrar
+  
+              
+        if(!empty($_POST))
+        {
+                      $search=trim($_POST['buscar']);
+                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 2 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
+                      $params = array("%$search%");       
+        }
+        else
+        {
+                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 2 AND vehiculos.estado_vehiculo =1";
+                      $params=null;
+        }
+    $data = Database::getRows($sql, $params);
+    if($data != null)
               {
+                //se carga la data en las tarjetas
                 foreach ($data as $row) 
                 {
                   print("
@@ -115,21 +163,47 @@
               {
                 print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
               }
-              ?>
+?>
+
+
               </div><!-- Fin de row -->
 
           </div>
           <!--Se inicia el siguiente submenu-->
           <div id="camion" class="col s12">
-          <img class="responsive-img" src="img/autos/logos/ford.png" width="220" height="150">
-          <div class='row'>
+       <form method='post'>
+	<div class='row'>
+    <div class='input-field col s6 m4'>
+			<i class='material-icons prefix'>search</i>
+			<input id='buscar' type='text' name='buscar'/>
+			<label for='buscar'>Buscar</label>
+		</div>
+    <div class='input-field col s6 m4'>
+			<button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
+		</div>
+	</div>
+</form>
+             <div class='row'>
               <?php
               ob_start();
-               //se inica la conexion de nuevo pero en esta consulta verifica otro tipo de vehiculo
-              $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 3 AND vehiculos.estado_vehiculo =1";
-              $data = Database::getRows($sql, null);
-              if($data != null)
+              //se consultan los productos a mostrar
+  
+              
+        if(!empty($_POST))
+        {
+                      $search=trim($_POST['buscar']);
+                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 3 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
+                      $params = array("%$search%");       
+        }
+        else
+        {
+                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 3 AND vehiculos.estado_vehiculo =1";
+                      $params=null;
+        }
+    $data = Database::getRows($sql, $params);
+    if($data != null)
               {
+                //se carga la data en las tarjetas
                 foreach ($data as $row) 
                 {
                   print("
@@ -154,20 +228,47 @@
               {
                 print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
               }
-              ?>
+?>
+
+
               </div><!-- Fin de row -->
           </div>
           <div id="hibrido" class="col s12">
           
-          <img class="responsive-img" src="img/autos/logos/ford.png" width="220" height="150">
-          <div class='row'>
+       <form method='post'>
+	<div class='row'>
+    <div class='input-field col s6 m4'>
+			<i class='material-icons prefix'>search</i>
+			<input id='buscar' type='text' name='buscar'/>
+			<label for='buscar'>Buscar</label>
+		</div>
+    <div class='input-field col s6 m4'>
+			<button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
+		</div>
+	</div>
+</form>
+             <div class='row'>
               <?php
               ob_start();
-               //se inica la conexion de nuevo pero en esta consulta verifica otro tipo de vehiculo
-              $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 4 AND vehiculos.estado_vehiculo =1";
-              $data = Database::getRows($sql, null);
-              if($data != null)
+              //se llama la conexion a la base de datos
+              //se consultan los productos a mostrar
+  
+              
+        if(!empty($_POST))
+        {
+                      $search=trim($_POST['buscar']);
+                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 4 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
+                      $params = array("%$search%");       
+        }
+        else
+        {
+                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 4 AND vehiculos.estado_vehiculo =1";
+                      $params=null;
+        }
+    $data = Database::getRows($sql, $params);
+    if($data != null)
               {
+                //se carga la data en las tarjetas
                 foreach ($data as $row) 
                 {
                   print("
@@ -192,7 +293,9 @@
               {
                 print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
               }
-              ?>
+?>
+
+
               </div><!-- Fin de row -->
           </div>
         </div>
