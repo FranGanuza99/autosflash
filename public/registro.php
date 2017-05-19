@@ -15,20 +15,19 @@
         <link type="text/css" rel="stylesheet" href="css/mystyle-sheet.css" media="screen,projection"/>
     </head>
     <body>
-        <!---->
         
-        
-        <!--Aqui se muestra el menu-->
         <?php
+        //Aqui se muestra el menu
         include("inc/menu.php");
-        ?>
-
-        <?php
+        //Enlaza los archivos necesarios
         require("../lib/database.php");
         require("../lib/validator.php");
 
+        //calculo de fecha
         $fecha = getdate();
         $registro = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+
+        //valida si post esta vacio y asigna variables a los campos
         if(!empty($_POST))
         {
             $_POST = Validator::validateForm($_POST);
@@ -42,10 +41,10 @@
             $telefono =$_POST['telefono'];
             $direccion =$_POST['direccion'];
             $archivo = $_FILES['foto'];
-            
 
             try 
             {
+                //validacion de campos
                 if($nombres != "" && $apellidos != "")
                 {
                     if($correo != "")
@@ -58,6 +57,7 @@
                                 {
                                     if ($direccion !="")
                                     {
+                                        //validacion de imagen
                                         if($archivo['name'] != null)
                                         {
                                             $base64 = Validator::validateImageProfile($archivo);
@@ -78,10 +78,12 @@
                                             }
                                         }
 
+                                        //validacion de clave
                                         if($clave1 != "" && $clave2 != "")
                                         {
                                             if($clave1 == $clave2)
                                             {
+                                                //ingreso de datos de cliente
                                                 $clave = password_hash($clave1, PASSWORD_DEFAULT);
                                                 $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, dui_cliente, nit_cliente, telefono_cliente, correo_cliente, contrasenia, fecha_registro_cliente, direccion_cliente, foto) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                                                 $params = array($nombres, $apellidos, $dui, $nit, $telefono, $correo, $clave, $registro, $direccion, $foto);
@@ -134,6 +136,7 @@
             }
 
         } else {
+            //setea las variavles a null
             $nombres = null;
             $apellidos = null;
             $correo = null;
@@ -176,18 +179,18 @@
                                 </div>
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">account_circle</i>
-                                    <input type="text" id="dui" name="dui" class="validate" value='<?php print($dui); ?>' required />
+                                    <input type="text" id="dui" name="dui" pattern='^[0-9]{8}-[0-9]{1}' class="validate" value='<?php print($dui); ?>' required />
                                     <label for="dui">Dui</label>
                                 </div>
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">account_circle</i>
-                                    <input type="text" id="nit" name="nit" class="validate" value='<?php print($nit); ?>' required />
+                                    <input type="text" id="nit" name="nit" pattern='^[0-9]{4}-[0-9]{6}-[0-9]{3}-[0-9]{1}' class="validate" value='<?php print($nit); ?>' required />
                                     <label for="nit">Nit</label>
                                 </div>
                                 <!--telefono-->
                                 <div class='input-field col s12 m6'>
                                     <i class='material-icons prefix'>description</i>
-                                    <input id='telefono' type='number' name='telefono' class='validate' value='<?php print($telefono); ?>' required/>
+                                    <input id='telefono' type='text' name='telefono' pattern='^[0-9]{8}' class='validate' value='<?php print($telefono); ?>' required/>
                                     <label for='telefono'>Teléfono</label>
                                 </div>
                                 <div class="input-field col s6">
@@ -200,7 +203,7 @@
                                 <!--email-->
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">email</i>
-                                    <input type="email" id="correo" name="correo" class="validate" value='<?php print($correo); ?>' required />
+                                    <input type="email" id="correo" name="correo" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" class="validate" value='<?php print($correo); ?>' required />
                                     <label for="correo" data-error="wrong" data-success="right">Correo electrónico</label>
                                 </div>
                                 <div id='profile-img' class='file-field input-field col s12 m6'>
@@ -224,8 +227,7 @@
                                     <input id="clave2" type="password" name="clave2" class="validate" required />
                                     <label for="clave2">Confirmar contraseña</label>
                                 </div>
-                                
-                                
+
                             </div>
                             <!--botones del form--> 
                             <div class='row center-align'>
@@ -242,7 +244,6 @@
         <?php
         include("inc/footer.php");
         ?>
-        
 
     </body>
 </html>

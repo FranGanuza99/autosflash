@@ -38,19 +38,21 @@
                         
           <!--a cada pestaña se le asigna un id  para luego desplazarse en los submenus-->
           <div id="carros" class="col s12">
+
            <form method='post'>
-	<div class='row'>
-    <div class='input-field col s6 m4'>
-			<i class='material-icons prefix'>search</i>
-			<input id='buscar' type='text' name='buscar'/>
-			<label for='buscar'>Buscar</label>
-		</div>
-    <div class='input-field col s6 m4'>
-			<button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
-		</div>
-	</div>
-</form>
+              <div class='row'>
+                <div class='input-field col s6 m4'>
+                  <i class='material-icons prefix'>search</i>
+                  <input id='buscar' type='text' name='buscar'/>
+                  <label for='buscar'>Buscar</label>
+                </div>
+                <div class='input-field col s6 m4'>
+                  <button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
+                </div>
+              </div>
+            </form>
              <div class='row'>
+
               <?php
               ob_start();
               //se llama la conexion a la base de datos
@@ -76,9 +78,9 @@
                 foreach ($data as $row) 
                 {
                   print("
-                    <div class='card hoverable col s12 m6 l4'>
+                    <div class='card hoverable col s12 m6 l4 fijo2'>
                       <div class='card-image waves-effect waves-block waves-light'>
-                        <img class='activator' src='data:image/*;base64,$row[url_foto]'>
+                        <img class='activator fijo' src='data:image/*;base64,$row[url_foto]'>
                       </div>
                       <div class='card-content'>
                         <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>

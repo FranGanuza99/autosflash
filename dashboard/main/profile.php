@@ -2,10 +2,13 @@
 require("../lib/page.php");
 Page::header("Perfil del usuario");
 
-
+//inicializo la variable de imagen
 $imagen = null;
+
+//valida si post esta vacio
 if(!empty($_POST)) {
     $_POST = Validator::validateForm($_POST);
+    //emlaza la variable con el campo
   	$nombres = $_POST['nombres'];
   	$apellidos = $_POST['apellidos'];
     $correo = $_POST['correo'];
@@ -16,12 +19,14 @@ if(!empty($_POST)) {
 
     try 
     {
+        //validaciones
       	if($nombres != "" && $apellidos != "")
         {
             if($correo != "")
             {
                 if($alias != "")
                 {
+                    //validacion de imagen
                     if($archivo['name'] != null)
                     {
                         $base64 = Validator::validateImage($archivo);
@@ -34,10 +39,12 @@ if(!empty($_POST)) {
                             throw new Exception("Ocurrió un problema con la imagen");
                         }
 
+                        //validacion de contrasenas
                         if($clave1 != "" || $clave2 != "")
                         {
                             if($clave1 == $clave2)
                             {
+                                //Actualiza junto con la contraseña
                                 $clave = password_hash($clave1, PASSWORD_DEFAULT);
                                 $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, contrasenia_usuario = ?, url_foto = ? WHERE codigo_usuario = ?";
                                 $params = array($nombres, $apellidos, $correo, $alias, $clave, $imagen, $_SESSION['id_usuario']);
@@ -49,11 +56,13 @@ if(!empty($_POST)) {
                         }
                         else
                         {
+                            //Actualiza junto sin la contraseña
                             $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, url_foto = ? WHERE codigo_usuario = ?";
                             $params = array($nombres, $apellidos, $correo, $alias, $imagen, $_SESSION['id_usuario']);
                         }
                         Database::executeRow($sql, $params);
                         Page::showMessage(1, "Operación satisfactoria", "index.php");
+                        //Actualiza algunas variables de sesion
                         $_SESSION['nombre_usuario'] = $nombres." ".$apellidos;
                         $_SESSION['foto_perfil'] = $imagen;
 
@@ -63,6 +72,7 @@ if(!empty($_POST)) {
                         {
                             if($clave1 == $clave2)
                             {
+                                //actualiza sin la imagen y con clave
                                 $clave = password_hash($clave1, PASSWORD_DEFAULT);
                                 $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, contrasenia_usuario = ? WHERE codigo_usuario = ?";
                                 $params = array($nombres, $apellidos, $correo, $alias, $clave, $_SESSION['id_usuario']);
@@ -74,6 +84,7 @@ if(!empty($_POST)) {
                         }
                         else
                         {
+                             //actualiza sin la imagen y sin clave
                             $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ? WHERE codigo_usuario = ?";
                             $params = array($nombres, $apellidos, $correo, $alias, $_SESSION['id_usuario']);
                         }
@@ -104,6 +115,7 @@ if(!empty($_POST)) {
         Page::showMessage(2, $error->getMessage(), null);
     }
 } else {
+    //consulta los registros de la base
     $sql = "SELECT * FROM usuarios WHERE codigo_usuario = ?";
     $params = array($_SESSION['id_usuario']);
     $data = Database::getRow($sql, $params);
@@ -114,11 +126,11 @@ if(!empty($_POST)) {
     $imagen = $data['url_foto'];
 }
 ?>
-
-    <!--start container-->
+    <!--inicia el formulario-->
         <form method='post' enctype='multipart/form-data'>
             <div class='row'>
                 <h5>Foto de perfil</h5>
+                <!-- Muestra la foto actual -->
                 <div class="col s12 m3">
                     <?php
                         if ($imagen == null){
@@ -128,7 +140,7 @@ if(!empty($_POST)) {
                         }
                     ?>
                 </div>
-                
+                <!-- campo de imagen -->
                 <div id='profile-img' class='file-field input-field col s12 m6'>
                     <div class='btn waves-effect'>
                         <span><i class='material-icons'>image</i></span>
@@ -139,6 +151,7 @@ if(!empty($_POST)) {
                     </div>
                 </div>
             </div>
+            <!-- Campos del perfil -->
             <div class='row'>
                 <h5>Datos personales</h5>
                 <div class='input-field col s12 m6'>
@@ -179,9 +192,7 @@ if(!empty($_POST)) {
             <div class='row center-align'>
                 <button type='submit' class='btn waves-effect'><i class='material-icons'></i>Guardar</button>
             </div>
-        </form>
-
-        
+        </form>  
 
 <!--Aqui se muestra el pie de pagina-->
 <?php

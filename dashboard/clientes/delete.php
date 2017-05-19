@@ -1,7 +1,7 @@
 <?php
 ob_start();
 require("../lib/page.php");
-Page::header("Eliminar proveedor");
+Page::header("Eliminar cliente");
 
 //valida si se ha obtenido el id
 if(!empty($_GET['id'])) 
@@ -16,19 +16,22 @@ else
 //valida si el post esta vacio
 if(!empty($_POST))
 {
+	
 	$id = $_POST['id'];
 	try 
-	{
-		//Borra el registro
-		$sql = "DELETE FROM proveedores WHERE codigo_proveedor = ?";
-	    $params = array($id);
-	    Database::executeRow($sql, $params);
-	    header("location: index.php");
+	{	
+		//elimina el registro
+		$sql = "UPDATE clientes set estado_cliente = 0 where codigo_cliente = ?";
+		$params = array($id);
+		Database::executeRow($sql, $params);
+		header("location: index.php");
 	}
 	catch (Exception $error) 
 	{
 		Page::showMessage(2, $error->getMessage(), "index.php");
 	}
+	
+	
 }
 ?>
 

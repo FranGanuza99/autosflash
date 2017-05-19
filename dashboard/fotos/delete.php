@@ -1,42 +1,48 @@
 <?php
+//reiniciar header
 ob_start();
 require("../lib/page.php");
 Page::header("Eliminar Imagen");
 
-if(!empty($_GET['id'])) 
+//valida si se selecciono un registro
+if(!empty($_GET['img'])) 
 {
-    $id = $_GET['id'];
+    $img = $_GET['img'];
+	$id = $_GET['id'];
 }
 else
 {
     header("location: index.php");
 }
 
+//valida si post esta vacio
 if(!empty($_POST))
 {
-	$id = $_POST['id'];
+	$img= $_POST['img'];
 	try 
 	{
 		$sql = "DELETE FROM fotos_vehiculos WHERE codigo_foto = ?";
-	    $params = array($id);
+	    $params = array($img);
 	    Database::executeRow($sql, $params);
-	    header("location: index.php");
+	    header("location: vista.php?id=$id");
 	}
 	catch (Exception $error) 
 	{
-		Page::showMessage(2, $error->getMessage(), "index.php");
+		Page::showMessage(2, $error->getMessage(), "index.php?id=$id");
 	}
 }
 ?>
 
+<!-- Inicio de formulario-->
 <form method='post'>
 	<div class='row center-align'>
-		<input type='hidden' name='id' value='<?php print($id); ?>'/>
+		<input type='hidden' name='img' value='<?php print($img); ?>'/>
 		<button type='submit' class='btn waves-effect red'><i class='material-icons'>remove_circle</i></button>
-		<a href='index.php' class='btn waves-effect grey'><i class='material-icons'>cancel</i></a>
+		<?php print ("<a href='vista.php?id=$id' class='btn waves-effect grey'><i class='material-icons'>cancel</i></a>") ?>
 	</div>
 </form>
 
+<!-- Llamada a footer-->
 <?php
 Page::footer();
 ?>

@@ -49,3 +49,21 @@ height: 500px;
  width: 70%;
  margin: auto;
 }
+
+.foto-perfil {
+    height: 65px;
+    padding: 7px;
+}
+
+.dropstyle {
+    top: 64.4px !important; 
+}
+
+.fijo {
+    height: 200px;
+}
+
+.fijo2 {
+    height: 310px;
+    margin-right: 10px;
+}
