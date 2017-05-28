@@ -22,6 +22,7 @@ if(!empty($_POST))
     $clave1 = $_POST['clave1'];
     $clave2 = $_POST['clave2'];
     $nacimiento =$_POST['nacimiento'];
+    $archivo = $_FILES['foto'];
 
     try 
     {
@@ -33,6 +34,20 @@ if(!empty($_POST))
                 {
                     if ($nacimiento !="")
                     {
+                        //validacion de foto
+                        if($archivo['name'] != null)
+                        {
+                            $base64 = Validator::validateImageProfile($archivo);
+                            if($base64 != false)
+                            {
+                                $foto = $base64;
+                            }
+                            else
+                            {
+                                throw new Exception("Ocurrió un problema con la imagen");
+                            }
+                        }
+                                
                         
                         if($clave1 != "" && $clave2 != "")
                         {
@@ -40,8 +55,8 @@ if(!empty($_POST))
                             {
                                 //Inserta el registro del nuevo usuario
                                 $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                $sql = "INSERT INTO usuarios(nombre_usuario, apellido_usuario, correo_usuario, usuario, contrasenia_usuario, fecha_nacimiento, codigo_pregunta, respuesta_usuario, codigo_cargo, estado_usuario) VALUES(?, ?, ?, ?, ?, ?, ?, ?, 1, 1)";
-                                $params = array($nombres, $apellidos, $correo, $alias, $clave, $nacimiento, $pregunta_seg, $respuesta);
+                                $sql = "INSERT INTO usuarios(nombre_usuario, apellido_usuario, correo_usuario, usuario, contrasenia_usuario, fecha_nacimiento, codigo_cargo, estado_usuario, url_foto) VALUES(?, ?, ?, ?, ?, ?, 1, 1, ?)";
+                                $params = array($nombres, $apellidos, $correo, $alias, $clave, $nacimiento, $foto);
                                 Database::executeRow($sql, $params);
                                 Page::showMessage(1, "Operación satisfactoria", "login.php");
                             }
@@ -95,9 +110,18 @@ else
 <div class="card-panel">
     <h3 class= "center-align">Registro de usuario</h3>
     <!-- Inicio del formulario -->
-    <form method='post'>
+    <form method='post' enctype='multipart/form-data'>
         <div class='row'>
-            <h5>Foto de perfil</h5>  
+            <h5>Foto de perfil</h5> 
+            <div class='file-field input-field col s12 m6'>
+                <div class='btn waves-effect'>
+                    <span><i class='material-icons'>image</i></span>
+                    <input type='file' name='foto' required/>
+                </div>
+                <div class='file-path-wrapper'>
+                    <input class='file-path validate' type='text' placeholder='Seleccione una imagen'/>
+                </div>
+            </div>
         </div>
         <!-- campos -->
         <div class='row'>

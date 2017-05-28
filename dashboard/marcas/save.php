@@ -26,18 +26,18 @@ if(!empty($_POST))
     {
         if($marca_vehiculo != "")
         {
-             if($id == null)
-             {
-             $sql = "INSERT INTO marcas(marca) VALUES(?)";
-             $params = array($marca_vehiculo);
-             }
-             else
-             {
-             $sql = "UPDATE marcas SET marca = ? WHERE codigo_marca = ?";
-             $params = array($marca_vehiculo, $id);
-             }
-             Database::executeRow($sql, $params);
-             header("location: index.php"); 
+            if($id == null)
+            {
+            $sql = "INSERT INTO marcas(marca) VALUES(?)";
+            $params = array($marca_vehiculo);
+            }
+            else
+            {
+            $sql = "UPDATE marcas SET marca = ? WHERE codigo_marca = ?";
+            $params = array($marca_vehiculo, $id);
+            }
+            Database::executeRow($sql, $params);
+            header("location: index.php"); 
          }    
         else
         {

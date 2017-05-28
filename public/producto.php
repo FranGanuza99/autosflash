@@ -51,260 +51,330 @@
                 </div>
               </div>
             </form>
-             <div class='row'>
+            <div class='row'>
 
-              <?php
-              ob_start();
-              //se llama la conexion a la base de datos
-              require("../lib/database.php");
-              //se consultan los productos a mostrar
+            <?php
+            ob_start();
+            //se llama la conexion a la base de datos
+            require("../lib/database.php");
+            require("../lib/zebra.php");
+            //se consultan los productos a mostrar
   
               
-        if(!empty($_POST))
-        {
-                      $search=trim($_POST['buscar']);
-                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 1 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
-                      $params = array("%$search%");       
-        }
-        else
-        {
-                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 1 AND vehiculos.estado_vehiculo =1";
-                      $params=null;
-        }
-    $data = Database::getRows($sql, $params);
-    if($data != null)
+            if(!empty($_POST))
+            {
+                $search=trim($_POST['buscar']);
+                $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 1 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
+                $params = array("%$search%");       
+            }
+            else
+            {
+                $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 1 AND vehiculos.estado_vehiculo =1";
+                $params=null;
+            }
+
+            $data = Database::getRows($sql, $params);
+            //obtenemos el numero de filas y cantidad maxima
+            $num_registros = count($data); 
+            $resul_x_pagina = 1; 
+
+            //instanciando la clase y enviando parametros
+            $paginacion = new Zebra_Pagination(); 
+            $paginacion->records($num_registros); 
+            $paginacion->records_per_page($resul_x_pagina);
+
+            //Consulta utilizando limit
+            $consulta = $sql.' LIMIT '.(($paginacion->get_page() - 1) * $resul_x_pagina). ',' .$resul_x_pagina;
+            //ejecuta la consulta
+            $data = Database::getRows($consulta, $params);
+
+            if($data != null)
+            {
+              //se carga la data en las tarjetas
+              foreach ($data as $row) 
               {
-                //se carga la data en las tarjetas
-                foreach ($data as $row) 
-                {
-                  print("
-                    <div class='card hoverable col s12 m6 l4 fijo2'>
-                      <div class='card-image waves-effect waves-block waves-light'>
-                        <img class='activator fijo' src='data:image/*;base64,$row[url_foto]'>
-                      </div>
-                      <div class='card-content'>
-                        <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>
-                        <p><a href='descripcion.php?id=".$row['codigo_vehiculo']."'><i class='material-icons left'>loupe</i>Seleccionar</a></p>
-                      </div>
-                      <div class='card-reveal'>
-                        <span class='card-title grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>close</i></span>
-                        <p>$row[descripcion_vehiculo]</p>
-                        <p>Precio (US$) $row[precio_vehiculo]</p>
-                      </div>
+                print("
+                  <div class='card hoverable col s12 m6 l4 fijo2'>
+                    <div class='card-image waves-effect waves-block waves-light'>
+                      <img class='activator fijo' src='data:image/*;base64,$row[url_foto]'>
                     </div>
-                  ");
-                }
+                    <div class='card-content'>
+                      <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>
+                      <p><a href='descripcion.php?id=".$row['codigo_vehiculo']."'><i class='material-icons left'>loupe</i>Seleccionar</a></p>
+                    </div>
+                    <div class='card-reveal'>
+                      <span class='card-title grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>close</i></span>
+                      <p>$row[descripcion_vehiculo]</p>
+                      <p>Precio (US$) $row[precio_vehiculo]</p>
+                    </div>
+                  </div>
+                ");
               }
-              else
-              {
-                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
-              }
-?>
+            }
+            else
+            {
+              print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+            }
+            ?>
 
-
-              </div><!-- Fin de row -->
-
-    <!--se inicia con el siguiente submenu-->
-          </div>
-          <div id="suv" class="col s12">
+          </div><!-- Fin de row -->
+          <?php
+          $paginacion->render();
+          ?>
+        <!--se inicia con el siguiente submenu-->
+        </div>
+        <div id="suv" class="col s12">
             
           <form method='post'>
-	<div class='row'>
-    <div class='input-field col s6 m4'>
-			<i class='material-icons prefix'>search</i>
-			<input id='buscar' type='text' name='buscar'/>
-			<label for='buscar'>Buscar</label>
-		</div>
-    <div class='input-field col s6 m4'>
-			<button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
-		</div>
-	</div>
-</form>
-             <div class='row'>
-              <?php
-              ob_start();
-              //se consultan los productos a mostrar
+            <div class='row'>
+              <div class='input-field col s6 m4'>
+                <i class='material-icons prefix'>search</i>
+                <input id='buscar' type='text' name='buscar'/>
+                <label for='buscar'>Buscar</label>
+              </div>
+              <div class='input-field col s6 m4'>
+                <button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
+              </div>
+            </div>
+          </form>
+          <div class='row'>
+          <?php
+          ob_start();
+          //se consultan los productos a mostrar
   
               
-        if(!empty($_POST))
-        {
-                      $search=trim($_POST['buscar']);
-                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 2 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
-                      $params = array("%$search%");       
-        }
-        else
-        {
-                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 2 AND vehiculos.estado_vehiculo =1";
-                      $params=null;
-        }
-    $data = Database::getRows($sql, $params);
-    if($data != null)
-              {
-                //se carga la data en las tarjetas
-                foreach ($data as $row) 
-                {
-                  print("
-                    <div class='card hoverable col s12 m6 l4'>
-                      <div class='card-image waves-effect waves-block waves-light'>
-                        <img class='activator' src='data:image/*;base64,$row[url_foto]'>
-                      </div>
-                      <div class='card-content'>
-                        <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>
-                        <p><a href='descripcion.php?id=".$row['codigo_vehiculo']."'><i class='material-icons left'>loupe</i>Seleccionar</a></p>
-                      </div>
-                      <div class='card-reveal'>
-                        <span class='card-title grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>close</i></span>
-                        <p>$row[descripcion_vehiculo]</p>
-                        <p>Precio (US$) $row[precio_vehiculo]</p>
-                      </div>
-                    </div>
-                  ");
-                }
-              }
-              else
-              {
-                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
-              }
-?>
+          if(!empty($_POST))
+          {
+            $search=trim($_POST['buscar']);
+            $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 2 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
+            $params = array("%$search%");       
+          }
+          else
+          {
+            $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 2 AND vehiculos.estado_vehiculo =1";
+            $params=null;
+          }
+          $data = Database::getRows($sql, $params);
 
+          //obtenemos el numero de filas y cantidad maxima
+          $num_registros = count($data); 
+          $resul_x_pagina = 10; 
 
-              </div><!-- Fin de row -->
+          //instanciando la clase y enviando parametros
+          $paginacion = new Zebra_Pagination(); 
+          $paginacion->records($num_registros); 
+          $paginacion->records_per_page($resul_x_pagina);
 
+          //Consulta utilizando limit
+          $consulta = $sql.' LIMIT '.(($paginacion->get_page() - 1) * $resul_x_pagina). ',' .$resul_x_pagina;
+          //ejecuta la consulta
+          $data = Database::getRows($consulta, $params);
+
+          if($data != null)
+          {
+            //se carga la data en las tarjetas
+            foreach ($data as $row) 
+            {
+              print("
+                <div class='card hoverable col s12 m6 l4'>
+                  <div class='card-image waves-effect waves-block waves-light'>
+                    <img class='activator' src='data:image/*;base64,$row[url_foto]'>
+                  </div>
+                  <div class='card-content'>
+                    <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>
+                    <p><a href='descripcion.php?id=".$row['codigo_vehiculo']."'><i class='material-icons left'>loupe</i>Seleccionar</a></p>
+                  </div>
+                  <div class='card-reveal'>
+                    <span class='card-title grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>close</i></span>
+                    <p>$row[descripcion_vehiculo]</p>
+                    <p>Precio (US$) $row[precio_vehiculo]</p>
+                  </div>
+                </div>
+              ");
+            }
+          }
+          else
+          {
+            print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+          }
+          ?>
+
+          </div><!-- Fin de row -->
+          <?php
+          $paginacion->render();
+          ?>
+        </div>
+        <!--Se inicia el siguiente submenu-->
+        <div id="camion" class="col s12">
+        <form method='post'>
+          <div class='row'>
+            <div class='input-field col s6 m4'>
+              <i class='material-icons prefix'>search</i>
+              <input id='buscar' type='text' name='buscar'/>
+              <label for='buscar'>Buscar</label>
+            </div>
+            <div class='input-field col s6 m4'>
+              <button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
+            </div>
           </div>
-          <!--Se inicia el siguiente submenu-->
-          <div id="camion" class="col s12">
-       <form method='post'>
-	<div class='row'>
-    <div class='input-field col s6 m4'>
-			<i class='material-icons prefix'>search</i>
-			<input id='buscar' type='text' name='buscar'/>
-			<label for='buscar'>Buscar</label>
-		</div>
-    <div class='input-field col s6 m4'>
-			<button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
-		</div>
-	</div>
-</form>
-             <div class='row'>
-              <?php
-              ob_start();
-              //se consultan los productos a mostrar
-  
-              
+        </form>
+
+        <div class='row'>
+        <?php
+        ob_start();
+        //se consultan los productos a mostrar    
         if(!empty($_POST))
         {
-                      $search=trim($_POST['buscar']);
-                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 3 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
-                      $params = array("%$search%");       
+          $search=trim($_POST['buscar']);
+          $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 3 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
+          $params = array("%$search%");       
         }
         else
         {
-                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 3 AND vehiculos.estado_vehiculo =1";
-                      $params=null;
+          $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 3 AND vehiculos.estado_vehiculo =1";
+          $params=null;
         }
-    $data = Database::getRows($sql, $params);
-    if($data != null)
-              {
-                //se carga la data en las tarjetas
-                foreach ($data as $row) 
-                {
-                  print("
-                    <div class='card hoverable col s12 m6 l4'>
-                      <div class='card-image waves-effect waves-block waves-light'>
-                        <img class='activator' src='data:image/*;base64,$row[url_foto]'>
-                      </div>
-                      <div class='card-content'>
-                        <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>
-                        <p><a href='descripcion.php?id=".$row['codigo_vehiculo']."'><i class='material-icons left'>loupe</i>Seleccionar</a></p>
-                      </div>
-                      <div class='card-reveal'>
-                        <span class='card-title grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>close</i></span>
-                        <p>$row[descripcion_vehiculo]</p>
-                        <p>Precio (US$) $row[precio_vehiculo]</p>
-                      </div>
-                    </div>
-                  ");
-                }
-              }
-              else
-              {
-                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
-              }
-?>
+        $data = Database::getRows($sql, $params);
 
+        //obtenemos el numero de filas y cantidad maxima
+        $num_registros = count($data); 
+        $resul_x_pagina = 10; 
 
-              </div><!-- Fin de row -->
+        //instanciando la clase y enviando parametros
+        $paginacion = new Zebra_Pagination(); 
+        $paginacion->records($num_registros); 
+        $paginacion->records_per_page($resul_x_pagina);
+
+        //Consulta utilizando limit
+        $consulta = $sql.' LIMIT '.(($paginacion->get_page() - 1) * $resul_x_pagina). ',' .$resul_x_pagina;
+        //ejecuta la consulta
+        $data = Database::getRows($consulta, $params);
+
+        if($data != null)
+        {
+          //se carga la data en las tarjetas
+          foreach ($data as $row) 
+          {
+            print("
+              <div class='card hoverable col s12 m6 l4'>
+                <div class='card-image waves-effect waves-block waves-light'>
+                  <img class='activator' src='data:image/*;base64,$row[url_foto]'>
+                </div>
+                <div class='card-content'>
+                  <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>
+                  <p><a href='descripcion.php?id=".$row['codigo_vehiculo']."'><i class='material-icons left'>loupe</i>Seleccionar</a></p>
+                </div>
+                <div class='card-reveal'>
+                  <span class='card-title grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>close</i></span>
+                  <p>$row[descripcion_vehiculo]</p>
+                  <p>Precio (US$) $row[precio_vehiculo]</p>
+                </div>
+              </div>
+            ");
+          }
+        }
+        else
+        {
+          print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+        }
+        ?>
+
+      </div><!-- Fin de row -->
+      <?php
+      $paginacion->render();
+      ?>
+    </div>
+  
+    <div id="hibrido" class="col s12">
+            
+      <form method='post'>
+        <div class='row'>
+          <div class='input-field col s6 m4'>
+            <i class='material-icons prefix'>search</i>
+            <input id='buscar' type='text' name='buscar'/>
+            <label for='buscar'>Buscar</label>
           </div>
-          <div id="hibrido" class="col s12">
-          
-       <form method='post'>
-	<div class='row'>
-    <div class='input-field col s6 m4'>
-			<i class='material-icons prefix'>search</i>
-			<input id='buscar' type='text' name='buscar'/>
-			<label for='buscar'>Buscar</label>
-		</div>
-    <div class='input-field col s6 m4'>
-			<button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
-		</div>
-	</div>
-</form>
-             <div class='row'>
-              <?php
-              ob_start();
-              //se llama la conexion a la base de datos
-              //se consultan los productos a mostrar
-  
-              
-        if(!empty($_POST))
-        {
-                      $search=trim($_POST['buscar']);
-                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 4 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
-                      $params = array("%$search%");       
-        }
-        else
-        {
-                      $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 4 AND vehiculos.estado_vehiculo =1";
-                      $params=null;
-        }
-    $data = Database::getRows($sql, $params);
-    if($data != null)
-              {
-                //se carga la data en las tarjetas
-                foreach ($data as $row) 
-                {
-                  print("
-                    <div class='card hoverable col s12 m6 l4'>
-                      <div class='card-image waves-effect waves-block waves-light'>
-                        <img class='activator' src='data:image/*;base64,$row[url_foto]'>
-                      </div>
-                      <div class='card-content'>
-                        <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>
-                        <p><a href='descripcion.php?id=".$row['codigo_vehiculo']."'><i class='material-icons left'>loupe</i>Seleccionar</a></p>
-                      </div>
-                      <div class='card-reveal'>
-                        <span class='card-title grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>close</i></span>
-                        <p>$row[descripcion_vehiculo]</p>
-                        <p>Precio (US$) $row[precio_vehiculo]</p>
-                      </div>
-                    </div>
-                  ");
-                }
-              }
-              else
-              {
-                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
-              }
-?>
-
-
-              </div><!-- Fin de row -->
+          <div class='input-field col s6 m4'>
+            <button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
           </div>
         </div>
-   </div>
-        <!--Aqui se muestra el pie de pagina-->
-        <?php
-        include("inc/footer.php");
-        ?>
-    </body>
+      </form>
+
+      <div class='row'>
+      <?php
+      ob_start();
+      //se llama la conexion a la base de datos
+      //se consultan los productos a mostrar
+    
+            
+      if(!empty($_POST))
+      {
+        $search=trim($_POST['buscar']);
+        $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 4 AND vehiculos.estado_vehiculo =1 AND nombre_vehiculo LIKE ?";
+        $params = array("%$search%");       
+      }
+      else
+      {
+        $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 4 AND vehiculos.estado_vehiculo =1";
+        $params=null;
+      }
+      $data = Database::getRows($sql, $params);
+
+      //obtenemos el numero de filas y cantidad maxima
+      $num_registros = count($data); 
+      $resul_x_pagina = 10; 
+
+      //instanciando la clase y enviando parametros
+      $paginacion = new Zebra_Pagination(); 
+      $paginacion->records($num_registros); 
+      $paginacion->records_per_page($resul_x_pagina);
+
+      //Consulta utilizando limit
+      $consulta = $sql.' LIMIT '.(($paginacion->get_page() - 1) * $resul_x_pagina). ',' .$resul_x_pagina;
+      //ejecuta la consulta
+      $data = Database::getRows($consulta, $params);
+
+      if($data != null)
+      {
+        //se carga la data en las tarjetas
+        foreach ($data as $row) 
+        {
+          print("
+            <div class='card hoverable col s12 m6 l4'>
+              <div class='card-image waves-effect waves-block waves-light'>
+                <img class='activator' src='data:image/*;base64,$row[url_foto]'>
+              </div>
+              <div class='card-content'>
+                <span class='card-title activator grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>more_vert</i></span>
+                <p><a href='descripcion.php?id=".$row['codigo_vehiculo']."'><i class='material-icons left'>loupe</i>Seleccionar</a></p>
+              </div>
+              <div class='card-reveal'>
+                <span class='card-title grey-text text-darken-4'>$row[nombre_vehiculo]<i class='material-icons right'>close</i></span>
+                <p>$row[descripcion_vehiculo]</p>
+                <p>Precio (US$) $row[precio_vehiculo]</p>
+              </div>
+            </div>
+          ");
+        }
+      }
+      else
+      {
+        print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No hay registros disponibles en este momento.</div>");
+      }
+      ?>
+      </div><!-- Fin de row -->
+      
+      <?php
+      $paginacion->render();
+      ?>
+
+    </div>
+  </div>
+</div>
+
+<!--Aqui se muestra el pie de pagina-->
+<?php
+include("inc/footer.php");
+?>
+</body>
 </html>

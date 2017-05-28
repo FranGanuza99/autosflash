@@ -13,6 +13,8 @@
         <!--  archivos css-->
         <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
         <link type="text/css" rel="stylesheet" href="css/mystyle-sheet.css" media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="../css/sweetalert2.min.css" media="screen,projection"/>
+        <script type="text/javascript" src="../js/sweetalert2.min.js"></script>
     </head>
     <body>
         
@@ -20,8 +22,8 @@
         //Aqui se muestra el menu
         include("inc/menu.php");
         //Enlaza los archivos necesarios
-        require("../lib/database.php");
-        require("../lib/validator.php");
+        
+        require("../lib/page.php");
 
         //calculo de fecha
         $fecha = getdate();
@@ -60,22 +62,11 @@
                                         //validacion de imagen
                                         if($archivo['name'] != null)
                                         {
-                                            $base64 = Validator::validateImageProfile($archivo);
-                                            if($base64 != false)
-                                            {
-                                                $foto = $base64;
-                                            }
-                                            else
-                                            {
-                                                throw new Exception("Ocurrió un problema con la imagen");
-                                            }
+                                            $foto = Validator::validateImageProfile($archivo);
                                         }
                                         else
                                         {
-                                            if($foto == null)
-                                            {
                                                 throw new Exception("Debe seleccionar una imagen");
-                                            }
                                         }
 
                                         //validacion de clave
@@ -132,7 +123,7 @@
             }
             catch (Exception $error)
             {
-                
+                Page::showMessage(2, $error->getMessage(), null);
             }
 
         } else {
