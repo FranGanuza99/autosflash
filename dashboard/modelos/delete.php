@@ -19,8 +19,10 @@ if(!empty($_POST))
 	{
 		$sql = "DELETE FROM marcas WHERE codigo_marca = ?";
 	    $params = array($id);
-	    Database::executeRow($sql, $params);
-	    header("location: index.php");
+	    if(Database::executeRow($sql, $params))
+		{
+			Page::showMessage(1, "Registro eliminado correctamente", "index.php");
+		}
 	}
 	catch (Exception $error) 
 	{

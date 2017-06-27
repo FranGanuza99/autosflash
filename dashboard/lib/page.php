@@ -76,9 +76,18 @@ class Page
 					</ul>
 					</li>
 					<li class='bold'><i class='material-icons iconos-menu'>library_books</i><a href='http://materializecss.com/mobile.html' class='waves-effect waves-teal'>Reservaciones</a></li>
-					<li class='bold'><i class='material-icons iconos-menu'>shop</i><a href='showcase.html' class='waves-effect waves-teal'>Ventas</a></li>
+					<ul class='collapsible collapsible-accordion'>
+						<li class='bold'><i class='material-icons iconos-menu'>shop</i><a class='collapsible-header  waves-effect waves-teal'>Ventas</a>
+							<div class='collapsible-body'>
+								<ul>
+								<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../ventas/'> Ventas </a></li>
+								<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../nueva_venta/step1.php'> Realizar una venta</a></li>							
+								</ul>
+							</div>
+						</li>
+					</ul>
 					<li class='bold'><i class='material-icons iconos-menu'>list</i><a href='themes.html' class='waves-effect waves-teal'>Promociones</a></li>
-
+					<li class='bold'><i class='material-icons iconos-menu'>contacts</i><a href='../contactos/' class='waves-effect waves-teal'>Consultas</a></li>
 				</ul>
 			
 

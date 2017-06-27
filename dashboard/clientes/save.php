@@ -122,9 +122,10 @@ if(!empty($_POST))
                                     $sql = "UPDATE clientes SET nombre_cliente = ?, apellido_cliente = ?, correo_cliente = ?, dui_cliente = ?, nit_cliente = ?, telefono_cliente = ?, direccion_cliente = ?, estado_cliente = ?, foto = ?, contrasenia = ? WHERE codigo_cliente = ?";
                                     $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $id);
                                 }
-                                Database::executeRow($sql, $params);
-                                header("location: index.php");
-                                
+                                if(Database::executeRow($sql, $params))
+                                {
+                                    Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                }
                                
                             }
                             else

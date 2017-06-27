@@ -107,18 +107,22 @@ if(!empty($_FILES))
         if ($data == null){
             $sql = "INSERT INTO fotos_vehiculos(codigo_vehiculo, url_foto, codigo_tipo_foto) VALUES (?, ?, ?)";
             $params = array($id, $foto1, 1);
-            Database::executeRow($sql, $params);
         } else {
             $sql = "UPDATE fotos_vehiculos SET url_foto = ? WHERE codigo_vehiculo = ? AND codigo_tipo_foto = 1";
             $params = array($foto1, $id);
-            Database::executeRow($sql, $params);
+        }
+        if(Database::executeRow($sql, $params))
+        {
+
         }
 
         //ingreso de fotos dentro de vehiculos
         $sql = "UPDATE vehiculos SET foto_general1 = ?, foto_general2 = ?, foto_general3 = ? WHERE codigo_vehiculo = ?";
         $params = array($foto2, $foto3, $foto4, $id);
-        Database::executeRow($sql, $params);
-        header("location: index.php?id=$id");
+        if(Database::executeRow($sql, $params))
+        {
+            Page::showMessage(1, "Operación satisfactoria", "index.php?id=$id");
+        }
                                                                                                       
     }
     catch (Exception $error)

@@ -66,11 +66,10 @@ if(!empty($_POST))
                 $sql = "UPDATE fotos_vehiculos SET url_foto = ?, codigo_tipo_foto = ? WHERE codigo_foto = ?";
                 $params = array($foto, $tipo, $img);
             }
-            Database::executeRow($sql, $params);
-
-            //consulta de id de retorno
-
-            header("location: vista.php?id=$id");       
+            if(Database::executeRow($sql, $params))
+            {
+                Page::showMessage(1, "Operación satisfactoria", "vista.php?id=$id");
+            }    
         }    
         else
         {

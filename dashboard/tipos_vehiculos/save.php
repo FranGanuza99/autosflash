@@ -30,16 +30,18 @@ if(!empty($_POST))
         {
              if($id == null)
              {
-             $sql = "INSERT INTO tipos_vehiculos(tipo_vehiculo) VALUES(?)";
-             $params = array($tipo_vehiculo);
+                $sql = "INSERT INTO tipos_vehiculos(tipo_vehiculo) VALUES(?)";
+                $params = array($tipo_vehiculo);
              }
              else
              {
-             $sql = "UPDATE tipos_vehiculos SET tipo_vehiculo = ? WHERE codigo_tipo_vehiculo = ?";
-             $params = array($tipo_vehiculo, $id);
+                $sql = "UPDATE tipos_vehiculos SET tipo_vehiculo = ? WHERE codigo_tipo_vehiculo = ?";
+                $params = array($tipo_vehiculo, $id);
              }
-             Database::executeRow($sql, $params);
-             header("location: index.php");                
+             if(Database::executeRow($sql, $params))
+            {
+                Page::showMessage(1, "Operación satisfactoria", "index.php");
+            }            
          }    
         else
         {

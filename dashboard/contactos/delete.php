@@ -1,7 +1,7 @@
 <?php
 ob_start();
 require("../lib/page.php");
-Page::header("Eliminar proveedor");
+Page::header("Eliminar consulta");
 
 //valida si se ha obtenido el id
 if(!empty($_GET['id'])) 
@@ -20,7 +20,7 @@ if(!empty($_POST))
 	try 
 	{
 		//Borra el registro
-		$sql = "DELETE FROM proveedores WHERE codigo_proveedor = ?";
+		$sql = "DELETE FROM contactos WHERE codigo_contacto = ?";
 	    $params = array($id);
 	    if(Database::executeRow($sql, $params))
 		{

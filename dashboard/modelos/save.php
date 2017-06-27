@@ -36,16 +36,18 @@ if(!empty($_POST))
             {
                 if($id == null)
                 {
-                $sql = "INSERT INTO modelos(nombre_modelo, codigo_serie) VALUES(?,?)";
-                $params = array($nombre_modelo,$codigo_serie);
+                    $sql = "INSERT INTO modelos(nombre_modelo, codigo_serie) VALUES(?,?)";
+                    $params = array($nombre_modelo,$codigo_serie);
                 }
                 else
                 {
-                $sql = "UPDATE modelos SET nombre_modelo = ?, codigo_serie=? WHERE codigo_modelo = ?";
-                $params = array($nombre_modelo, $codigo_serie, $id);
+                    $sql = "UPDATE modelos SET nombre_modelo = ?, codigo_serie=? WHERE codigo_modelo = ?";
+                    $params = array($nombre_modelo, $codigo_serie, $id);
                 }
-                Database::executeRow($sql, $params);
-                header("location: index.php");
+                if(Database::executeRow($sql, $params))
+                {
+                    Page::showMessage(1, "Operación satisfactoria", "index.php");
+                }
             }
             else{
                 throw new Exception("Debe ingresar alguna serie de marca");

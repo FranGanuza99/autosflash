@@ -13,6 +13,8 @@
         <!--  archivos css-->
         <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
         <link type="text/css" rel="stylesheet" href="css/mystyle-sheet.css" media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="../css/sweetalert2.min.css" media="screen,projection"/>
+        <script type="text/javascript" src="../js/sweetalert2.min.js"></script>
     </head>
     <body>
 
@@ -47,36 +49,96 @@
                         </p>
                     </div>
                     <!--segunda columna-->
+                    <?php
+
+                    require("../lib/page.php");
+                    if(!empty($_POST))
+                    {
+                        $_POST = Validator::validateForm($_POST);
+                        $nombre = $_POST['nombre'];
+                        $apellido = $_POST['apellido'];
+                        $correo = $_POST['correo'];
+                        $mensaje = $_POST['mensaje'];
+                    
+                        //calculo de fecha
+                        $fecha = getdate();
+                        $registro = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+
+                        try 
+                        {
+                            //validacion de campos
+                            if($nombre != "" && $apellido != "")
+                            {
+                                if($correo != "")
+                                {
+                                    if($mensaje != "")
+                                    {
+                                        
+                                        $sql = "INSERT INTO contactos(nombre_contacto, apellido_contacto, correo_contacto, mensaje, fecha) VALUES(?, ?, ?, ?, ?)";
+                                        $params = array($nombre, $apellido, $correo, $mensaje, $registro);
+                                        if(Database::executeRow($sql, $params))
+					                    {
+                                            Page::showMessage(1, "Mensaje enviado correctamente", "index.php");
+                                        } 
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("Debe ingresar su mensaje");
+                                    }
+                                }
+                                else
+                                {
+                                    throw new Exception("Debe ingresar el correo electronico");
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception("Debe ingresar el nombre y apellido");
+                            }
+                        }
+                        catch (Exception $error)
+                        {
+                            Page::showMessage(2, $error->getMessage(), null);
+                        }
+                    } else {
+                        $nombre = "";
+                        $apellido = "";
+                        $correo = "";
+                        $mensaje = "";
+                    }
+
+                    ?>
                     <div class="col s12 m6">
                         <h5>Comunícate con nosotros</h5>
                         <!--comienza el form-->
                         <!--nombre-->
-                        <form action="">
-                            <div class="input-field col s12 l6">
-                                <input type="text" id="first_name" class="validate">
-                                <label for="first_name">Nombre:</label>
+                        <form method="post">
+                            <div class='input-field col s12 m6'>
+                                <i class='material-icons prefix'>note_add</i>
+                                <input id='nombre' type='text' name='nombre' class='validate' value='<?php print($nombre); ?>' required/>
+                                <label for='nombre'>Nombre</label>
                             </div>
-                            <!--apellido-->
-                            <div class="input-field col s12 l6">
-                                <input type="text" id="last_name" class="validate">
-                                <label for="last_name">Apellido:</label>
+                            <div class='input-field col s12 m6'>
+                                <i class='material-icons prefix'>description</i>
+                                <input id='apellido' type='text' name='apellido' class='validate' value='<?php print($apellido); ?>' required/>
+                                <label for='apellido'>Apellido</label>
                             </div>
-                            <!--correo-->
-                            <div class="input-field col s12">
-                                <input type="email" id="email" class="validate">
-                                <label for="email" data-error="wrong" data-success="right">Correo electrónico</label>
+                            <div class='input-field col s12 m12'>
+                                <i class='material-icons prefix'>description</i>
+                                <input id='correo' type='email' name='correo' pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" class='validate' value='<?php print($correo); ?>' required/>
+                                <label for='correo'>Correo</label>
                             </div>
-                            <!--mensaje-->
-                            <div class="input-field col s12">
-                                <textarea id="textarea1" class="materialize-textarea"></textarea>
-                                <label for="textarea1">Mensaje</label>
+                            <div class='input-field col s12 m12'>
+                                <i class='material-icons prefix'>note_add</i>
+                                <textarea id="mensaje" class="materialize-textarea" name='mensaje' class='validate' value='<?php print($mensaje); ?>' required></textarea>
+                                <label for='mensaje'>Mensaje</label>
                             </div>
                             <br>
                             <br>
                             <!--botones-->
-                            <div class="center">
-                                <a href="#" class="waves-effect waves-light btn green">Enviar</a>
-                                <a href="#" class="waves-effect waves-light btn red">Cancelar</a>
+                            <div class='row center-align'>
+                                <a href='index.php' class='btn waves-effect grey'><i class='material-icons right'>cancel</i>Cancelar</a>
+                                <button type='submit' class='btn waves-effect blue'><i class="material-icons right">send</i>Enviar</button>
                             </div>
                         </form>               
                     </div>

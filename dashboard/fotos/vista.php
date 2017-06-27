@@ -55,10 +55,10 @@ if($data != null)
 //consulta las campos donde estan las fotos (Slider)
 $sql = "SELECT * FROM fotos_vehiculos, tipos_fotos WHERE tipos_fotos.codigo_tipo_foto = fotos_vehiculos.codigo_tipo_foto AND fotos_vehiculos.codigo_tipo_foto = 3 AND codigo_vehiculo = ?";
 $params = array($id);
-$data = Database::getRows($sql, $params);
+$data1 = Database::getRows($sql, $params);
 
 //Encabezados de la tabla
-if($data != null)
+if($data1 != null)
 {
 ?>
 <br size='10'>
@@ -74,7 +74,7 @@ if($data != null)
 
 <?php
 	//muestra las fotos
-	foreach($data as $row)
+	foreach($data1 as $row)
 	{
 		print("
         
@@ -97,7 +97,11 @@ if($data != null)
 } //Fin de if que comprueba la existencia de registros.
 else
 {
-	Page::showMessage(4, "No hay registros disponibles", "save.php");
+	
+}
+
+if ($data==null && $data==null){
+	Page::showMessage(4, "No hay registros disponibles", "save.php?id=$id");
 }
 
 //muestra el footer

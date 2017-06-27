@@ -59,8 +59,10 @@ if(!empty($_POST))
                             $sql = "UPDATE proveedores SET nombre_proveedor = ?, contacto_proveedor = ?, telefono_proveedor = ?, direccion_provedor = ? WHERE codigo_proveedor = ?";
                             $params = array($nombre, $contacto, $telefono, $direccion, $id);
                         }
-                        Database::executeRow($sql, $params);
-                        header("location: index.php");     
+                        if(Database::executeRow($sql, $params))
+                        {
+                            Page::showMessage(1, "Operación satisfactoria", "index.php");
+                        }  
                     }
                     else
                     {

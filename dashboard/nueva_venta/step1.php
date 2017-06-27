@@ -2,22 +2,21 @@
 ob_start();
 require("../lib/page.php");
 require("../../lib/zebra.php");
-Page::header("Vehiculos");
-//se hace un select de todos los vehiculos
-//se inicia conexion
+Page::header("Realizar una venta");
+
+//valida si el post esta vacio para la busqueda
 if(!empty($_POST))
 {
-	//se crea un buscador
 	$search = trim($_POST['buscar']);
-	$sql = "SELECT* FROM vehiculos AND nombre_vehiculo LIKE ? ";
+	$sql = "SELECT * FROM clientes WHERE estado_cliente = 1 AND nombre_cliente LIKE ? ORDER BY nombre_cliente";
 	$params = array("%$search%");
 }
 else
 {
-	$sql = "SELECT * FROM vehiculos ";
+	$sql = "SELECT * FROM clientes WHERE estado_cliente = 1 ORDER BY nombre_cliente";
 	$params = null;
 }
-//se guarda la informacion en la variable data
+//ejecuta la consulta
 $data = Database::getRows($sql, $params);
 
 //obtenemos el numero de filas y cantidad maxima
@@ -38,9 +37,14 @@ $data = Database::getRows($consulta, $params);
 if($data != null)
 {
 ?>
-<form method='post'>
+
+<!-- Inicio del formulario -->
+<h4 class='center-align'>Listado de clientes disponibles</h4>
+<br>
+<br>
+<form method='post' >
 	<div class='row'>
-		<div class='input-field col s6 m4'>
+		<div class='input-field col s6 m6'>
 			<i class='material-icons prefix'>search</i>
 			<input id='buscar' type='text' name='buscar'/>
 			<label for='buscar'>Buscar</label>
@@ -48,50 +52,36 @@ if($data != null)
 		<div class='input-field col s6 m4'>
 			<button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
 		</div>
-		<div class='input-field col s12 m4'>
-			<a href='save.php' class='btn waves-effect indigo'><i class='material-icons'>add_circle</i></a>
-		</div>
 	</div>
 </form>
+
+<!-- Encabezados de la tabla -->
 <table class='striped'>
 	<thead>
 		<tr>
-			<th>NOMBRE DE VEHICULO</th>
-			<th>PRECIO DE VEHICULO ($)</th>
-			<th>CANTIDAD DISPONIBLE</th>
-			<th>AÑO DE VEHICULO ($)</th>
+			<th>IMAGEN</th>
+			<th>NOMBRE</th>
+			<th>DUI</th>
+			<th>TELEFONO</th>
+			<th>EMAIL</th>
 		</tr>
 	</thead>
 	<tbody>
 
 <?php
-//se recorre data y al final todo se muestra en una tabla
-//se mandan los id
+	//se muestran las filas de registros
 	foreach($data as $row)
 	{
 		print("
         
 			<tr>
-				<td>".$row['nombre_vehiculo']."</td>
-				<td>".$row['precio_vehiculo']."</td>
-				<td>".$row['cantidad_disponible']."</td>
-				<td>".$row['anio_vehiculo']."</td>
+				<td><img src='data:image/*;base64,".$row['foto']."' class='materialboxed' width='100' height='100'></td>
+				<td>".$row['nombre_cliente']." ".$row['apellido_cliente']."</td>
+				<td>".$row['dui_cliente']."</td>
+				<td>".$row['telefono_cliente']."</td>
+				<td>".$row['correo_cliente']."</td>
 				<td>
-				");
-		if($row['estado_vehiculo'] == 1)
-		{
-			print("<i class='material-icons'>visibility</i>");
-		}
-		else
-		{
-			print("<i class='material-icons'>visibility_off</i>");
-		}
-		print("
-				</td>
-				<td>
-					<a href='save.php?id=".$row['codigo_vehiculo']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
-					<a href='delete.php?id=".$row['codigo_vehiculo']."' class='red-text'><i class='material-icons'>delete</i></a>
-					<a href='../fotos/index.php?id=".$row['codigo_vehiculo']."' class='green-text'><i class='material-icons'>view_quilt</i></a>
+					<a href='step2.php?id=".$row['codigo_cliente']."' class='red-text'><i class='material-icons'>shop</i></a>
 				</td>
 			</tr>
 		");
@@ -107,6 +97,7 @@ else
 {
 	Page::showMessage(4, "No hay registros disponibles", "save.php");
 }
+
+//se muestra el footer
 Page::footer();
 ?>
-

@@ -2,19 +2,20 @@
 ob_start();
 require("../lib/page.php");
 require("../../lib/zebra.php");
-Page::header("Vehiculos");
+Page::header("Vehiculos disponibles");
+$id = $_GET['id'];
 //se hace un select de todos los vehiculos
 //se inicia conexion
 if(!empty($_POST))
 {
 	//se crea un buscador
 	$search = trim($_POST['buscar']);
-	$sql = "SELECT* FROM vehiculos AND nombre_vehiculo LIKE ? ";
+	$sql = "SELECT* FROM vehiculos, fotos_vehiculos, marcas, series, modelos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND marcas.codigo_marca = series.codigo_marca AND series.codigo_serie = modelos.codigo_serie AND modelos.codigo_modelo = vehiculos.codigo_modelo AND cantidad_disponible > 0 AND fotos_vehiculos.codigo_tipo_foto = 1 AND estado_vehiculo = 1 AND nombre_vehiculo LIKE ? ";
 	$params = array("%$search%");
 }
 else
 {
-	$sql = "SELECT * FROM vehiculos ";
+	$sql = "SELECT * FROM vehiculos, fotos_vehiculos, marcas, series, modelos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND marcas.codigo_marca = series.codigo_marca AND series.codigo_serie = modelos.codigo_serie AND modelos.codigo_modelo = vehiculos.codigo_modelo AND cantidad_disponible > 0 AND fotos_vehiculos.codigo_tipo_foto = 1 AND estado_vehiculo = 1";
 	$params = null;
 }
 //se guarda la informacion en la variable data
@@ -56,10 +57,13 @@ if($data != null)
 <table class='striped'>
 	<thead>
 		<tr>
-			<th>NOMBRE DE VEHICULO</th>
-			<th>PRECIO DE VEHICULO ($)</th>
-			<th>CANTIDAD DISPONIBLE</th>
-			<th>AÑO DE VEHICULO ($)</th>
+			<th>IMEGEN</th>
+			<th>MARCA</th>
+			<th>SERIE</th>
+			<th>MODELO</th>
+			<th>PRECIO ($)</th>
+			<th>CANTIDAD</th>
+			<th>AÑO</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -72,26 +76,15 @@ if($data != null)
 		print("
         
 			<tr>
-				<td>".$row['nombre_vehiculo']."</td>
+				<td><img src='data:image/*;base64,".$row['url_foto']."' class='materialboxed' width='120' height='100'></td>
+				<td>".$row['marca']."</td>
+				<td>".$row['nombre_serie']."</td>
+				<td>".$row['nombre_modelo']."</td>
 				<td>".$row['precio_vehiculo']."</td>
 				<td>".$row['cantidad_disponible']."</td>
 				<td>".$row['anio_vehiculo']."</td>
 				<td>
-				");
-		if($row['estado_vehiculo'] == 1)
-		{
-			print("<i class='material-icons'>visibility</i>");
-		}
-		else
-		{
-			print("<i class='material-icons'>visibility_off</i>");
-		}
-		print("
-				</td>
-				<td>
-					<a href='save.php?id=".$row['codigo_vehiculo']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
-					<a href='delete.php?id=".$row['codigo_vehiculo']."' class='red-text'><i class='material-icons'>delete</i></a>
-					<a href='../fotos/index.php?id=".$row['codigo_vehiculo']."' class='green-text'><i class='material-icons'>view_quilt</i></a>
+					<a href='step3.php?id=".$id."&auto=".$row['codigo_vehiculo']."' class='blue-text'><i class='material-icons'>done</i></a>
 				</td>
 			</tr>
 		");

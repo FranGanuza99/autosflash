@@ -21,10 +21,12 @@ if(!empty($_POST))
 	try 
 	{	
 		//elimina el registro
-		$sql = "UPDATE clientes set estado_cliente = 0 where codigo_cliente = ?";
+		$sql = "DELETE FROM clientes where codigo_cliente = ?";
 		$params = array($id);
-		Database::executeRow($sql, $params);
-		header("location: index.php");
+		if(Database::executeRow($sql, $params))
+		{
+			Page::showMessage(1, "Registro eliminado correctamente", "index.php");
+		}
 	}
 	catch (Exception $error) 
 	{

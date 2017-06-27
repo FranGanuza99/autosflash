@@ -23,8 +23,10 @@ if(!empty($_POST))
 	{
 		$sql = "DELETE FROM fotos_vehiculos WHERE codigo_foto = ?";
 	    $params = array($img);
-	    Database::executeRow($sql, $params);
-	    header("location: vista.php?id=$id");
+	    if(Database::executeRow($sql, $params))
+		{
+			Page::showMessage(1, "Registro eliminado correctamente", "vista.php?id=$id");
+		}
 	}
 	catch (Exception $error) 
 	{

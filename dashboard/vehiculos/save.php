@@ -93,141 +93,137 @@ if(!empty($_POST))
             if($precio_vehiculo != "")
             {
                 if($descripcion_vehiculo != "")
-                 {
-                     if($fecha_registro_vehiculo != "")
-                     {
-                         if($codigo_tipo_vehiculo != "")
-                         {
-                              if($codigo_proveedor != "")
-                              {
-                                  if($cantidad_disponible != "")
-                                  {
-                                      if($codigo_modelo != "")
-                                      {
-                                                if($anio_vehiculo != "")
+                {
+                    if($fecha_registro_vehiculo != "")
+                    {
+                        if($codigo_tipo_vehiculo != "")
+                        {
+                            if($codigo_proveedor != "")
+                            {
+                                if($cantidad_disponible != "")
+                                {
+                                    if($codigo_modelo != "")
+                                    {
+                                        if($anio_vehiculo != "")
+                                        {
+                                            if($potencia_vehiculo != "")
+                                            {
+                                                if($manejo_vehiculo != "")
+                                                {
+                                                    if($rueda_vehiculo != "")
                                                     {
-                                                        if($potencia_vehiculo != "")
+                                                        if($comodida_vehiculo != "")
                                                         {
-                                                            if($manejo_vehiculo != "")
+                                                            if($apariencia_vehiculo != "")
                                                             {
-                                                                if($rueda_vehiculo != "")
+                                                                if($ventana_vehiculo != "")
                                                                 {
-                                                                    if($comodida_vehiculo != "")
+                                                                    if($general1_vehiculo != "")
                                                                     {
-                                                                        if($apariencia_vehiculo != "")
+                                                                        if($general2_vehiculo != "")
                                                                         {
-                                                                            if($ventana_vehiculo != "")
+                                                                            if($general3_vehiculo != "")
                                                                             {
-                                                                                    if($general1_vehiculo != "")
+                                                                                if($descuento_vehiculo != "")
+                                                                                {
+                                                                                    if($id == null)
                                                                                     {
-                                                                                        if($general2_vehiculo != "")
-                                                                                        {
-                                                                                                if($general3_vehiculo != "")
-                                                                                                {
-                                                                                                    if($descuento_vehiculo != "")
-                                                                                                    {
-
-                                                                                                                if($id == null)
-                                                                                                                {
-                                                                                                                $sql = "INSERT INTO vehiculos(nombre_vehiculo, precio_vehiculo, descripcion_vehiculo, fecha_registro_vehiculo, codigo_tipo_vehiculo,codigo_proveedor, cantidad_disponible, codigo_modelo, anio_vehiculo, potencia_vehiculo, manejo_vehiculo, rueda_vehiculo, comodida_vehiculo, apariencia_vehiculo, ventana_vehiculo, general1_vehiculo, general2_vehiculo, general3_vehiculo, descuento_vehiculo, estado_vehiculo) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                                                                                                                $params = array($nombre_vehiculo,$precio_vehiculo,$descripcion_vehiculo,$fecha_registro_vehiculo,$codigo_tipo_vehiculo,$codigo_proveedor,$cantidad_disponible,$codigo_modelo,$anio_vehiculo,$potencia_vehiculo,$manejo_vehiculo,$rueda_vehiculo,$comodida_vehiculo,$apariencia_vehiculo,$ventana_vehiculo,$general1_vehiculo,$general2_vehiculo,$general3_vehiculo,$descuento_vehiculo,$estado);
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                $sql = "UPDATE vehiculos SET nombre_vehiculo =?, precio_vehiculo =?, descripcion_vehiculo =?, fecha_registro_vehiculo =?, codigo_tipo_vehiculo =?, codigo_proveedor =?, cantidad_disponible = ?, codigo_modelo = ?, anio_vehiculo =?, potencia_vehiculo =?, manejo_vehiculo =?, rueda_vehiculo =?, comodida_vehiculo =?, apariencia_vehiculo =?, ventana_vehiculo = ?, general1_vehiculo =?, general2_vehiculo =?, general3_vehiculo =?, descuento_vehiculo =?, estado_vehiculo=? WHERE codigo_vehiculo= ?";
-                                                                                                                $params = array($nombre_vehiculo,$precio_vehiculo,$descripcion_vehiculo,$fecha_registro_vehiculo,$codigo_tipo_vehiculo,$codigo_proveedor,$cantidad_disponible,$codigo_modelo,$anio_vehiculo,$potencia_vehiculo,$manejo_vehiculo,$rueda_vehiculo,$comodida_vehiculo,$apariencia_vehiculo,$ventana_vehiculo,$general1_vehiculo,$general2_vehiculo,$general3_vehiculo,$descuento_vehiculo,$estado, $id);
-                                                                                                                }
-                                                                                                                Database::executeRow($sql, $params);
-                                                                                                                header("location: index.php");
-                                                                                                    }
-                                                                                                    else{
-                                                                                                    throw new Exception("Debe ingresar descuento del vehiculo");
-                                                                                                    } 
-                                                                                        
-                                                                                                }
-                                                                                                else{
-                                                                                                throw new Exception("Debe ingresar dato general 3 del vehiculo");
-                                                                                                } 
-
-                                                                                        }
-                                                                                        else{
-                                                                                        throw new Exception("Debe ingresar dato general 2 del vehiculo");
-                                                                                        } 
-                                                                                        
+                                                                                        $sql = "INSERT INTO vehiculos(nombre_vehiculo, precio_vehiculo, descripcion_vehiculo, fecha_registro_vehiculo, codigo_tipo_vehiculo,codigo_proveedor, cantidad_disponible, codigo_modelo, anio_vehiculo, potencia_vehiculo, manejo_vehiculo, rueda_vehiculo, comodida_vehiculo, apariencia_vehiculo, ventana_vehiculo, general1_vehiculo, general2_vehiculo, general3_vehiculo, descuento_vehiculo, estado_vehiculo) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                                                                        $params = array($nombre_vehiculo,$precio_vehiculo,$descripcion_vehiculo,$fecha_registro_vehiculo,$codigo_tipo_vehiculo,$codigo_proveedor,$cantidad_disponible,$codigo_modelo,$anio_vehiculo,$potencia_vehiculo,$manejo_vehiculo,$rueda_vehiculo,$comodida_vehiculo,$apariencia_vehiculo,$ventana_vehiculo,$general1_vehiculo,$general2_vehiculo,$general3_vehiculo,$descuento_vehiculo,$estado);
                                                                                     }
-                                                                                    else{
-                                                                                    throw new Exception("Debe ingresar dato general 1 del vehiculo");
-                                                                                    } 
-
+                                                                                    else
+                                                                                    {
+                                                                                        $sql = "UPDATE vehiculos SET nombre_vehiculo =?, precio_vehiculo =?, descripcion_vehiculo =?, fecha_registro_vehiculo =?, codigo_tipo_vehiculo =?, codigo_proveedor =?, cantidad_disponible = ?, codigo_modelo = ?, anio_vehiculo =?, potencia_vehiculo =?, manejo_vehiculo =?, rueda_vehiculo =?, comodida_vehiculo =?, apariencia_vehiculo =?, ventana_vehiculo = ?, general1_vehiculo =?, general2_vehiculo =?, general3_vehiculo =?, descuento_vehiculo =?, estado_vehiculo=? WHERE codigo_vehiculo= ?";
+                                                                                        $params = array($nombre_vehiculo,$precio_vehiculo,$descripcion_vehiculo,$fecha_registro_vehiculo,$codigo_tipo_vehiculo,$codigo_proveedor,$cantidad_disponible,$codigo_modelo,$anio_vehiculo,$potencia_vehiculo,$manejo_vehiculo,$rueda_vehiculo,$comodida_vehiculo,$apariencia_vehiculo,$ventana_vehiculo,$general1_vehiculo,$general2_vehiculo,$general3_vehiculo,$descuento_vehiculo,$estado, $id);
+                                                                                    }
+                                                                                    if(Database::executeRow($sql, $params))
+                                                                                    {
+                                                                                        Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                                                                    }
                                                                                 }
                                                                                 else{
-                                                                                throw new Exception("Debe ingresar ventanas del vehiculo");
+                                                                                    throw new Exception("Debe ingresar descuento del vehiculo");
                                                                                 } 
-                                                                                
+                                                                                        
+                                                                            }
+                                                                            else{
+                                                                                throw new Exception("Debe ingresar dato general 3 del vehiculo");
+                                                                            } 
+
                                                                         }
                                                                         else{
-                                                                        throw new Exception("Debe ingresar apariencia del vehiculo");
+                                                                            throw new Exception("Debe ingresar dato general 2 del vehiculo");
                                                                         } 
-                                                                    
+                                                                                        
                                                                     }
                                                                     else{
-                                                                    throw new Exception("Debe ingresar comodidad del vehiculo");
+                                                                        throw new Exception("Debe ingresar dato general 1 del vehiculo");
                                                                     } 
-                                                            
+
+                                                                }
+                                                                else{
+                                                                    throw new Exception("Debe ingresar ventanas del vehiculo");
+                                                                } 
+                                                                                
                                                             }
                                                             else{
-                                                            throw new Exception("Debe ingresar el tipo de ruedas del vehiculo");
+                                                                throw new Exception("Debe ingresar apariencia del vehiculo");
                                                             } 
-                                                            
+                                                                    
                                                         }
                                                         else{
-                                                        throw new Exception("Debe ingresar el tipo de manejo del vehiculo");
+                                                            throw new Exception("Debe ingresar comodidad del vehiculo");
                                                         } 
                                                             
-                                                        }
-                                                        else{
-                                                        throw new Exception("Debe ingresar la potencia del vehiculo");
-                                                        } 
-
                                                     }
                                                     else{
-                                                    throw new Exception("Debe ingresar el año del vehiculo");
+                                                        throw new Exception("Debe ingresar el tipo de ruedas del vehiculo");
                                                     } 
-                                         }
-                                        else{
-                                        throw new Exception("Debe ingresar el modelo del vehiculo");
+                                                            
+                                                }
+                                                else{
+                                                    throw new Exception("Debe ingresar el tipo de manejo del vehiculo");
+                                                } 
+                                                            
+                                            }
+                                            else{
+                                                throw new Exception("Debe ingresar la potencia del vehiculo");
+                                            } 
+
                                         }
+                                        else{
+                                            throw new Exception("Debe ingresar el año del vehiculo");
+                                        } 
                                     }
                                     else{
-                                    throw new Exception("Debe ingresar la cantidad de vehiculos");
+                                        throw new Exception("Debe ingresar el modelo del vehiculo");
                                     }
+                                }
+                                else{
+                                    throw new Exception("Debe ingresar la cantidad de vehiculos");
+                                }
                             }
                             else{
-                            throw new Exception("Debe ingresar el proveedor del vehiculo");
+                                throw new Exception("Debe ingresar el proveedor del vehiculo");
                             }
-                        
                         }
                         else{
-                        throw new Exception("Debe ingresar el tipo de vehiculo");
+                            throw new Exception("Debe ingresar el tipo de vehiculo");
                         } 
-
                     }
                     else{
-                    throw new Exception("Debe ingresar fecha de registro");
+                        throw new Exception("Debe ingresar fecha de registro");
                     } 
-                
-
                 }
-                else{
-                throw new Exception("Debe ingresar descripcion del vehiculo");
+                else {
+                    throw new Exception("Debe ingresar descripcion del vehiculo");
                 }  
             }
             else{
                 throw new Exception("Debe ingresar precio del vehiculo");
-             }           
-         }    
-        else
-        {
+            }           
+        }    
+        else {
             throw new Exception("Debe ingresar el nombre del vehiculo");
         }
     }
