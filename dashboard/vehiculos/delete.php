@@ -17,6 +17,7 @@ if(!empty($_POST))
 	$id = $_POST['id'];
 	try 
 	{
+		//se ejecuta consulta
 		$sql = "DELETE FROM vehiculos WHERE codigo_vehiculo = ?";
 	    $params = array($id);
 	    if(Database::executeRow($sql, $params))
@@ -29,6 +30,7 @@ if(!empty($_POST))
 		Page::showMessage(2, $error->getMessage(), "index.php");
 	}
 }
+//se inicia con el diseño y asignacion de variables
 ?>
 <form method='post'>
 	<div class='row center-align'>

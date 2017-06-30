@@ -125,8 +125,6 @@ if(!empty($_POST))
                                 {
                                     Page::showMessage(1, "Operación satisfactoria", "index.php");
                                 }
-
-                               
                             }
                             else
                             {
@@ -254,8 +252,6 @@ if(!empty($_POST))
             <input name="estado" type="radio" id="inactivo" value='0' class='with-gap' <?php print(($estado == 0)?"checked":""); ?> />
             <label for="inactivo">Inactivo</label>
         </div>
-        
-
     </div>
     <div class='row center-align'>
         <a href='index.php' class='btn waves-effect grey'><i class='material-icons'>cancel</i></a>

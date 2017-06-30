@@ -8,6 +8,7 @@ $total = null;
 
 if(empty($_GET['reserva'])) 
 {
+	//se declaran las variables
 	$marca = null;
 	$serie = null;
 	$modelo = null;
@@ -72,7 +73,6 @@ if(empty($_GET['reserva']))
 if(!empty($_POST))
 {
 	try {
-
 		if ($cantidad > 0) {
 			if ($estadoc > 0 ) {
 				if ($estadov > 0 ) {
@@ -104,10 +104,8 @@ if(!empty($_POST))
 	} catch (Exception $error) {
 		Page::showMessage(2, $error->getMessage(), null);
 	}
-	
-
 } 
-
+//se crea el formulario adicionalmente se le asignas las variables para que posteriormente sean capturados los valores
 ?>
 <form method='post' enctype='multipart/form-data'>
 	<div class='row'>

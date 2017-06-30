@@ -190,7 +190,7 @@ if(!empty($_POST))
         
         <div class='input-field col s12 m6'>
             <i class='material-icons prefix'>description</i>
-            <input id='telefono' type='text' name='telefono' pattern='^[0-9]{8}' class='validate' value='<?php print($telefono); ?>' required/>
+            <input id='telefono' type='text' name='telefono' pattern='^[2|6|7][0-9]{7}' class='validate' value='<?php print($telefono); ?>' required/>
             <label for='telefono'>Teléfono</label>
         </div>
         <div class='input-field col s12 m6'>

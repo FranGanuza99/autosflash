@@ -29,6 +29,7 @@ if(!empty($_POST))
 		Page::showMessage(2, $error->getMessage(), "index.php");
 	}
 }
+//se inicia con el formulario y asignacion de vriables
 ?>
 <form method='post'>
 	<div class='row center-align'>

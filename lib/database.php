@@ -67,7 +67,7 @@ class Database
         self::desconnect();
         return $statement->fetchAll(PDO::FETCH_BOTH);
     }
-
+    //se capturan los errores de la base de datos sql para luego mandarlos en un mensaje mas comprensible
     public static function errorMessages($code){
         switch ($code) {
 
@@ -111,7 +111,7 @@ class Database
                 self::showMessage(2, "Ha ocurrido un error desconocido, favor contacte a un administrador. Codigo de error de MySQL: ".$code, null);
         }
     }
-
+//se mandon los mensajes al momento de realizar alguna accion
     public static function showMessage($type, $message, $url)
 	{
 		$text = addslashes($message);
