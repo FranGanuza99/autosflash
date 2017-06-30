@@ -2,13 +2,17 @@
 session_start();
 ?>
 <ul id='dropdown1' class='dropdown-content dropstyle'>
-    <li><a href='#!'>Perfil</a></li>
+    <li><a href='perfil.php'>Perfil</a></li>
+    <li class='divider'></li>
+    <li><a href='compras.php'>Compras realizadas</a></li>
     <li class='divider'></li>
     <li><a href='logout.php'>Cerrar Sesion</a></li>
 </ul>
 
 <ul id='dropdown12' class='dropdown-content dropstyle'>
-    <li><a href='#!'>Perfil</a></li>
+    <li><a href='perfil.php'>Perfil</a></li>
+    <li class='divider'></li>
+    <li><a href='compras.php'>Compras realizadas</a></li>
     <li class='divider'></li>
     <li><a href='logout.php'>Cerrar Sesion</a></li>
 </ul>
@@ -26,7 +30,7 @@ session_start();
                     <li><a href="pregunta.php">Preguntas frecuentes</a></li>
                     <?php
                     //valida si hay alguna sesion iniciada
-                    if (isset($_SESSION['nombre_usuario'])){
+                    if (isset($_SESSION['nombre_cliente'])){
                         //muestra la foto de perfil del cliente
                         print("
                         <li><a class='foto-perfil dropdown-button' data-activates='dropdown1'><img src='data:image/*;base64,".$_SESSION['foto_perfil']."' class='circle' width='48' height='48'></a></li>");
@@ -50,8 +54,8 @@ session_start();
     <li><a href="contacto.php">Contáctenos</a></li>
     <li><a href="pregunta.php">Preguntas frecuentes</a></li>
     <?php
-    if (isset($_SESSION['nombre_usuario'])){
-        print("<li class='active'><a class='dropdown-button' data-activates='dropdown12'>".$_SESSION['nombre_usuario']."</a></li>");
+    if (isset($_SESSION['nombre_cliente'])){
+        print("<li class='active'><a class='dropdown-button' data-activates='dropdown12'>".$_SESSION['nombre_cliente']."</a></li>");
     } else {
         print("<li><a href='sesion.php'>Iniciar sesión</a></li>");
     }

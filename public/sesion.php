@@ -44,8 +44,8 @@
                         if(password_verify($clave, $hash)) 
                         {
                             //Asigna el valor a las variables de sesion
-                            $_SESSION['id_usuario'] = $data['codigo_cliente'];
-                            $_SESSION['nombre_usuario'] = $data['nombre_cliente']." ".$data['apellido_cliente'];
+                            $_SESSION['id_cliente'] = $data['codigo_cliente'];
+                            $_SESSION['nombre_cliente'] = $data['nombre_cliente']." ".$data['apellido_cliente'];
                             $_SESSION['foto_perfil'] = $data['foto'];
                             header("location: index.php");
                         }

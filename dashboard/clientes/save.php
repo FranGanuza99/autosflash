@@ -74,58 +74,63 @@ if(!empty($_POST))
                         {
                             if ($direccion !="")
                             {
+                                if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {    
                                 
                                 //validacion de foto
-                                if($archivo['name'] != null)
-                                {
-                                    $base64 = Validator::validateImageProfile($archivo);
-                                    if($base64 != false)
+                                    if($archivo['name'] != null)
                                     {
-                                        $foto = $base64;
-                                    }
-                                    else
-                                    {
-                                        throw new Exception("Ocurrió un problema con la imagen");
-                                    }
-                                }
-                            
-                                //valida si es un nuevo cliente o una modificacion
-                                if($id == null)
-                                {
-                                        
-                                    $clave1 = $_POST['clave1'];
-                                    $clave2 = $_POST['clave2'];
-                                    //valida claves
-                                    if($clave1 != "" && $clave2 != "")
-                                    {
-                                        if($clave1 == $clave2)
+                                        $base64 = Validator::validateImageProfile($archivo);
+                                        if($base64 != false)
                                         {
-                                            //inserta datos nuevos
-                                            $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                            $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, correo_cliente, dui_cliente, nit_cliente, telefono_cliente, direccion_cliente, estado_cliente, foto, contrasenia, fecha_registro_cliente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                                            $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $registro);
+                                            $foto = $base64;
                                         }
                                         else
                                         {
-                                            throw new Exception("Las contraseñas no coinciden");
+                                            throw new Exception("Ocurrió un problema con la imagen");
                                         }
+                                    }
+                                
+                                    //valida si es un nuevo cliente o una modificacion
+                                    if($id == null)
+                                    {
+                                            
+                                        $clave1 = $_POST['clave1'];
+                                        $clave2 = $_POST['clave2'];
+                                        //valida claves
+                                        if($clave1 != "" && $clave2 != "")
+                                        {
+                                            if($clave1 == $clave2)
+                                            {
+                                                //inserta datos nuevos
+                                                $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                                $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, correo_cliente, dui_cliente, nit_cliente, telefono_cliente, direccion_cliente, estado_cliente, foto, contrasenia, fecha_registro_cliente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $registro);
+                                            }
+                                            else
+                                            {
+                                                throw new Exception("Las contraseñas no coinciden");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            throw new Exception("Debe ingresar ambas contraseñas");
+                                        }
+                                        
                                     }
                                     else
                                     {
-                                        throw new Exception("Debe ingresar ambas contraseñas");
+                                        //actializa un registro existente
+                                        $sql = "UPDATE clientes SET nombre_cliente = ?, apellido_cliente = ?, correo_cliente = ?, dui_cliente = ?, nit_cliente = ?, telefono_cliente = ?, direccion_cliente = ?, estado_cliente = ?, foto = ?, contrasenia = ? WHERE codigo_cliente = ?";
+                                        $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $id);
                                     }
-                                    
-                                }
-                                else
-                                {
-                                    //actializa un registro existente
-                                    $sql = "UPDATE clientes SET nombre_cliente = ?, apellido_cliente = ?, correo_cliente = ?, dui_cliente = ?, nit_cliente = ?, telefono_cliente = ?, direccion_cliente = ?, estado_cliente = ?, foto = ?, contrasenia = ? WHERE codigo_cliente = ?";
-                                    $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $id);
-                                }
-                                if(Database::executeRow($sql, $params))
-                                {
-                                    Page::showMessage(1, "Operación satisfactoria", "index.php");
-                                }
+                                    if(Database::executeRow($sql, $params))
+                                    {
+                                        Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                    }
+                                 }
+                                else{
+                                    throw new Exception("Debe ingresar un correo valido");
+                                 }
                                
                             }
                             else

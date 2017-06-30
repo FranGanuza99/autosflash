@@ -13,16 +13,77 @@
         <!--  archivos css-->
         <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
         <link type="text/css" rel="stylesheet" href="css/mystyle-sheet.css" media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="../css/sweetalert2.min.css" media="screen,projection"/>
+        <script type="text/javascript" src="../js/sweetalert2.min.js"></script>
     </head>
     <body>
         <!--Aqui se muestra el menu-->
         <?php
         include("inc/menu.php");
+        require("../lib/page.php");
+
+        ob_start();
+        if(isset($_POST['compra']))
+        {
+         
+            $id_cliente = $_SESSION['id_cliente'];
+            $vehiculo = $_GET['id'];
+            $fecha = getdate();
+            $registro = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+        
+
+            try 
+            {
+                //validacion de campos
+                if($id_cliente != "")
+                {
+                    if($vehiculo != "")
+                    {
+                        if($registro != "")
+                        {                    
+                            $sql = "INSERT INTO reservaciones(codigo_cliente, codigo_vehiculo,fecha_reserva) VALUES(?, ?, ?)";
+                            $params = array($id_cliente, $vehiculo, $registro);
+                            if(Database::executeRow($sql, $params))
+                            {
+                                Page::showMessage(1, "Operación satisfactoria", "index.php");
+                            }            
+                        }
+                        else
+                        {
+                            throw new Exception("Debe ingresar el cliente");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Debe ingresar el vehiculo");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Debe ingresar la fecha");
+                }
+            }
+            catch (Exception $error)
+            {
+                Page::showMessage(2, $error->getMessage(), null);
+            }
+
+        } else {
+            //setea las variavles a null
+            $id_cliente = null;
+            $vehiculo = null;
+            $registro = null;
+        }
+                
+
+
+
+
         ?>
         <?php
         //se inica la coneccion y se realiza una consulta con toda la informacion relaciona al id del vehiculo
               ob_start();
-              require("../lib/database.php");
+              
               $id = $_GET['id'];
               $data1 = null;
               $sql = "SELECT nombre_vehiculo, precio_vehiculo, descripcion_vehiculo, anio_vehiculo, potencia_vehiculo, manejo_vehiculo,rueda_vehiculo, comodida_vehiculo, apariencia_vehiculo, ventana_vehiculo, general1_vehiculo, general2_vehiculo, general3_vehiculo, foto_general1, foto_general2, foto_general3  FROM vehiculos WHERE codigo_vehiculo = ?";
@@ -91,71 +152,27 @@
                 <div id="modal1" class="modal">
                   <div class="modal-content">
                     <h4>Compra de Automovil</h4>
-                    <?php print("<h5>Monto a Cancelar: $".$row1['precio_vehiculo']."</h5> ");?>
+                    <?php print("<h5>Monto a Cancelar: $".$row1['precio_vehiculo']."</h5> ");
                    
-                    <!--Se crea un formulario para la compra del vehiculo-->
-                     <div class="row">
-                      <form class="col s12">
-                        <div class="row">
-                          <div class="input-field col s6">
-                            <input placeholder="Primer Nombre" id="first_name" type="text" class="validate">
-                            <label for="first_name">Nombres Completos</label>
-                          </div>
-                          <div class="input-field col s6">
-                            <input id="last_name" type="text" class="validate">
-                            <label for="last_name">Segundo Nombre</label>
-                          </div>
-                           <div class="input-field col s6">
-                          <input placeholder="Primer Apellido" id="first_name" type="text" class="validate">
-                            <label for="first_name">Apellidos Completos</label>
-                          </div>
-                          <div class="input-field col s6">
-                            <input id="last_name" type="text" class="validate">
-                            <label for="last_name">Segundo Apellido</label>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="input-field col s12">
-                            <input id="password" type="password" class="validate">
-                            <label for="password">Contraseña</label>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="input-field col s12">
-                            <input id="email" type="email" class="validate">
-                            <label for="email">Email</label>
-                          </div>
-                        </div>
-                         <div class="row">
-                          <div class="input-field col s12">
-                            <input id="password" type="password" class="validate">
-                            <label for="password">Numero de tarjeta</label>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="input-field col s12">
-                            <input id="password" type="password" class="validate">
-                            <label for="password">Numero de Ping</label>
-                          </div>
-                        </div>
-                        <p>Plazo del credito</p>
-                        <p>
-                          <input name="group1" type="radio" id="test1" />
-                          <label for="test1">18 Meses</label>
-                        </p>
-                        <p>
-                          <input name="group1" type="radio" id="test2" />
-                          <label for="test2">24 Meses</label>
-                        </p>
-                        <p>
-                          <input class="with-gap" name="group1" type="radio" id="test3"  />
-                          <label for="test3">36 Meses</label>
-                        </p>
-                      </form>
-                    </div>
+
+                    if (isset($_SESSION['nombre_cliente'])){
+                        
+                        print("
+                        <form method='post' enctype='multipart/form-data'>
+                        <div class='card-panel yellow'><i class='material-icons left'>warning</i>¿ESTAS SEGURO DE HACER UNA RESERVA PARA LUEGO COMPRARLO? EN CASO DE SER SI, DEBES ACERCARTE A NUESTRA AGENCIA PARA FINALIZAR EL PROCESO</div>
+                         <div class='row center-align'>
+                            <button type='submit' class='btn waves-effect' name='compra'>Si, estoy seguro</button>
+                         </div>
+                         </form>   
+                            ");
+                            
+                    } else {
+                         print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>Debes iniciar sesion primero</div>");
+                    }
+                    ?>
                   </div>
                   <div class="modal-footer">
-                    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Comprar</a>
+                    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
                   </div>
                 </div>
                 <div class="center-align">
@@ -163,8 +180,8 @@
                 </div>
                 <h5>PRECIO:</h5>
                 <?php print("<h4>Desde: $".$row1['precio_vehiculo']."</h4> ");?>
+                <!-- 
                 <h5>Modelo:</h5>
-                <!--Se crea un combobox para mostrar las versiones de los vehiculos-->
                 <div class="input-field">
                   <select>
                     <option value="" disabled selected>Seleciona el modelo</option>
@@ -177,9 +194,9 @@
                     <option value="7">Fiesta ST</option>
                   </select>
                   <label>Materialize Select</label>
-                  </div>
+                  </div> -->
                 </div>
-
+        
                  <?php
               ob_start();
               //consulta foto perfil
@@ -280,10 +297,9 @@
               <br>
               <!--Se crea un formulario de comentarios y calificacion-->
               <?php 
-                require('../lib/validator.php');
                 try {
-                  if (isset($_SESSION['id_usuario'])){
-                    $cliente = $_SESSION['id_usuario'];
+                  if (isset($_SESSION['id_cliente'])){
+                    $cliente = $_SESSION['id_cliente'];
                   } else {
                     $cliente = null;
                     throw new Exception("Debe de iniciar sesion primero");
@@ -296,7 +312,7 @@
                 //calculo de fecha
                 $fecha = getdate();
                 $registro = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
-                if(!empty($_POST))
+                if(isset($_POST['mensaje']))
                 {
                   $_POST = Validator::validateForm($_POST);
                   $mensaje = $_POST['mensaje'];

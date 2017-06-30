@@ -24,11 +24,34 @@
         //Enlaza los archivos necesarios
         
         require("../lib/page.php");
-
+        ob_start();
         //calculo de fecha
-        $fecha = getdate();
-        $registro = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+        if(isset($_SESSION['id_cliente'])) 
+        {
+            
+            $id = $_SESSION['id_cliente'];
+            
+            //realiza la consulta y llena las variavles con los datos de la consulta
+            $sql = "SELECT * FROM clientes WHERE codigo_cliente = ?";
+            $params = array($id);
+            $data = Database::getRow($sql, $params);
 
+            $nombres = $data['nombre_cliente'];
+            $apellidos = $data['apellido_cliente'];
+            $correo = $data['correo_cliente'];
+            $dui = $data['dui_cliente'];
+            $nit = $data['nit_cliente'];
+            $telefono = $data['telefono_cliente'];
+            $direccion = $data['direccion_cliente'];
+            $estado = $data['estado_cliente'];
+            $foto = $data['foto'];
+            $clave = $data['contrasenia'];
+            
+        }
+        else{
+             Page::showMessage(2, "Inicie sesion", "sesion.php");
+        }
+       
         //valida si post esta vacio y asigna variables a los campos
         if(!empty($_POST))
         {
@@ -59,43 +82,44 @@
                                 {
                                     if ($direccion !="")
                                     {
-                                         if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-                                                //validacion de imagen
-                                                if($archivo['name'] != null)
+                                        if (filter_var($correo, FILTER_VALIDATE_EMAIL)) { 
+                                            //validacion de imagen
+                                            if($archivo['name'] != null)
+                                            {
+                                                $foto = Validator::validateImageProfile($archivo);
+                                            }
+                                            
+
+                                            //validacion de clave
+                                            if($clave1 != "" && $clave2 != "")
+                                            {
+                                                if($clave1 == $clave2)
                                                 {
-                                                    $foto = Validator::validateImageProfile($archivo);
+                                                    //ingreso de datos de cliente
+                                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                                    //actializa un registro existente
+                                                    $sql = "UPDATE clientes SET nombre_cliente = ?, apellido_cliente = ?, correo_cliente = ?, dui_cliente = ?, nit_cliente = ?, telefono_cliente = ?, direccion_cliente = ?, estado_cliente = ?, foto = ?, contrasenia = ? WHERE codigo_cliente = ?";
+                                                    $params = array($nombres, $apellidos, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $id);
+                                                    if(Database::executeRow($sql, $params))
+                                                    {
+                                                        Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                                        $_SESSION['nombre_cliente'] = $nombres." ".$apellidos;
+                                                        $_SESSION['foto_perfil'] = $data['foto'];
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                        throw new Exception("Debe seleccionar una imagen");
+                                                    throw new Exception("Las contraseñas no coinciden");
                                                 }
-
-                                                //validacion de clave
-                                                if($clave1 != "" && $clave2 != "")
-                                                {
-                                                    if($clave1 == $clave2)
-                                                    {
-                                                        //ingreso de datos de cliente
-                                                        $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                                        $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, dui_cliente, nit_cliente, telefono_cliente, correo_cliente, contrasenia, fecha_registro_cliente, direccion_cliente, foto) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                                                        $params = array($nombres, $apellidos, $dui, $nit, $telefono, $correo, $clave, $registro, $direccion, $foto);
-                                                        if(Database::executeRow($sql, $params))
-                                                        {
-                                                            Page::showMessage(1, "Operación satisfactoria", "index.php");
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        throw new Exception("Las contraseñas no coinciden");
-                                                    }
-                                                }
-                                                else {
-                                                    throw new Exception("Debe ingresar ambas contraseñas");
-                                                }
-                                         }
+                                            }
+                                            else {
+                                                throw new Exception("Debe ingresar ambas contraseñas");
+                                            }
+                                        }
                                         else{
-                                            throw new Exception("Debe ingresar un correo valido");
-                                        }       
+                                                throw new Exception("Debe ingresar un correo valido");
+                                         }
+                                                
                                             
                                     }
                                     else {
@@ -132,18 +156,6 @@
                 Page::showMessage(2, $error->getMessage(), null);
             }
 
-        } else {
-            //setea las variavles a null
-            $nombres = null;
-            $apellidos = null;
-            $correo = null;
-            $dui = null;
-            $nit = null;
-            $clave1 = null;
-            $calve2 = null;
-            $telefono = null;
-            $direccion = null;
-            $archivo = null;
         }
 
         ?>
@@ -156,7 +168,7 @@
                 <div class="col s12 m12 ">
                     <br>
                     <div class="card-panel">
-                        <h3 class="center-txt">Registro de usuarios</h3>
+                        <h3 class="center-txt">Editar Perfil</h3>
                         <br>
                         
                         <!--inicio del form de registro-->
@@ -206,7 +218,7 @@
                                 <div id='profile-img' class='file-field input-field col s12 m6'>
                                     <div class='btn waves-effect'>
                                         <span><i class='material-icons'>image</i></span>
-                                        <input type='file' name='foto' required/>
+                                        <input type='file' name='foto'/>
                                     </div>
                                     <div class='file-path-wrapper'>
                                         <input class='file-path validate' type='text' placeholder='Seleccione una foto de perfil'/>
@@ -215,20 +227,20 @@
                                 <!--contra-->
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">vpn_key</i>
-                                    <input id="clave1" type="password" name="clave1" class="validate"  required />
+                                    <input id="clave1" type="password" name="clave1" class="validate"  />
                                     <label for="clave1">Contraseña</label>
                                 </div>
                                 <!--contra2-->
                                 <div class="input-field col s6">
                                     <i class="material-icons prefix">replay</i>
-                                    <input id="clave2" type="password" name="clave2" class="validate" required />
+                                    <input id="clave2" type="password" name="clave2" class="validate" />
                                     <label for="clave2">Confirmar contraseña</label>
                                 </div>
 
                             </div>
                             <!--botones del form--> 
                             <div class='row center-align'>
-                                <button type='submit' class='btn waves-effect'>Registrarme</button>
+                                <button type='submit' class='btn waves-effect'>Actualizar</button>
                                 <button type='submit' class='btn waves-effect'>Cancelar</button>
                             </div>
                         </form>         
