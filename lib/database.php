@@ -70,9 +70,24 @@ class Database
 
     public static function errorMessages($code){
         switch ($code) {
-            
+
+            case 1045:
+				self::showMessage(2, "Autenticación desconocida", null);
+				break;
+            case 1049:
+                self::showMessage(2, "La base de datos no se ha encontrado.", null);
+                break;
+            case 1054:
+                self::showMessage(2, "Nombre de campo desconocido", null);
+                break;
             case 1048:
                 self::showMessage(2, "Uno o mas campos requeridos se encuentran vacios", null);
+                break;
+            case 1146:
+                self::showMessage(2, "Nombre de tabla desconocido", null);
+                break;
+            case 2002:
+                self::showMessage(2, "Servidor desconocido", null);
                 break;
             case 1062:
                 self::showMessage(2, "El registro que desea procesar ya se encuentra en la base de datos.", null);
@@ -92,6 +107,8 @@ class Database
             case 1586:
                 self::showMessage(2, "El registro que desea procesar ya se encuentra en la base de datos.", null);
                 break;
+            default:
+                self::showMessage(2, "Ha ocurrido un error desconocido, favor contacte a un administrador. Codigo de error de MySQL: ".$code, null);
         }
     }
 

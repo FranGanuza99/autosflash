@@ -56,7 +56,7 @@
               require("../lib/database.php");
               require("../lib/zebra.php");
               //se consultan los productos a mostrar
-              $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND vehiculos.codigo_tipo_vehiculo = 1 AND vehiculos.estado_vehiculo =1";
+              $sql = "SELECT vehiculos.codigo_vehiculo,nombre_vehiculo, descripcion_vehiculo, url_foto, precio_vehiculo FROM vehiculos, fotos_vehiculos,tipos_fotos WHERE fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND fotos_vehiculos.codigo_tipo_foto=1 AND tipos_fotos.codigo_tipo_foto= 1 AND  vehiculos.estado_vehiculo =1";
               $data = Database::getRows($sql, null);
 
               //obtenemos el numero de filas y cantidad maxima

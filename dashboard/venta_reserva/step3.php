@@ -6,7 +6,7 @@ Page::header("Resumen de la venta");
 $fecha = null;
 $total = null;
 
-if(empty($_GET['auto'])) 
+if(empty($_GET['reserva'])) 
 {
 	$marca = null;
 	$serie = null;
@@ -17,7 +17,13 @@ if(empty($_GET['auto']))
 	$foto = null;
 
 } else {
-	$auto = $_GET['auto']; //auto
+	$reserva = $_GET['reserva'];
+	$sql = "SELECT * FROM vehiculos, reservaciones WHERE vehiculos.codigo_vehiculo=reservaciones.codigo_vehiculo AND reservaciones.estado_reserva=1 AND reservaciones.codigo_reserva= ?";
+	$params = array($reserva);
+	$data = Database::getRow($sql, $params);
+	$auto = $data['codigo_vehiculo'];
+	$cliente = $data['codigo_cliente'];
+
 	//se hace un select del vehiculo
 	$sql = "SELECT * FROM vehiculos, fotos_vehiculos, marcas, series, modelos, tipos_vehiculos WHERE tipos_vehiculos.codigo_tipo_vehiculo = vehiculos.codigo_tipo_vehiculo AND fotos_vehiculos.codigo_vehiculo = vehiculos.codigo_vehiculo AND marcas.codigo_marca = series.codigo_marca AND series.codigo_serie = modelos.codigo_serie AND modelos.codigo_modelo = vehiculos.codigo_modelo AND cantidad_disponible > 0 AND fotos_vehiculos.codigo_tipo_foto = 1 AND estado_vehiculo = 1 AND vehiculos.codigo_vehiculo = ?";
 	$params = array($auto);
@@ -34,7 +40,7 @@ if(empty($_GET['auto']))
 	$estadov = $data['estado'];
 }
 
-if(empty($_GET['id'])) 
+if(empty($_GET['reserva'])) 
 {
 	$nombre = null;
 	$apellido = null;
@@ -45,10 +51,9 @@ if(empty($_GET['id']))
 	$foto = null;
 
 } else {
-	$id = $_GET['id']; //cliente
 	//se hace un select del cliente
 	$sql = "SELECT * FROM clientes WHERE codigo_cliente = ?";
-	$params = array($id);
+	$params = array($cliente);
 	$data = Database::getRow($sql, $params);
 
 	$nombre = $data['nombre_cliente'];
@@ -73,12 +78,15 @@ if(!empty($_POST))
 				if ($estadov > 0 ) {
 					//inserta datos nuevos
 					$sql = "INSERT INTO facturas(codigo_cliente, codigo_vehiculo, fecha_factura, codigo_usuario) VALUES(?, ?, ?, ?)";
-					$params = array($id, $auto, $fecha, $_SESSION['id_usuario']);
+					$params = array($cliente, $auto, $fecha, $_SESSION['id_usuario']);
 					if(Database::executeRow($sql, $params))
 					{
 						$cantidad = $cantidad - 1;
 						$sql = "UPDATE vehiculos SET cantidad_disponible = ? WHERE codigo_vehiculo = ?";
 						$params = array($cantidad, $auto);
+						Database::executeRow($sql, $params);
+						$sql = "UPDATE reservaciones SET estado_reserva = 0 WHERE codigo_reservacion = ?";
+						$params = array($reserva);
 						Database::executeRow($sql, $params);
 						Page::showMessage(1, "Operación satisfactoria", "../ventas/index.php");
 					}

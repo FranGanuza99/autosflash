@@ -75,13 +75,13 @@ class Page
 						<li class='bold'><i class='material-icons iconos-menu'>perm_identity</i><a class='waves-effect waves-teal' href='../clientes/'>Clientes</a></li>
 					</ul>
 					</li>
-					<li class='bold'><i class='material-icons iconos-menu'>library_books</i><a href='http://materializecss.com/mobile.html' class='waves-effect waves-teal'>Reservaciones</a></li>
+					<li class='bold'><i class='material-icons iconos-menu'>library_books</i><a href='../venta_reserva/step2.php' class='waves-effect waves-teal'>Reservaciones</a></li>
 					<ul class='collapsible collapsible-accordion'>
 						<li class='bold'><i class='material-icons iconos-menu'>shop</i><a class='collapsible-header  waves-effect waves-teal'>Ventas</a>
 							<div class='collapsible-body'>
 								<ul>
 								<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../ventas/'> Ventas </a></li>
-								<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../nueva_venta/step1.php'> Realizar una venta</a></li>							
+								<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../nueva_venta/step1.php'> Realizar una venta</a></li>						
 								</ul>
 							</div>
 						</li>
