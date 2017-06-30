@@ -3,7 +3,8 @@ require("database.php");
 require("validator.php");
 class Page
 {
-	
+	//se crea esta funcion lo cual lo que hace es capturar una consulta sql
+	//y el resultado es mostrado en un combobox
 	public static function setCombo($label, $name, $value, $query)
 	{
 		$data = Database::getRows($query, null);
@@ -32,7 +33,7 @@ class Page
 			<label>$label</label>
 		");
 	}
-
+//se mandan los mensajes en caso de que exita algun accion mediante el numero que sea recibido
 	public static function showMessage($type, $message, $url)
 	{
 		$text = addslashes($message);

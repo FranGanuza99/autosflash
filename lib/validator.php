@@ -9,7 +9,7 @@ class Validator
 		}
 		return $fields;
 	}
-//se valida la imagen
+//se valida la imagen que sea de los formatos solicitados 
 	public static function validateImage($file)
 	{
 		$img_size = $file["size"];

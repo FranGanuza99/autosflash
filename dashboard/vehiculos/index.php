@@ -34,7 +34,6 @@ $consulta = $sql.' LIMIT '.(($paginacion->get_page() - 1) * $resul_x_pagina). ',
 //ejecuta la consulta
 $data = Database::getRows($consulta, $params);
 
-
 if($data != null)
 {
 ?>

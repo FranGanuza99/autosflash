@@ -51,6 +51,7 @@ if(!empty($_POST))
         Page::showMessage(2, $error->getMessage(), null);
     }
 }
+//se inicia el diseño del formulario
 ?>
 <form method='post'>
     <div class='row'>
