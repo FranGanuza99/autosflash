@@ -205,7 +205,7 @@ if(!empty($_POST))
 		<br>
 		<br>
 		<div class='row center-align'>
-			<a href='step1.php' class='btn waves-effect grey'><i class='material-icons right'>cancel</i>Cancelar</a>
+			<a href='step2.php' class='btn waves-effect grey'><i class='material-icons right'>cancel</i>Cancelar</a>
 			<button type='submit' class='btn waves-effect blue'><i class="material-icons right">send</i>Siguiente</button>
 		</div>
 	</div>

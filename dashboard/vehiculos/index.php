@@ -92,6 +92,7 @@ if($data != null)
 					<a href='save.php?id=".$row['codigo_vehiculo']."' class='blue-text'><i class='material-icons'>mode_edit</i></a>
 					<a href='delete.php?id=".$row['codigo_vehiculo']."' class='red-text'><i class='material-icons'>delete</i></a>
 					<a href='../fotos/index.php?id=".$row['codigo_vehiculo']."' class='green-text'><i class='material-icons'>view_quilt</i></a>
+					<a href='../comentarios/index.php?id=".$row['codigo_vehiculo']."' class='yellow-text'><i class='material-icons'>comment</i></a>
 				</td>
 			</tr>
 		");

@@ -13,6 +13,8 @@
         <!--  archivos css-->
         <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
         <link type="text/css" rel="stylesheet" href="css/mystyle-sheet.css" media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="../css/sweetalert2.min.css" media="screen,projection"/>
+        <script type="text/javascript" src="../js/sweetalert2.min.js"></script>
     </head>
     <body>
 
@@ -20,8 +22,7 @@
         //Aqui se muestra el menu
         include("inc/menu.php");
         //Se elanzan archivos necesarios
-        require("../lib/database.php");
-        require("../lib/validator.php");
+        require("../lib/page.php");
 
         //valida si el post esta vacio y enlaza las variables con el campo
         if(!empty($_POST))
@@ -39,19 +40,23 @@
                     $params = array($correo);
                     $data = Database::getRow($sql, $params);
                     if($data != null)
-                    {
-                        $hash = $data['contrasenia'];
-                        if(password_verify($clave, $hash)) 
-                        {
-                            //Asigna el valor a las variables de sesion
-                            $_SESSION['id_cliente'] = $data['codigo_cliente'];
-                            $_SESSION['nombre_cliente'] = $data['nombre_cliente']." ".$data['apellido_cliente'];
-                            $_SESSION['foto_perfil'] = $data['foto'];
-                            header("location: index.php");
-                        }
-                        else 
-                        {
-                            throw new Exception("La clave ingresada es incorrecta");
+                    {   
+                        if ($data['estado_cliente'] == 1) {
+                            $hash = $data['contrasenia'];
+                            if(password_verify($clave, $hash)) 
+                            {
+                                //Asigna el valor a las variables de sesion
+                                $_SESSION['id_cliente'] = $data['codigo_cliente'];
+                                $_SESSION['nombre_cliente'] = $data['nombre_cliente']." ".$data['apellido_cliente'];
+                                $_SESSION['foto_perfil'] = $data['foto'];
+                                header("location: index.php");
+                            }
+                            else 
+                            {
+                                throw new Exception("La clave ingresada es incorrecta");
+                            }
+                        } else {
+                            throw new Exception("El cliente se encuentra en estado inactivo");
                         }
                     }
                     else
@@ -66,7 +71,7 @@
             }
             catch (Exception $error)
             {
-                //Page::showMessage(2, $error->getMessage(), null);
+                Page::showMessage(2, $error->getMessage(), null);
             }
         }
         ?>
@@ -88,7 +93,7 @@
                         <form  method='post'>
                             <div class="input-field col s12">
                                 <input type="email" id="correo" name="correo" class="validate" required/>
-                                <label for="correo" data-error="wrong" data-success="right">Correo eléctronico:</label>
+                                <label for="correo">Correo eléctronico:</label>
                             </div>
                             <div class="input-field col s12">
                                 <input id="clave" name="clave" type="password" class="validate" required/>
