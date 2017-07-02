@@ -435,12 +435,14 @@
               $data7 = Database::getRows($sql7, $params);
               if($data7 != null)
              {
-                  $sql8 = "SELECT * FROM clientes, valoraciones,vehiculos WHERE  clientes.codigo_cliente = valoraciones.codigo_cliente AND valoraciones.codigo_vehiculo = ?";
-                  $params = array($vehiculo);
-                  $data8 = Database::getRows($sql8, $params);
+                  $sql8 = "SELECT valoracion FROM clientes, valoraciones,vehiculos WHERE  valoraciones.codigo_cliente = ? AND valoraciones.codigo_vehiculo = ?";
+                  $params = array($_SESSION['id_cliente'], $vehiculo);
+                  $data8 = Database::getRow($sql8, $params);
+                 
+                  $valoracion= $data8['valoracion'];
                   if($data8 != null)
                   {
-                      print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>Ya ha valorado este vehiculo</div>");
+                      print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>Ya ha valorado este vehiculo, su valoracion fue de: $valoracion</div>");
                   }
                   else{
                       if (isset($_SESSION['nombre_cliente'])){
@@ -452,7 +454,7 @@
                                         <input id='nota' type='number' name='nota' pattern='^[0-10]{2}' class='validate' value='<?php print($nota); ?>' required/>
                                         <label for='nota'>Valoracion</label>
                                          <div class='input-field col s4 m3'>
-                                        <button type='submit' class='btn waves-effect'> name='valor'<i class='material-icons left'>cloud</i>Enviar</button>
+                                        <button type='submit' class='btn waves-effect' name='valor'><i class='material-icons left'>cloud</i>Enviar</button>
                                         </div>
                                     </div>
                                     </form>
@@ -463,6 +465,7 @@
                             print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>Debes iniciar sesion primero para valorar</div>");
                         }
                   }
+                  $valoracion = null;
              }
              else{
                print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No puedes valorar este vehiculo($vehiculo)</div>");
@@ -572,6 +575,7 @@
               <?php
               ob_start();
               $sql = "SELECT fotos_vehiculos.url_foto FROM fotos_vehiculos,tipos_fotos WHERE  fotos_vehiculos.codigo_tipo_foto=2 AND tipos_fotos.codigo_tipo_foto= 2 AND fotos_vehiculos.codigo_vehiculo =?";
+              $params=array($vehiculo);
               $data = Database::getRows($sql, $params);
               ?>
                 
