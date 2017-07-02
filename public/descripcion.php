@@ -389,6 +389,88 @@
               {
                 print("<div class='card-panel  grey lighten-2'><i class='material-icons left'>warning</i>No hay ningun comentario. Se el primero en opinar.</div>");
               }
+               if(isset($_POST['valor']))
+             {
+               $_POST = Validator::validateForm($_POST);
+               $vehiculo = $_GET['id'];
+               $nota = $_POST['nota'];
+                  try 
+                  {
+                      //validacion de campos
+                      if($nota != "")
+                      {
+                        if($nota <= 10 && $nota >=0)
+                        {
+                                              
+                                  $sql = "INSERT INTO valoraciones(codigo_vehiculo, codigo_cliente, valoracion) VALUES(?, ?, ?)";
+                                  $params = array($vehiculo,$_SESSION['id_cliente'],  $nota);
+                                  if(Database::executeRow($sql, $params))
+                                  {
+                                      Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                  }   
+                        }       
+                        else
+                        {
+                            throw new Exception("Debe ingresar una valoracion entre 0 y 10");
+                        }        
+                      }
+                      else
+                      {
+                          throw new Exception("Debe ingresar la valoracion");
+                      }
+                  }
+                  catch (Exception $error)
+                  {
+                      Page::showMessage(2, $error->getMessage(), null);
+                  }
+             } 
+             else {
+            //setea las variavles a null
+            $nota = null;
+             }
+              
+              $vehiculo = $_GET['id'];
+              $sql7 = "SELECT * FROM clientes, facturas,vehiculos WHERE  clientes.codigo_cliente = facturas.codigo_cliente AND facturas.codigo_vehiculo = ?";
+              $params = array($vehiculo);
+              $data7 = Database::getRows($sql7, $params);
+              if($data7 != null)
+             {
+                  $sql8 = "SELECT valoracion FROM clientes, valoraciones,vehiculos WHERE  valoraciones.codigo_cliente = ? AND valoraciones.codigo_vehiculo = ?";
+                  $params = array($_SESSION['id_cliente'], $vehiculo);
+                  $data8 = Database::getRow($sql8, $params);
+                 
+                  $valoracion= $data8['valoracion'];
+                  if($data8 != null)
+                  {
+                      print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>Ya ha valorado este vehiculo, su valoracion fue de: $valoracion</div>");
+                  }
+                  else{
+                      if (isset($_SESSION['nombre_cliente'])){
+                              
+                            print("
+                                    <form  method='post' enctype='multipart/form-data'>
+                                    <div class='input-field col s12 m6'>
+                                        <i class='material-icons prefix'>description</i>
+                                        <input id='nota' type='number' name='nota' pattern='^[0-10]{2}' class='validate' value='<?php print($nota); ?>' required/>
+                                        <label for='nota'>Valoracion</label>
+                                         <div class='input-field col s4 m3'>
+                                        <button type='submit' class='btn waves-effect' name='valor'><i class='material-icons left'>cloud</i>Enviar</button>
+                                        </div>
+                                    </div>
+                                    </form>
+
+                                ");
+                                
+                        } else {
+                            print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>Debes iniciar sesion primero para valorar</div>");
+                        }
+                  }
+                  $valoracion = null;
+             }
+             else{
+               print("<div class='card-panel yellow'><i class='material-icons left'>warning</i>No puedes valorar este vehiculo($vehiculo)</div>");
+             }
+            
               ?>
               
               </div>  
@@ -493,6 +575,7 @@
               <?php
               ob_start();
               $sql = "SELECT fotos_vehiculos.url_foto FROM fotos_vehiculos,tipos_fotos WHERE  fotos_vehiculos.codigo_tipo_foto=2 AND tipos_fotos.codigo_tipo_foto= 2 AND fotos_vehiculos.codigo_vehiculo =?";
+              $params=array($vehiculo);
               $data = Database::getRows($sql, $params);
               ?>
                 

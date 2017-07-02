@@ -91,9 +91,7 @@ if(!empty($_POST)) {
                         Database::executeRow($sql, $params);
                         Page::showMessage(1, "Operación satisfactoria", "index.php");
                         $_SESSION['nombre_usuario'] = $nombres." ".$apellidos;
-                    }
-                    
-                    
+                    } 
                 }
                 else
                 {

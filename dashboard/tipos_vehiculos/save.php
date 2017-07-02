@@ -53,6 +53,7 @@ if(!empty($_POST))
         Page::showMessage(2, $error->getMessage(), null);
     }
 }
+//se inicia con el diseño y asignacion de variables
 ?>
 <form method='post'>
     <div class='row'>

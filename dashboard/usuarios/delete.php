@@ -37,10 +37,8 @@ if(!empty($_POST))
 			Page::showMessage(2, $error->getMessage(), "index.php");
 		}
 	}
-	
 }
 ?>
-
 <!-- inicio de formulario (botones) -->
 <form method='post'>
 	<div class='row center-align'>
