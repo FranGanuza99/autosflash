@@ -1,0 +1,8 @@
+# Bloquear todos los rastreadores
+User-agent: *
+
+# Contenido bloqueado
+Disallow: /
+Disallow: /Dashboard/
+Disallow: /lib/database.php
+Disallow: /img/
