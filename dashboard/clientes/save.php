@@ -101,10 +101,17 @@ if(!empty($_POST))
                                         {
                                             if($clave1 == $clave2)
                                             {
-                                                //inserta datos nuevos
-                                                $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                                $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, correo_cliente, dui_cliente, nit_cliente, telefono_cliente, direccion_cliente, estado_cliente, foto, contrasenia, fecha_registro_cliente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                                                $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $registro);
+                                                if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $clave1))
+                                                {
+                                                    //inserta datos nuevos
+                                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                                    $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, correo_cliente, dui_cliente, nit_cliente, telefono_cliente, direccion_cliente, estado_cliente, foto, contrasenia, fecha_registro_cliente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                    $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $registro);
+                                                }
+                                                else 
+                                                {
+                                                    throw new Exception("El formato de contraseña incorrecto. La contraseña debe contener por lo menos un número y un caracter especial (Ejemplo: Abcdef1#)");
+                                                }
                                             }
                                             else
                                             {

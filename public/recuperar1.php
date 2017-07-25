@@ -4,7 +4,7 @@
         <meta charset="utf-8"/>
         <!--Import Google Icon Font-->
         <link href="../css/icons.css" rel="stylesheet">
-        <title>Iniciar Sesión</title>
+        <title>Recuperación de contraseña - Paso 1</title>
         <!--Import materialize.css-->
         <link type="text/css" rel="stylesheet" href="../css/icon.css"  media="screen,projection"/>
         <!--Let browser know website is optimized for mobile-->
@@ -19,12 +19,13 @@
     <body>
 
         <?php
-        ob_start();
         //Aqui se muestra el menu
         include("inc/menu.php");
         //Se elanzan archivos necesarios
         require("../lib/page.php");
-        
+        include "../lib/phpmailer/class.phpmailer.php";
+        include "../lib/phpmailer/class.smtp.php";
+
 
         //validar inicio de sesion
         if(isset($_SESSION['nombre_cliente'])){
@@ -36,34 +37,60 @@
         {
             $_POST = validator::validateForm($_POST);
             $correo = $_POST['correo'];
-            $clave = $_POST['clave'];
             try
             {
                 //valida campos
-                if($correo != "" && $clave != "")
+                if($correo != "")
                 {
                     //consulta al cliente ingresado
                     $sql = "SELECT * FROM clientes WHERE clientes.correo_cliente = ?";
                     $params = array($correo);
                     $data = Database::getRow($sql, $params);
+                    $codigo = $data['codigo_cliente'];
+                    $nombres = $data['nombre_cliente']." ".$data['apellido_cliente'];
                     if($data != null)
                     {   
-                        if ($data['estado_cliente'] == 1) {
-                            $hash = $data['contrasenia'];
-                            if(password_verify($clave, $hash)) 
-                            {
-                                //Asigna el valor a las variables de sesion
+                        $clave_provicional = Validator::generarCodigo(8);
+                        $clave = password_hash($clave_provicional, PASSWORD_DEFAULT);
+                        $sql = "UPDATE clientes set contrasenia = ? WHERE correo_cliente = ? AND codigo_cliente = ?";
+                        $params = array($clave, $correo, $codigo);
+                        if(Database::executeRow($sql, $params))
+                        {
+                            $email_user = "noreply.autosflash@gmail.com";
+                            $email_password = "Expo2017";
+                            $the_subject = "Recuperar cuenta";
+                            $address_to = $correo;
+                            $from_name = "Autosflash Services";
+                            $phpmailer = new PHPMailer();
+                            // ---------- datos de la cuenta de Gmail -------------------------------
+                            $phpmailer->Username = $email_user;
+                            $phpmailer->Password = $email_password; 
+                            //-----------------------------------------------------------------------
+                            // $phpmailer->SMTPDebug = 1;
+                            $phpmailer->SMTPSecure = 'ssl';
+                            $phpmailer->Host = "smtp.gmail.com"; // GMail
+                            $phpmailer->Port = 465;
+                            $phpmailer->IsSMTP(); // use SMTP
+                            $phpmailer->SMTPAuth = true;
+                            $phpmailer->setFrom($phpmailer->Username,$from_name);
+                            $phpmailer->AddAddress($address_to); // recipients email
+                            $phpmailer->Subject = $the_subject;	
+                            $phpmailer->Body .="<h1 style='color:#3498db;'>Hola ".$nombres."</h1>";
+                            $phpmailer->Body .= "<p>Tu codigo es: ".$clave_provicional."</p>";
+                            $phpmailer->Body .= "<p>Fecha y Hora: ".date("d-m-Y h:i:s")."</p>";
+                            $phpmailer->IsHTML(true);
+                            
+                            try {
+                                $phpmailer->Send();
                                 $_SESSION['id_cliente'] = $data['codigo_cliente'];
-                                $_SESSION['nombre_cliente'] = $data['nombre_cliente']." ".$data['apellido_cliente'];
-                                $_SESSION['foto_cliente'] = $data['foto'];
-                                header("location: index.php");
+                                $_SESSION['verifiacion'] = 0;
+                                header('location: recuperar2.php');                             
+                            } catch (Exception $exec){
+                                Page::showMessage(2, $error->getMessage(), null);
                             }
-                            else 
-                            {
-                                throw new Exception("La clave ingresada es incorrecta");
-                            }
-                        } else {
-                            throw new Exception("El cliente se encuentra en estado inactivo");
+                            
+
+                            
                         }
                     }
                     else
@@ -73,7 +100,7 @@
                 }
                 else
                 {
-                    throw new Exception("Debe ingresar un correo y una clave");
+                    throw new Exception("Debe ingresar su correo.");
                 }
             }
             catch (Exception $error)
@@ -91,36 +118,23 @@
                 <div class="col s12 m6 offset-m3">
                     <br>
                     <div class="card-panel">
-                        <h3 class="center-txt">Iniciar Sesión</h3>
+                        <h3 class="center-txt">Recuperar contraseña</h3>
                         <br>
-                        <div class="center">
-                            <img src = "img/sesion/usuario.png" width="200px">
-                        </div>
+                        <p>A continuación ingrese su correo electrónico. Se enviará un código a su cuenta de correo electronico que deberá ser confirmado en la siguiente ventana.</p>
                         <!--Inicio del formulario-->
                         <form  method='post'>
                             <div class="input-field col s12">
                                 <input type="email" id="correo" name="correo" class="validate" required/>
                                 <label for="correo">Correo eléctronico:</label>
-                            </div>
-                            <div class="input-field col s12">
-                                <input id="clave" name="clave" type="password" class="validate" required/>
-                                <label for="clave">Contraseña:</label>
-                            </div>
-                            
-                        
+                            </div>                        
                             <!--botones-->
                             <div class="center">
-                                <button type='submit' class='btn waves-effect'>Iniciar Sesion</button>
+                                <button type='submit' class='btn waves-effect'>Continuar</button>
                                 <button type='submit' class='btn waves-effect'>Cancelar</button>
-                                <h6>¿Olvidaste tu contraseña?
-                            <a href="recuperar1.php" class="waves-effect waves-light ">Haz clic aqui</a></h6>
                             </div>
-                            <br>
                         </form>
-                        <div class="center">
-                            <h6>¿No tienes una cuenta? Registrate aquí</h6>
-                            <a href="registro.php" class="waves-effect waves-light btn">Registrarse</a>
-                        </div>
+                        <br>
+                        
                     </div>
                 </div>
             </div>

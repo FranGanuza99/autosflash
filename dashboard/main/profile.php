@@ -5,6 +5,12 @@ Page::header("Perfil del usuario");
 //inicializo la variable de imagen
 $imagen = null;
 
+$sql = "SELECT * FROM usuarios WHERE codigo_usuario = ?";
+$params = array($_SESSION['id_usuario']);
+$data = Database::getRow($sql, $params);
+$hash = $data['contrasenia_usuario'];
+$imagen = $data['url_foto'];
+
 //valida si post esta vacio
 if(!empty($_POST)) {
     $_POST = Validator::validateForm($_POST);
@@ -13,8 +19,6 @@ if(!empty($_POST)) {
   	$apellidos = $_POST['apellidos'];
     $correo = $_POST['correo'];
     $alias = $_POST['alias'];
-    $clave1 = $_POST['clave1'];
-    $clave2 = $_POST['clave2'];
     $archivo = $_FILES['imagen'];
 
     try 
@@ -26,72 +30,46 @@ if(!empty($_POST)) {
             {
                 if($alias != "")
                 {
-                    //validacion de imagen
-                    if($archivo['name'] != null)
+                    if(password_verify($alias, $hash)) 
+		    	    { 
+                        throw new Exception("El usuario no puede ser modificado. Intente ingresando otro alias.");
+                    } 
+                    else 
                     {
-                        $base64 = Validator::validateImage($archivo);
-                        if($base64 != false)
+                        //validacion de imagen
+                        if($archivo['name'] != null)
                         {
-                            $imagen = $base64;
-                        }
-                        else
-                        {
-                            throw new Exception("Ocurrió un problema con la imagen");
-                        }
-
-                        //validacion de contrasenas
-                        if($clave1 != "" || $clave2 != "")
-                        {
-                            if($clave1 == $clave2)
+                            $base64 = Validator::validateImage($archivo);
+                            if($base64 != false)
                             {
-                                //Actualiza junto con la contraseña
-                                $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, contrasenia_usuario = ?, url_foto = ? WHERE codigo_usuario = ?";
-                                $params = array($nombres, $apellidos, $correo, $alias, $clave, $imagen, $_SESSION['id_usuario']);
+                                $imagen = $base64;
                             }
                             else
                             {
-                                throw new Exception("Las contraseñas no coinciden");
+                                throw new Exception("Ocurrió un problema con la imagen");
                             }
-                        }
-                        else
-                        {
                             //Actualiza junto sin la contraseña
                             $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, url_foto = ? WHERE codigo_usuario = ?";
                             $params = array($nombres, $apellidos, $correo, $alias, $imagen, $_SESSION['id_usuario']);
-                        }
-                        Database::executeRow($sql, $params);
-                        Page::showMessage(1, "Operación satisfactoria", "index.php");
-                        //Actualiza algunas variables de sesion
-                        $_SESSION['nombre_usuario'] = $nombres." ".$apellidos;
-                        $_SESSION['foto_perfil'] = $imagen;
+                            
+                            if (Database::executeRow($sql, $params)){
+                                Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                //Actualiza algunas variables de sesion
+                                $_SESSION['nombre_usuario'] = $nombres." ".$apellidos;
+                                $_SESSION['foto_usuario'] = $imagen;
+                            }
 
-                    } else if ($imagen == null) {
-                        
-                        if($clave1 != "" || $clave2 != "")
-                        {
-                            if($clave1 == $clave2)
-                            {
-                                //actualiza sin la imagen y con clave
-                                $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, contrasenia_usuario = ? WHERE codigo_usuario = ?";
-                                $params = array($nombres, $apellidos, $correo, $alias, $clave, $_SESSION['id_usuario']);
-                            }
-                            else
-                            {
-                                throw new Exception("Las contraseñas no coinciden");
-                            }
-                        }
-                        else
-                        {
-                             //actualiza sin la imagen y sin clave
+                        } else {
+                            //actualiza sin la imagen y sin clave
                             $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ? WHERE codigo_usuario = ?";
                             $params = array($nombres, $apellidos, $correo, $alias, $_SESSION['id_usuario']);
-                        }
-                        Database::executeRow($sql, $params);
-                        Page::showMessage(1, "Operación satisfactoria", "index.php");
-                        $_SESSION['nombre_usuario'] = $nombres." ".$apellidos;
-                    } 
+                            
+                            if (Database::executeRow($sql, $params)){
+                                Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                $_SESSION['nombre_usuario'] = $nombres." ".$apellidos;
+                            }           
+                        } 
+                    }
                 }
                 else
                 {
@@ -122,6 +100,7 @@ if(!empty($_POST)) {
     $correo = $data['correo_usuario'];
     $alias = $data['usuario'];
     $imagen = $data['url_foto'];
+    $hash = $data['contrasenia_usuario'];
 }
 ?>
     <!--inicia el formulario-->
@@ -171,19 +150,6 @@ if(!empty($_POST)) {
                     <i class='material-icons prefix'>person_pin</i>
                     <input id='alias' type='text' name='alias' class='validate' value='<?php print($alias); ?>' required/>
                     <label for='alias'>Alias</label>
-                </div>
-            </div>
-            <div class="row">
-                <h5>Cambiar contraseña</h5>
-                <div class='input-field col s12 m6'>
-                    <i class='material-icons prefix'>security</i>
-                    <input id='clave1' type='password' name='clave1' class='validate'/>
-                    <label for='clave1'>Contraseña</label>
-                </div>
-                <div class='input-field col s12 m6'>
-                    <i class='material-icons prefix'>security</i>
-                    <input id='clave2' type='password' name='clave2' class='validate'/>
-                    <label for='clave2'>Confirmar contraseña</label>
                 </div>
             </div>
             

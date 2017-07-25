@@ -4,7 +4,7 @@
         <meta charset="utf-8"/>
         <!--Import Google Icon Font-->
         <link href="../css/icons.css" rel="stylesheet">
-        <title>Formulario de registro</title>
+        <title>Editar perfil</title>
         <!--Import materialize.css-->
         <link type="text/css" rel="stylesheet" href="../css/icon.css"  media="screen,projection"/>
         <!--Let browser know website is optimized for mobile-->
@@ -45,7 +45,6 @@
             $direccion = $data['direccion_cliente'];
             $estado = $data['estado_cliente'];
             $foto = $data['foto'];
-            $clave = $data['contrasenia'];
             
         }
         else{
@@ -61,8 +60,6 @@
             $correo = $_POST['correo'];
             $dui = $_POST['dui'];
             $nit = $_POST['nit'];
-            $clave1 = $_POST['clave1'];
-            $clave2 =$_POST['clave2'];
             $telefono =$_POST['telefono'];
             $direccion =$_POST['direccion'];
             $archivo = $_FILES['foto'];
@@ -88,33 +85,15 @@
                                             {
                                                 $foto = Validator::validateImageProfile($archivo);
                                             }
-                                            
-
-                                            //validacion de clave
-                                            if($clave1 != "" && $clave2 != "")
+                                            $sql = "UPDATE clientes SET nombre_cliente = ?, apellido_cliente = ?, correo_cliente = ?, dui_cliente = ?, nit_cliente = ?, telefono_cliente = ?, direccion_cliente = ?, estado_cliente = ?, foto = ? WHERE codigo_cliente = ?";
+                                            $params = array($nombres, $apellidos, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $id);
+                                            if(Database::executeRow($sql, $params))
                                             {
-                                                if($clave1 == $clave2)
-                                                {
-                                                    //ingreso de datos de cliente
-                                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                                    //actializa un registro existente
-                                                    $sql = "UPDATE clientes SET nombre_cliente = ?, apellido_cliente = ?, correo_cliente = ?, dui_cliente = ?, nit_cliente = ?, telefono_cliente = ?, direccion_cliente = ?, estado_cliente = ?, foto = ?, contrasenia = ? WHERE codigo_cliente = ?";
-                                                    $params = array($nombres, $apellidos, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $id);
-                                                    if(Database::executeRow($sql, $params))
-                                                    {
-                                                        Page::showMessage(1, "Operación satisfactoria", "index.php");
-                                                        $_SESSION['nombre_cliente'] = $nombres." ".$apellidos;
-                                                        $_SESSION['foto_perfil'] = $data['foto'];
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    throw new Exception("Las contraseñas no coinciden");
-                                                }
+                                                Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                                $_SESSION['nombre_cliente'] = $nombres." ".$apellidos;
+                                                $_SESSION['foto_cliente'] = $foto;
                                             }
-                                            else {
-                                                throw new Exception("Debe ingresar ambas contraseñas");
-                                            }
+                                                
                                         }
                                         else{
                                                 throw new Exception("Debe ingresar un correo valido");
@@ -224,24 +203,12 @@
                                         <input class='file-path validate' type='text' placeholder='Seleccione una foto de perfil'/>
                                     </div>
                                 </div>
-                                <!--contra-->
-                                <div class="input-field col s6">
-                                    <i class="material-icons prefix">vpn_key</i>
-                                    <input id="clave1" type="password" name="clave1" class="validate"  />
-                                    <label for="clave1">Contraseña</label>
-                                </div>
-                                <!--contra2-->
-                                <div class="input-field col s6">
-                                    <i class="material-icons prefix">replay</i>
-                                    <input id="clave2" type="password" name="clave2" class="validate" />
-                                    <label for="clave2">Confirmar contraseña</label>
-                                </div>
 
                             </div>
                             <!--botones del form--> 
                             <div class='row center-align'>
-                                <button type='submit' class='btn waves-effect'>Actualizar</button>
-                                <button type='submit' class='btn waves-effect'>Cancelar</button>
+                                <button type='submit' class='btn waves-effect green'>Actualizar información</button>
+                                <a href='index.php' class="waves-effect waves-light btn grey">Cancelar</a>
                             </div>
                         </form>         
                     </div>

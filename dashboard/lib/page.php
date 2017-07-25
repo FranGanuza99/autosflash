@@ -34,19 +34,21 @@ class Page
 					<li class='user-details'>
 						<div class='row'>
 							<div class='col col s4 m4 l4'>
-								<img id='profile' src='data:image/*;base64,".$_SESSION['foto_perfil']."' alt=' class='circle responsive-img valign profile-image'>
+								<img id='profile' src='data:image/*;base64,".$_SESSION['foto_usuario']."' alt=' class='circle responsive-img valign profile-image'>
 							</div>
 							<div class='col col s8 m8 l8 '>
 
 								<ul id='profile-dropdown' class='dropdown-content'>
-									<li><a href='../main/profile.php'><i class='user-icons material-icons'>person</i> Perfil</a>
+									<li><a class='options_menu' href='../main/profile.php'><i class='user-icons material-icons'>person</i> Perfil</a>
 									</li>
-									<li><a href='#'><i class='user-icons material-icons'>settings</i> Ajustes</a>
+									<li><a class='options_menu' href='#'><i class='user-icons material-icons'>settings</i> Ajustes</a>
 									</li>
-									<li><a href='#'><i class='user-icons material-icons'>live_help</i> Ayuda</a>
+									<li><a class='options_menu' href='#'><i class='user-icons material-icons'>live_help</i> Ayuda</a>
+									</li>
+									<li><a class='options_menu' href='../main/modificar_clave.php'><i class='user-icons material-icons'>security</i> Cambiar contraseña</a>
 									</li>
 									<li class='divider'></li>
-									<li><a href='../main/logout.php'><i class='user-icons material-icons'>input</i> Salir</a>
+									<li><a class='options_menu' href='../main/logout.php'><i class='user-icons material-icons'>input</i> Salir</a>
 									</li>
 								</ul>
 								<a class='btn-flat dropdown-button waves-effect waves-light white-text profile-btn'  data-activates='profile-dropdown'>".$_SESSION['nombre_usuario']."<i class='tiny material-icons right'>details</i></a>
@@ -124,7 +126,7 @@ class Page
 				<div class='container'>
 			");
 			$filename = basename($_SERVER['PHP_SELF']);
-			if($filename != "login.php" && $filename != "register.php")
+			if($filename != "login.php" && $filename != "register.php" && $filename != "recuperar1.php" && $filename != "recuperar2.php" && $filename != "recuperar3.php")
 			{
 				self::showMessage(3, "¡Debe iniciar sesión!", "../main/login.php");
 				self::footer();

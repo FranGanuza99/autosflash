@@ -38,8 +38,12 @@ else
         $cargo = $data['codigo_cargo'];
         $foto = $data['url_foto'];
         $estado = $data['estado_usuario'];
+        $hash = $data['contrasenia_usuario'];
     }  
 }
+
+$fecha = getdate();
+$actual = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
 
 //valida si post esta vacio y enlaza las variables con el campo
 if(!empty($_POST))
@@ -66,6 +70,8 @@ if(!empty($_POST))
                     {
                         if($nacimiento != "")
                         {
+                            $nacimiento = new DateTime($nacimiento);
+                            $nacimiento = $nacimiento->format('Y-m-d');
                             if($cargo > 0)
                             {
                                 //validacion de foto
@@ -85,41 +91,50 @@ if(!empty($_POST))
                                 //valida si es un nuevo usuario o una modificacion
                                 if($id == null)
                                 {
-                                    $usuario = $_POST['usuario'];
-                                    if($usuario != "")
-                                    {   
-                                        $clave1 = $_POST['clave1'];
-                                        $clave2 = $_POST['clave2'];
-                                        //valida claves
-                                        if($clave1 != "" && $clave2 != "")
+                                      
+                                    $clave1 = $_POST['clave1'];
+                                    $clave2 = $_POST['clave2'];
+                                    //valida claves
+                                    if($clave1 != "" && $clave2 != "")
+                                    {
+                                        if($clave1 == $clave2)
                                         {
-                                            if($clave1 == $clave2)
+                                            if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $clave1))
                                             {
-                                                //inserta datos nuevos
-                                                $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                                $sql = "INSERT INTO usuarios(nombre_usuario, apellido_usuario, correo_usuario, usuario, contrasenia_usuario, fecha_nacimiento, codigo_cargo, url_foto, estado_usuario) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                                                $params = array($nombre, $apellido, $correo, $usuario, $clave, $nacimiento, $cargo, $foto, $estado);
+                                                if ($usuario != $clave1){
+                                                    //inserta datos nuevos
+                                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                                    $sql = "INSERT INTO usuarios(nombre_usuario, apellido_usuario, correo_usuario, usuario, contrasenia_usuario, fecha_nacimiento, codigo_cargo, url_foto, estado_usuario, fecha_clave) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                    $params = array($nombre, $apellido, $correo, $usuario, $clave, $nacimiento, $cargo, $foto, $estado, $actual);
+                                                } else {
+                                                    throw new Exception("El alias y la contraseña son los mismos");
+                                                }
                                             }
-                                            else
+                                            else 
                                             {
-                                                throw new Exception("Las contraseñas no coinciden");
+                                                throw new Exception("El formato de contraseña incorrecto. La contraseña debe contener por lo menos un número y un caracter especial (Ejemplo: Abcdef1#)");
                                             }
                                         }
                                         else
                                         {
-                                            throw new Exception("Debe ingresar ambas contraseñas");
+                                            throw new Exception("Las contraseñas no coinciden");
                                         }
                                     }
                                     else
                                     {
-                                        throw new Exception("Debe ingresar un alias");
+                                        throw new Exception("Debe ingresar ambas contraseñas");
                                     }
                                 }
                                 else
                                 {
-                                    //actializa un registro existente
-                                    $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, fecha_nacimiento = ?, codigo_cargo = ?, url_foto = ?, estado_usuario = ? WHERE codigo_usuario = ?";
-                                    $params = array($nombre, $apellido, $correo, $usuario, $nacimiento, $cargo, $foto, $estado, $id);
+                                    if(password_verify($usuario, $hash)) 
+                                    { 
+                                        throw new Exception("El usuario no puede ser modificado. Intente ingresando otro alias.");
+                                    } else {
+                                        //actializa un registro existente
+                                        $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, fecha_nacimiento = ?, codigo_cargo = ?, url_foto = ?, estado_usuario = ? WHERE codigo_usuario = ?";
+                                        $params = array($nombre, $apellido, $correo, $usuario, $nacimiento, $cargo, $foto, $estado, $id);
+                                    }
                                 }
                                 if(Database::executeRow($sql, $params))
                                 {

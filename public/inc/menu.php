@@ -2,17 +2,21 @@
 session_start();
 ?>
 <ul id='dropdown1' class='dropdown-content dropstyle'>
-    <li><a href='perfil.php'>Perfil</a></li>
+    <li><a href='perfil.php'>Editar perfil</a></li>
     <li class='divider'></li>
     <li><a href='compras.php'>Compras realizadas</a></li>
+    <li class='divider'></li>
+    <li><a href='modificar_clave.php'>Cambiar contraseña</a></li>
     <li class='divider'></li>
     <li><a href='logout.php'>Cerrar Sesion</a></li>
 </ul>
 
 <ul id='dropdown12' class='dropdown-content dropstyle'>
-    <li><a href='perfil.php'>Perfil</a></li>
+    <li><a href='perfil.php'>Editar perfil</a></li>
     <li class='divider'></li>
     <li><a href='compras.php'>Compras realizadas</a></li>
+    <li class='divider'></li>
+    <li><a href='modificar_clave.php'>Cambiar contraseña</a></li>
     <li class='divider'></li>
     <li><a href='logout.php'>Cerrar Sesion</a></li>
 </ul>
@@ -33,7 +37,7 @@ session_start();
                     if (isset($_SESSION['nombre_cliente'])){
                         //muestra la foto de perfil del cliente
                         print("
-                        <li><a class='foto-perfil dropdown-button' data-activates='dropdown1'><img src='data:image/*;base64,".$_SESSION['foto_perfil']."' class='circle' width='48' height='48'></a></li>");
+                        <li><a class='foto-perfil dropdown-button' data-activates='dropdown1'><img src='data:image/*;base64,".$_SESSION['foto_cliente']."' class='circle' width='48' height='48'></a></li>");
                     } else {
                         print("<li><a href='sesion.php'>Iniciar sesión</a></li>");
                     }

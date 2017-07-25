@@ -288,3 +288,7 @@ div#imagesv {
     padding-top: 40px;
     padding-bottom: 40px;
 }
+
+.dropdown-content li a.options_menu {
+    height: 100%;
+}

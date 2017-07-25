@@ -108,7 +108,7 @@ class Database
                 self::showMessage(2, "El registro que desea procesar ya se encuentra en la base de datos.", null);
                 break;
             default:
-                self::showMessage(2, "Ha ocurrido un error desconocido, favor contacte a un administrador. Codigo de error de MySQL: ".$code, null);
+                self::showMessage(2, "Ha ocurrido un error desconocido, favor contacte a un administrador. Codigo de error de MySQL: $code", null);
         }
     }
 //se mandon los mensajes al momento de realizar alguna accion
