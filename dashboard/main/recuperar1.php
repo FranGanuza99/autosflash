@@ -108,7 +108,7 @@ if(!empty($_POST))
             <br>
             <p>A continuación ingrese su correo electrónico. Se enviará un código a su cuenta de correo electronico que deberá ser confirmado en la siguiente ventana.</p>
             <!--Inicio del formulario-->
-            <form  method='post'>
+            <form  method='post' autocomplete='off'>
                 <div class="input-field col s12">
                     <input type="email" id="correo" name="correo" class="validate" required/>
                     <label for="correo">Correo eléctronico:</label>

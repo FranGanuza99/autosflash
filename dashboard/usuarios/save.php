@@ -1,7 +1,6 @@
 <?php
 ob_start();
 require("../lib/page.php");
-
 //valida si se ha recibido el id
 if(empty($_GET['id'])) 
 {
@@ -40,6 +39,19 @@ else
         $estado = $data['estado_usuario'];
         $hash = $data['contrasenia_usuario'];
     }  
+}
+
+//validando permisos
+global $agregar_usuario;
+global $modificar_usuario;
+if($agregar_usuario == 0 && empty($_GET['id']))
+{
+    header("location: index.php");
+} 
+
+if($modificar_usuario == 0 && !empty($_GET['id']))
+{
+    header("location: index.php");
 }
 
 $fecha = getdate();
@@ -109,7 +121,7 @@ if(!empty($_POST))
                                                 {
                                                     if($clave1 == $clave2)
                                                     {
-                                                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $clave1))
+                                                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&]).*$/", $clave1))
                                                         {
                                                             if ($usuario != $clave1){
                                                                 //inserta datos nuevos
@@ -193,7 +205,7 @@ if(!empty($_POST))
 ?>
 
 <!-- Inicia el formulario -->
-<form action="<?php $_SERVER['PHP_SELF']; ?>" method='post' enctype='multipart/form-data'>
+<form  autocomplete='off' action="<?php $_SERVER['PHP_SELF']; ?>" method='post' enctype='multipart/form-data'>
     <div class='row'>
         <!-- Muestra la foto -->
         <h5>Foto de perfil</h5>

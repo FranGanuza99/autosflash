@@ -29,6 +29,10 @@
             header('location: index.php');
         }
 
+        //calculo de fecha
+        $fecha = getdate();
+        $registro = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+
         if (isset($_SESSION['id_cliente']) && isset($_SESSION['verifiacion']))
         {
             if ($_SESSION['verifiacion'] == 1)
@@ -46,31 +50,36 @@
                         {
                             if($clave1 == $clave2)
                             {
-                                if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $clave1))
+                                if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&]).*$/", $clave1))
                                 {
-                                    
-                                    //ingreso de datos de cliente
-                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                    //actializa un registro existente
-                                    $sql = "UPDATE clientes SET contrasenia = ? WHERE codigo_cliente = ?";
-                                    $params = array($clave, $_SESSION['id_cliente']);
-                                    if(Database::executeRow($sql, $params))
-                                    {
-                                        $sql = "SELECT * FROM clientes WHERE clientes.codigo_cliente = ?";
-                                        $params = array($_SESSION['id_cliente']);
-                                        $data = Database::getRow($sql, $params);
-                                        if ($data != null){
-                                            $_SESSION['id_cliente'] = $data['codigo_cliente'];
-                                            $_SESSION['nombre_cliente'] = $data['nombre_cliente']." ".$data['apellido_cliente'];
-                                            $_SESSION['foto_cliente'] = $data['foto'];
-                                            Page::showMessage(1, "Contraseña actualizada correctamente", "index.php");
-                                        }
-                                        else 
+                                    $sql = "SELECT * FROM clientes WHERE clientes.codigo_cliente = ?";
+                                    $params = array($_SESSION['id_cliente']);
+                                    $data = Database::getRow($sql, $params);
+                                    $correo = $data['correo_cliente'];
+                                    if ($correo != $clave1){
+                                        //ingreso de datos de cliente
+                                        $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                        //actializa un registro existente
+                                        $sql = "UPDATE clientes SET contrasenia = ?, fecha_clave = ? WHERE codigo_cliente = ?";
+                                        $params = array($clave, $registro, $_SESSION['id_cliente']);
+                                        if(Database::executeRow($sql, $params))
                                         {
-                                            throw new Exception("Ocurrio un erro de seguridad.");
+                                            if ($data != null){
+                                                $_SESSION['id_cliente'] = $data['codigo_cliente'];
+                                                $_SESSION['nombre_cliente'] = $data['nombre_cliente']." ".$data['apellido_cliente'];
+                                                $_SESSION['foto_cliente'] = $data['foto'];
+                                                Page::showMessage(1, "Contraseña actualizada correctamente", "index.php");
+                                            }
+                                            else 
+                                            {
+                                                throw new Exception("Ocurrio un erro de seguridad.");
+                                            }
                                         }
-                                    }
-                                        
+                                    } 
+                                    else 
+                                    {
+                                        throw new Exception("La contraseña no debe coincidir con el correo.");
+                                    }     
                                 }
                                 else 
                                 {
@@ -110,7 +119,7 @@
                         <h3 class="center-txt">Cambiar contraseña</h3>
                         <br>
                         <!--Inicio del formulario-->
-                        <form  method='post'>
+                        <form  method='post' autocomplete='off'>
                             <div class="input-field col s12">
                                 <input id="clave1" name="clave1" type="password" class="validate" required/>
                                 <label for="clave1">Contraseña:</label>

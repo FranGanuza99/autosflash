@@ -29,7 +29,7 @@ if(!empty($_POST)) {
                 {
                     if($clave1 == $clave2)
                     {
-                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $clave1))
+                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&]).*$/", $clave1))
                         {
                             //Actualiza junto con la contraseña
                             if(password_verify($clave_antigua, $hash)) 
@@ -40,11 +40,22 @@ if(!empty($_POST)) {
                                 } 
                                 else 
                                 {
-                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                    $sql = "UPDATE usuarios SET contrasenia_usuario = ?, fecha_clave = ? WHERE codigo_usuario = ?";
-                                    $params = array($clave, $actual, $_SESSION['id_usuario']);
-                                    if (Database::executeRow($sql, $params)){
-                                        Page::showMessage(1, "Operación satisfactoria", "../index.php");
+                                    $sql = "SELECT * FROM cargos_usuarios, usuarios WHERE usuarios.codigo_cargo = cargos_usuarios.codigo_cargo AND usuarios.codigo_usuario = ?";
+                                    $params = array($_SESSION['id_usuario']);
+                                    $data = Database::getRow($sql, $params);
+                                    $alias = $data['usuario'];
+                                    if ($alias != $clave1)
+                                    {
+                                        $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                        $sql = "UPDATE usuarios SET contrasenia_usuario = ?, fecha_clave = ? WHERE codigo_usuario = ?";
+                                        $params = array($clave, $actual, $_SESSION['id_usuario']);
+                                        if (Database::executeRow($sql, $params)){
+                                            Page::showMessage(1, "Operación satisfactoria", "../index.php");
+                                        }
+                                    }
+                                    else 
+                                    {
+                                        throw new Exception("La contraseña no se puede procesar, intente ingresando una diferente.");
                                     }
                                 }
                             } 
@@ -86,7 +97,7 @@ if(!empty($_POST)) {
 } 
 ?>
     <!--inicia el formulario-->
-        <form method='post' enctype='multipart/form-data'>
+        <form method='post' enctype='multipart/form-data' autocomplete='off'>
             <div class='row'>
                 <h5>Contraseña antigua</h5>
                 <div class='input-field col s12 m6'>

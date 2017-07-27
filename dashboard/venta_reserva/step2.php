@@ -4,8 +4,13 @@ require("../lib/page.php");
 require("../../lib/zebra.php");
 Page::header("Reservas realizadas");
 
+//validando permisos
+global $facturar;
+if($facturar == 0){
+	header("location: ../ventas/index.php");
+}
+
 //se hace un select de todos los vehiculos
-//se inicia conexion
 if(!empty($_POST))
 {
 	//se crea un buscador

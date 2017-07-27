@@ -1,17 +1,8 @@
 <?php
-ob_start();
 require("../lib/page.php");
-Page::header("Eliminar cliente");
+Page::header("Eliminar cargo");
 
-//validando permisos
-global $modificar_cliente;
-if($modificar_cliente == 0)
-{
-    header("location: index.php");
-} 
-
-//valida si se ha obtenido el id
-if(!empty($_GET['id'])) 
+if(!empty($_GET['id']))
 {
     $id = $_GET['id'];
 }
@@ -20,31 +11,29 @@ else
     header("location: index.php");
 }
 
-//valida si el post esta vacio
 if(!empty($_POST))
 {
-	
 	$id = $_POST['id'];
 	try 
-	{	
-		//elimina el registro
-		$sql = "DELETE FROM clientes where codigo_cliente = ?";
-		$params = array($id);
-		if(Database::executeRow($sql, $params))
+	{
+		$sql = "DELETE FROM cargos_usuarios WHERE codigo_cargo = ?";
+	    $params = array($id);
+	    if(Database::executeRow($sql, $params))
 		{
 			Page::showMessage(1, "Registro eliminado correctamente", "index.php");
 		}
-	}
+		else
+		{
+			throw new Exception("Operación fallida");
+		}
+	} 
 	catch (Exception $error) 
 	{
 		Page::showMessage(2, $error->getMessage(), "index.php");
 	}
-	
-	
 }
 ?>
 
-<!-- inicio de formulario (botones) -->
 <form method='post'>
 	<div class='row center-align'>
 		<input type='hidden' name='id' value='<?php print($id); ?>'/>
@@ -53,7 +42,6 @@ if(!empty($_POST))
 	</div>
 </form>
 
-<!-- Se muestra el footer -->
 <?php
 Page::footer();
 ?>

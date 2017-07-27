@@ -10,6 +10,10 @@ if($data != null)
     header("location: login.php");
 }
 
+//calculo de fecha
+$fecha = getdate();
+$registro = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+
 //valida si post esta vacio
 if(!empty($_POST))
 {
@@ -53,12 +57,19 @@ if(!empty($_POST))
                         {
                             if($clave1 == $clave2)
                             {
-                                //Inserta el registro del nuevo usuario
-                                $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                $sql = "INSERT INTO usuarios(nombre_usuario, apellido_usuario, correo_usuario, usuario, contrasenia_usuario, fecha_nacimiento, codigo_cargo, estado_usuario, url_foto) VALUES(?, ?, ?, ?, ?, ?, 1, 1, ?)";
-                                $params = array($nombres, $apellidos, $correo, $alias, $clave, $nacimiento, $foto);
-                                Database::executeRow($sql, $params);
-                                Page::showMessage(1, "Operación satisfactoria", "login.php");
+                                if ($clave1 != $alias)
+                                {
+                                    //Inserta el registro del nuevo usuario
+                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                    $sql = "INSERT INTO usuarios(nombre_usuario, apellido_usuario, correo_usuario, usuario, contrasenia_usuario, fecha_clave, fecha_nacimiento, codigo_cargo, estado_usuario, url_foto) VALUES(?, ?, ?, ?, ?, ?, ?, 1, 1, ?)";
+                                    $params = array($nombres, $apellidos, $correo, $alias, $clave, $registro, $nacimiento, $foto);
+                                    Database::executeRow($sql, $params);
+                                    Page::showMessage(1, "Operación satisfactoria", "login.php");
+                                }
+                                else 
+                                {
+                                    throw new Exception("La contraseña no se puede procesar, intente ingresando una diferente.");
+                                }
                             }
                             else
                             {
@@ -110,7 +121,7 @@ else
 <div class="card-panel">
     <h3 class= "center-align">Registro de usuario</h3>
     <!-- Inicio del formulario -->
-    <form method='post' enctype='multipart/form-data'>
+    <form method='post' enctype='multipart/form-data' autocomplete='off'>
         <div class='row'>
             <h5>Foto de perfil</h5> 
             <div class='file-field input-field col s12 m6'>

@@ -17,6 +17,10 @@ if($data == null)
     header("location: register.php");
 }
 
+//calculo de fecha
+$fecha = getdate();
+$registro = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+
 if (isset($_SESSION['id_usuario']) && isset($_SESSION['verifiacion_usuario']))
 {
     if ($_SESSION['verifiacion_usuario'] == 1)
@@ -36,30 +40,36 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['verifiacion_usuario']))
                     {
                         if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $clave1))
                         {
-                            
-                            //ingreso de datos de usuario
-                            $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                            //actializa un registro existente
-                            $sql = "UPDATE usuarios SET contrasenia_usuario = ? WHERE codigo_usuario = ?";
-                            $params = array($clave, $_SESSION['id_usuario']);
-                            if(Database::executeRow($sql, $params))
+                            $sql = "SELECT * FROM cargos_usuarios, usuarios WHERE usuarios.codigo_cargo = cargos_usuarios.codigo_cargo AND usuarios.codigo_usuario = ?";
+                            $params = array($_SESSION['id_usuario']);
+                            $data = Database::getRow($sql, $params);
+                            $alias = $data['usuario'];
+                            if ($alias != $clave1)
                             {
-                                $sql = "SELECT * FROM cargos_usuarios, usuarios WHERE usuarios.codigo_cargo = cargos_usuarios.codigo_cargo AND usuarios.codigo_usuario = ?";
-                                $params = array($_SESSION['id_usuario']);
-                                $data = Database::getRow($sql, $params);
-                                if ($data != null){
-                                    $_SESSION['cargo'] = $data['cargo_usuario'];
-                                    $_SESSION['id_usuario'] = $data['codigo_usuario'];
-                                    $_SESSION['nombre_usuario'] = $data['nombre_usuario']." ".$data['apellido_usuario'];
-                                    $_SESSION['foto_usuario'] = $data['url_foto'];
-                                    Page::showMessage(1, "Contraseña actualizada correctamente", "index.php");
-                                }
-                                else 
+                                //ingreso de datos de usuario
+                                $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                //actializa un registro existente
+                                $sql = "UPDATE usuarios SET contrasenia_usuario = ?, fecha_clave = ? WHERE codigo_usuario = ?";
+                                $params = array($clave, $registro, $_SESSION['id_usuario']);
+                                if(Database::executeRow($sql, $params))
                                 {
-                                    throw new Exception("Ocurrio un erro de seguridad.");
+                                    if ($data != null){
+                                        $_SESSION['cargo'] = $data['cargo_usuario'];
+                                        $_SESSION['id_usuario'] = $data['codigo_usuario'];
+                                        $_SESSION['nombre_usuario'] = $data['nombre_usuario']." ".$data['apellido_usuario'];
+                                        $_SESSION['foto_usuario'] = $data['url_foto'];
+                                        Page::showMessage(1, "Contraseña actualizada correctamente", "index.php");
+                                    }
+                                    else 
+                                    {
+                                        throw new Exception("Ocurrio un erro de seguridad.");
+                                    }
                                 }
                             }
-                                
+                            else 
+                            {
+                                throw new Exception("La contraseña no se puede procesar, intente ingresando una diferente.");
+                            }   
                         }
                         else 
                         {
@@ -98,7 +108,7 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['verifiacion_usuario']))
             <h3 class="center-txt">Cambiar contraseña</h3>
             <br>
             <!--Inicio del formulario-->
-            <form  method='post'>
+            <form  method='post' autocomplete='off'>
                 <div class="input-field col s12">
                     <input id="clave1" name="clave1" type="password" class="validate" required/>
                     <label for="clave1">Contraseña:</label>

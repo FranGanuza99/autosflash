@@ -30,6 +30,18 @@ class Page
 		");
 		if(isset($_SESSION['nombre_usuario']))
 		{
+			$sql = "SELECT * FROM cargos_usuarios WHERE cargo_usuario = ?";
+			$params = array($_SESSION['cargo']);
+			$data = Database::getRow($sql, $params);
+			$GLOBALS['cargo'] = $data['cargo_usuario'];
+			$GLOBALS['agregar_vehiculo'] = $data['permiso_agregar_vehiculos'];
+			$GLOBALS['agregar_usuario'] = $data['permiso_agregar_usuario'];
+			$GLOBALS['ver_datos'] = $data['permiso_datos_estadisticos'];
+			$GLOBALS['promociones'] = $data['permiso_agregar_promociones'];
+			$GLOBALS['facturar'] = $data['permiso_facturar'];
+			$GLOBALS['modificar_cliente'] = $data['permiso_modificar_cliente'];
+			$GLOBALS['modificar_usuario'] = $data['permiso_modificar_usuario'];
+
 			print("
 				<ul class='side-nav fixed' id='mobile-menu'>
 					<li class='user-details'>
@@ -56,13 +68,26 @@ class Page
 								<p class='user-roal'>".$_SESSION['cargo']."</p>
 							</div>
 						</div>
-					</li>
+					</li>");
+					
+					print("
 					<li class=bold active><i class='material-icons iconos-menu'>dashboard</i><a href='../main/index.php' class='waves-effect waves-teal'>Dashboard</a></li>
-					<li class=bold><i class='material-icons iconos-menu'>supervisor_account</i><a href='../usuarios/index.php' class='waves-effect waves-teal'>Usuarios</a></li>
-					<li class=bold'>
+					<li class=bold>
 					<ul class='collapsible collapsible-accordion'>
-						<li class='bold'><i class='material-icons iconos-menu'>contacts</i><a href='../proveedores/index.php' class='waves-effect waves-teal'>Proveedores</a>
+						<li class='bold'><i class='material-icons iconos-menu'>supervisor_account</i><a class='collapsible-header  waves-effect waves-teal'>Usuarios</a>
+						<div class='collapsible-body'>
+							<ul>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../usuarios/'> Gestión de usuarios</a></li>
+							<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../cargos/'> Cargos de usuarios</a></li>							
+							</ul>
+						</div>
 						</li>
+						<li class='bold'><i class='material-icons iconos-menu'>perm_identity</i><a class='waves-effect waves-teal' href='../clientes/'>Clientes</a></li>
+					</ul>
+					</li>
+					<li class=bold>
+					<ul class='collapsible collapsible-accordion'>
+						<li class='bold'><i class='material-icons iconos-menu'>contacts</i><a href='../proveedores/index.php' class='waves-effect waves-teal'>Proveedores</a></li>
 						<li class='bold'><i class='material-icons iconos-menu'>view_module</i><a class='collapsible-header  waves-effect waves-teal'>Vehiculos</a>
 						<div class='collapsible-body'>
 							<ul>
@@ -78,13 +103,32 @@ class Page
 						<li class='bold'><i class='material-icons iconos-menu'>perm_identity</i><a class='waves-effect waves-teal' href='../clientes/'>Clientes</a></li>
 					</ul>
 					</li>
-					<li class='bold'><i class='material-icons iconos-menu'>library_books</i><a href='../venta_reserva/step2.php' class='waves-effect waves-teal'>Reservaciones</a></li>
+					");
+
+					//validacion de permisos
+					global $facturar;
+					if($facturar == 1){
+						print("
+						<li class='bold'><i class='material-icons iconos-menu'>library_books</i><a href='../venta_reserva/step2.php' class='waves-effect waves-teal'>Reservaciones</a></li>
+						");
+					}
+				
+					print("
 					<ul class='collapsible collapsible-accordion'>
 						<li class='bold'><i class='material-icons iconos-menu'>shop</i><a class='collapsible-header  waves-effect waves-teal'>Ventas</a>
 							<div class='collapsible-body'>
 								<ul>
 								<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../ventas/'> Ventas </a></li>
-								<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../nueva_venta/step1.php'> Realizar una venta</a></li>						
+								");
+
+								//validacion de permisos
+								if($facturar == 1){
+									print("
+									<li><i class='material-icons sub-iconos'>keyboard_arrow_right</i><a class='sub-menu' href='../nueva_venta/step1.php'> Realizar una venta</a></li>
+									");
+								}
+
+								print("						
 								</ul>
 							</div>
 						</li>

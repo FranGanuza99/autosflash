@@ -36,12 +36,17 @@
             $params = array($id);
             $data = Database::getRow($sql, $params);
             $hash = $data['contrasenia'];
+            $correo = $data['correo_cliente'];
             
         }
         else{
              Page::showMessage(2, "Inicie sesion", "sesion.php");
         }
-       
+        
+        //calculo de fecha
+        $fecha = getdate();
+        $registro = $fecha['year'].'-'.$fecha['mon'].'-'.$fecha['mday'];
+
         //valida si post esta vacio y asigna variables a los campos
         if(!empty($_POST))
         {
@@ -56,7 +61,7 @@
                 {
                     if($clave1 == $clave2)
                     {
-                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $clave1))
+                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&.]).*$/", $clave1))
                         {
                             //Actualiza junto con la contraseña
                             if(password_verify($clave_antigua, $hash)) 
@@ -67,14 +72,19 @@
                                 } 
                                 else 
                                 {
-                                    //ingreso de datos de cliente
-                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                    //actializa un registro existente
-                                    $sql = "UPDATE clientes SET contrasenia = ? WHERE codigo_cliente = ?";
-                                    $params = array($clave, $id);
-                                    if(Database::executeRow($sql, $params))
-                                    {
-                                        Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                    if ($correo != $clave1){
+                                        //ingreso de datos de cliente
+                                        $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                        //actializa un registro existente
+                                        $sql = "UPDATE clientes SET contrasenia = ?, fecha_clave = ? WHERE codigo_cliente = ?";
+                                        $params = array($clave, $registro, $id);
+                                        if(Database::executeRow($sql, $params))
+                                        {
+                                            Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                        }
+                                    } 
+                                    else {
+                                        throw new Exception("La contraseña debe ser diferente al correo");
                                     }
                                 }
                             } 
@@ -120,7 +130,7 @@
                         
                         <!--inicio del form de registro-->
                         <!--nombre-->
-                        <form method='post' enctype='multipart/form-data'>
+                        <form method='post' enctype='multipart/form-data' autocomplete='off'>
                             <div class="row">
                                 <h5>Contraseña antigua</h5>
                                 <!--contra-->

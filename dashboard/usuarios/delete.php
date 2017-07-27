@@ -13,6 +13,12 @@ else
     header("location: index.php");
 }
 
+global $modificar_usuario;
+if($modificar_usuario == 0)
+{
+    header("location: index.php");
+}
+
 //valida si el post esta vacio
 if(!empty($_POST))
 {
