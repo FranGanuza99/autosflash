@@ -3,7 +3,7 @@ ob_start();
 require("../lib/page.php");
 
 //valida si se ha recibido el id
-if(empty($_GET['id'])) 
+     
 {
     Page::header("Agregar proveedores");
     //asigna null a las variables

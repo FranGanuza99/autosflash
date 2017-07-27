@@ -70,130 +70,142 @@ if(!empty($_POST))
     $estado = $_POST['estado'];
     $archivo = $_FILES['foto'];
 
-    try 
-    {
-        if($nombre != "")
-        {
-            if($apellido != "")
-            {
-                if($correo != "")
+    $response_recapchat =  $_POST['g-recaptcha-response'];
+    $secret = "6LehqioUAAAAAEfCqpsYct5UaPLCTQlLVDJTwxNv";
+            if(!$response_recapchat){
+                Page::showMessage(2, "Eres humano?", "save.php");       
+            }
+            $ip=$_SERVER['REMOTE_ADDR'];
+            $validation_server = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response_recapchat&remoteip=$ip");
+            //var_dump($validation_server);     
+            $arr  = json_decode($validation_server, TRUE);
+            if($arr['success']){
+                try 
                 {
-                    if($usuario != "")
+                    if($nombre != "")
                     {
-                        if($nacimiento != "")
+                        if($apellido != "")
                         {
-                            $nacimiento = new DateTime($nacimiento);
-                            $nacimiento = $nacimiento->format('Y-m-d');
-                            if($cargo > 0)
+                            if($correo != "")
                             {
-                                //validacion de foto
-                                if($archivo['name'] != null)
+                                if($usuario != "")
                                 {
-                                    $base64 = Validator::validateImageProfile($archivo);
-                                    if($base64 != false)
+                                    if($nacimiento != "")
                                     {
-                                        $foto = $base64;
-                                    }
-                                    else
-                                    {
-                                        throw new Exception("Ocurrió un problema con la imagen");
-                                    }
-                                }
-                                
-                                //valida si es un nuevo usuario o una modificacion
-                                if($id == null)
-                                {
-                                      
-                                    $clave1 = $_POST['clave1'];
-                                    $clave2 = $_POST['clave2'];
-                                    //valida claves
-                                    if($clave1 != "" && $clave2 != "")
-                                    {
-                                        if($clave1 == $clave2)
+                                        $nacimiento = new DateTime($nacimiento);
+                                        $nacimiento = $nacimiento->format('Y-m-d');
+                                        if($cargo > 0)
                                         {
-                                            if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&]).*$/", $clave1))
+                                            //validacion de foto
+                                            if($archivo['name'] != null)
                                             {
-                                                if ($usuario != $clave1){
-                                                    //inserta datos nuevos
-                                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                                    $sql = "INSERT INTO usuarios(nombre_usuario, apellido_usuario, correo_usuario, usuario, contrasenia_usuario, fecha_nacimiento, codigo_cargo, url_foto, estado_usuario, fecha_clave) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                                                    $params = array($nombre, $apellido, $correo, $usuario, $clave, $nacimiento, $cargo, $foto, $estado, $actual);
-                                                } else {
-                                                    throw new Exception("El alias y la contraseña son los mismos");
+                                                $base64 = Validator::validateImageProfile($archivo);
+                                                if($base64 != false)
+                                                {
+                                                    $foto = $base64;
+                                                }
+                                                else
+                                                {
+                                                    throw new Exception("Ocurrió un problema con la imagen");
                                                 }
                                             }
-                                            else 
+                                            
+                                            //valida si es un nuevo usuario o una modificacion
+                                            if($id == null)
                                             {
-                                                throw new Exception("El formato de contraseña incorrecto. La contraseña debe contener por lo menos un número y un caracter especial (Ejemplo: Abcdef1#)");
+                                                
+                                                $clave1 = $_POST['clave1'];
+                                                $clave2 = $_POST['clave2'];
+                                                //valida claves
+                                                if($clave1 != "" && $clave2 != "")
+                                                {
+                                                    if($clave1 == $clave2)
+                                                    {
+                                                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&]).*$/", $clave1))
+                                                        {
+                                                            if ($usuario != $clave1){
+                                                                //inserta datos nuevos
+                                                                $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                                                $sql = "INSERT INTO usuarios(nombre_usuario, apellido_usuario, correo_usuario, usuario, contrasenia_usuario, fecha_nacimiento, codigo_cargo, url_foto, estado_usuario, fecha_clave) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                                $params = array($nombre, $apellido, $correo, $usuario, $clave, $nacimiento, $cargo, $foto, $estado, $actual);
+                                                            } else {
+                                                                throw new Exception("El alias y la contraseña son los mismos");
+                                                            }
+                                                        }
+                                                        else 
+                                                        {
+                                                            throw new Exception("El formato de contraseña incorrecto. La contraseña debe contener por lo menos un número y un caracter especial (Ejemplo: Abcdef1#)");
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        throw new Exception("Las contraseñas no coinciden");
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    throw new Exception("Debe ingresar ambas contraseñas");
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if(password_verify($usuario, $hash)) 
+                                                { 
+                                                    throw new Exception("El usuario no puede ser modificado. Intente ingresando otro alias.");
+                                                } else {
+                                                    //actializa un registro existente
+                                                    $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, fecha_nacimiento = ?, codigo_cargo = ?, url_foto = ?, estado_usuario = ? WHERE codigo_usuario = ?";
+                                                    $params = array($nombre, $apellido, $correo, $usuario, $nacimiento, $cargo, $foto, $estado, $id);
+                                                }
+                                            }
+                                            if(Database::executeRow($sql, $params))
+                                            {
+                                                Page::showMessage(1, "Operación satisfactoria", "index.php");
                                             }
                                         }
                                         else
                                         {
-                                            throw new Exception("Las contraseñas no coinciden");
+                                            throw new Exception("Debe ingresar una dirección");
                                         }
                                     }
                                     else
                                     {
-                                        throw new Exception("Debe ingresar ambas contraseñas");
+                                        throw new Exception("Debe ingresar una dirección");
                                     }
                                 }
                                 else
                                 {
-                                    if(password_verify($usuario, $hash)) 
-                                    { 
-                                        throw new Exception("El usuario no puede ser modificado. Intente ingresando otro alias.");
-                                    } 
-                                    else 
-                                    {
-                                        //actializa un registro existente
-                                        $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, fecha_nacimiento = ?, codigo_cargo = ?, url_foto = ?, estado_usuario = ? WHERE codigo_usuario = ?";
-                                        $params = array($nombre, $apellido, $correo, $usuario, $nacimiento, $cargo, $foto, $estado, $id);
-                                    }
-                                }
-                                if(Database::executeRow($sql, $params))
-                                {
-                                    Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                    throw new Exception("Debe ingresar un nombre de usuario");
                                 }
                             }
                             else
                             {
-                                throw new Exception("Debe ingresar una dirección");
+                                throw new Exception("Debe ingresar el correo electrónico");
                             }
                         }
                         else
                         {
-                            throw new Exception("Debe ingresar una dirección");
+                            throw new Exception("Debe ingresar el apellido");
                         }
                     }
                     else
                     {
-                        throw new Exception("Debe ingresar un nombre de usuario");
+                        throw new Exception("Debe ingresar el nombre");
                     }
                 }
-                else
+                catch (Exception $error)
                 {
-                    throw new Exception("Debe ingresar el correo electrónico");
+                    Page::showMessage(2, $error->getMessage(), null);
                 }
+             }
+            else{
+                Page::showMessage(2, "Eres humano?", "save.php");       
             }
-            else
-            {
-                throw new Exception("Debe ingresar el apellido");
-            }
-        }
-        else
-        {
-            throw new Exception("Debe ingresar el nombre");
-        }
-    }
-    catch (Exception $error)
-    {
-        Page::showMessage(2, $error->getMessage(), null);
-    }
 }
 ?>
 
 <!-- Inicia el formulario -->
-<form method='post' enctype='multipart/form-data' autocomplete='off'>
+<form  autocomplete='off' action="<?php $_SERVER['PHP_SELF']; ?>" method='post' enctype='multipart/form-data'>
     <div class='row'>
         <!-- Muestra la foto -->
         <h5>Foto de perfil</h5>
@@ -281,6 +293,9 @@ if(!empty($_POST))
             <input name="estado" type="radio" id="inactivo" value='0' class='with-gap' <?php print(($estado == 0)?"checked":""); ?> />
             <label for="inactivo">Inactivo</label>
         </div>
+        <div class="input-field col s6">
+             <div class="g-recaptcha" data-sitekey="6LehqioUAAAAAMnvaYRXfAf8SkWR5rWz_hQjvH73"></div>
+         </div>        
     </div>
     <div class='row center-align'>
         <a href='index.php' class='btn waves-effect grey'><i class='material-icons'>cancel</i></a>

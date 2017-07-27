@@ -33,6 +33,8 @@
         if(!empty($_POST))
         {
             $_POST = Validator::validateForm($_POST);
+            $response_recapchat =  $_POST['g-recaptcha-response'];
+          
             $nombres = $_POST['nombres'];
             $apellidos = $_POST['apellidos'];
             $correo = $_POST['correo'];
@@ -43,107 +45,122 @@
             $telefono =$_POST['telefono'];
             $direccion =$_POST['direccion'];
             $archivo = $_FILES['foto'];
-
-            try 
-            {
-                //validacion de campos
-                if($nombres != "" && $apellidos != "")
+            $secret = "6LehqioUAAAAAEfCqpsYct5UaPLCTQlLVDJTwxNv";
+            if(!$response_recapchat){
+                Page::showMessage(2, "Eres humano?", "registro.php");       
+            }
+            $ip=$_SERVER['REMOTE_ADDR'];
+            $validation_server = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response_recapchat&remoteip=$ip");
+            //var_dump($validation_server);     
+            $arr  = json_decode($validation_server, TRUE);
+            if($arr['success']){
+                try 
                 {
-                    if($correo != "")
+                    //validacion de campos
+                    if($nombres != "" && $apellidos != "")
                     {
-                        if($dui != "")
+                        if($correo != "")
                         {
-                            if($nit != "")
+                            if($dui != "")
                             {
-                                if($telefono != "")
+                                if($nit != "")
                                 {
-                                    if ($direccion !="")
+                                    if($telefono != "")
                                     {
-                                         if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-                                                //validacion de imagen
-                                                if($archivo['name'] != null)
-                                                {
-                                                    $foto = Validator::validateImageProfile($archivo);
-                                                }
-                                                else
-                                                {
-                                                        throw new Exception("Debe seleccionar una imagen");
-                                                }
-
-                                                //validacion de clave
-                                                if($clave1 != "" && $clave2 != "")
-                                                {
-                                                    if($clave1 == $clave2)
+                                        if ($direccion !="")
+                                        {
+                                            if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+                                                    //validacion de imagen
+                                                    if($archivo['name'] != null)
                                                     {
-                                                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&.]).*$/", $clave1))
-                                                        {
-                                                            if ($clave1 != $correo){
-                                                                //ingreso de datos de cliente
-                                                                $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                                                $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, dui_cliente, nit_cliente, telefono_cliente, correo_cliente, contrasenia, fecha_clave, fecha_registro_cliente, direccion_cliente, foto) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                                                                $params = array($nombres, $apellidos, $dui, $nit, $telefono, $correo, $clave, $registro, $registro, $direccion, $foto);
-                                                                if(Database::executeRow($sql, $params))
-                                                                {
-                                                                    Page::showMessage(1, "Operación satisfactoria", "index.php");
-                                                                }
-                                                            }
-                                                            else 
-                                                            {
-                                                                throw new Exception("El correo y la contraseña deben ser diferentes");
-                                                            }  
-                                                        }
-                                                        else 
-                                                        {
-                                                            throw new Exception("El formato de contraseña incorrecto. La contraseña debe contener por lo menos un número y un caracter especial (Ejemplo: Abcdef1#)");
-                                                        }
+                                                        $foto = Validator::validateImageProfile($archivo);
                                                     }
                                                     else
                                                     {
-                                                        throw new Exception("Las contraseñas no coinciden");
+                                                            throw new Exception("Debe seleccionar una imagen");
                                                     }
-                                                }
-                                                else {
-                                                    throw new Exception("Debe ingresar ambas contraseñas");
-                                                }
-                                         }
-                                        else{
-                                            throw new Exception("Debe ingresar un correo valido");
-                                        }       
-                                            
+
+                                                    //validacion de clave
+                                                    if($clave1 != "" && $clave2 != "")
+                                                    {
+                                                        if($clave1 == $clave2)
+                                                        {
+                                                            if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&.]).*$/", $clave1))
+                                                            {
+                                                                if ($clave1 != $correo){
+                                                                  
+                                                                    //ingreso de datos de cliente
+                                                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                                                    $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, dui_cliente, nit_cliente, telefono_cliente, correo_cliente, contrasenia, fecha_registro_cliente, direccion_cliente, foto) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                                    $params = array($nombres, $apellidos, $dui, $nit, $telefono, $correo, $clave, $registro, $direccion, $foto);
+                                                                    if(Database::executeRow($sql, $params))
+                                                                    {
+                                                                        Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                                                    }
+                                                                }
+                                                                else 
+                                                                {
+                                                                    throw new Exception("El correo y la contraseña deben ser diferentes");
+                                                                } 
+                                                            }
+                                                            else 
+                                                            {
+                                                                throw new Exception("El formato de contraseña incorrecto. La contraseña debe contener por lo menos un número y un caracter especial (Ejemplo: Abcdef1#)");
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            throw new Exception("Las contraseñas no coinciden");
+                                                        }
+                                                        
+                                                    }
+                                                    else {
+                                                        throw new Exception("Debe ingresar ambas contraseñas");
+                                                    }
+                                            }
+                                            else{
+                                                throw new Exception("Debe ingresar un correo valido");
+                                            }       
+                                                
+                                        }
+                                        else {
+                                            throw new Exception("Debe ingresar su dirección");
+                                        }
                                     }
-                                    else {
-                                        throw new Exception("Debe ingresar su dirección");
+                                    else
+                                    {
+                                        throw new Exception("Debe ingresar su número de teléfono");
                                     }
                                 }
                                 else
                                 {
-                                    throw new Exception("Debe ingresar su número de teléfono");
+                                    throw new Exception("Debe ingresar su nit");
                                 }
                             }
                             else
                             {
-                                throw new Exception("Debe ingresar su nit");
+                                throw new Exception("Debe ingresar su dui");
                             }
                         }
                         else
                         {
-                            throw new Exception("Debe ingresar su dui");
+                            throw new Exception("Debe ingresar un correo electrónico");
                         }
                     }
                     else
                     {
-                        throw new Exception("Debe ingresar un correo electrónico");
+                        throw new Exception("Debe ingresar el nombre completo");
                     }
                 }
-                else
+                catch (Exception $error)
                 {
-                    throw new Exception("Debe ingresar el nombre completo");
+                    Page::showMessage(2, $error->getMessage(), null);
                 }
             }
-            catch (Exception $error)
-            {
-                Page::showMessage(2, $error->getMessage(), null);
+            else{
+                Page::showMessage(2, "Eres humano?", "registro.php");       
             }
+           
 
         } else {
             //setea las variavles a null
@@ -174,7 +191,7 @@
                         
                         <!--inicio del form de registro-->
                         <!--nombre-->
-                        <form method='post' enctype='multipart/form-data' autocomplete='off'>
+                        <form  autocomplete='off' action="<?php $_SERVER['PHP_SELF']; ?>" method='post'  enctype='multipart/form-data'>
                             <div class="row">
                                 <h5>Datos personales</h5>
                                 <div class="input-field col s6">
@@ -237,8 +254,10 @@
                                     <input id="clave2" type="password" name="clave2" class="validate" required />
                                     <label for="clave2">Confirmar contraseña</label>
                                 </div>
-
-                            </div>
+                                <div class="input-field col s6">
+                                    <div class="g-recaptcha" data-sitekey="6LehqioUAAAAAMnvaYRXfAf8SkWR5rWz_hQjvH73"></div>
+                                </div>
+                           </div>
                             <!--botones del form--> 
                             <div class='row center-align'>
                                 <button type='submit' class='btn waves-effect'>Registrarme</button>

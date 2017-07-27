@@ -127,6 +127,7 @@ if (isset($_SESSION['id_usuario']) && !empty($_GET['id']))
                                 $_SESSION['id_usuario'] = $data['codigo_usuario'];
                                 $_SESSION['nombre_usuario'] = $data['nombre_usuario']." ".$data['apellido_usuario'];
                                 $_SESSION['foto_usuario'] = $data['url_foto'];
+                                $_SESSION['tiempo']=time();
                                 header("location: index.php");
                             } 
                             else if ($dias >= 90)
