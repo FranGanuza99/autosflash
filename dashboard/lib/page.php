@@ -24,6 +24,7 @@ class Page
 					<link type='text/css' rel='stylesheet' href='../../css/icons.css' media='screen,projection'/>
 					<link type='text/css' rel='stylesheet' href='../css/dashboard.css' media='screen,projection'/>
 					<script type='text/javascript' src='../../js/sweetalert2.min.js'></script>
+					<script src='https://www.google.com/recaptcha/api.js'></script>
 				</head>
 				<body>
 		");
@@ -108,6 +109,7 @@ class Page
 				<div class='pagina'>
 
 			");
+			self::timer();
 		}
 		else
 		{
@@ -180,6 +182,19 @@ class Page
 			</body>
 			</html>
 		");
+		
+	}
+	public static function timer()
+	{
+			if ((time() - $_SESSION['tiempo']) > 300) {
+				session_destroy();
+				/* Aquí redireccionas a la url especifica */
+				header("Location: logout.php");
+			}
+			else
+			{
+				$_SESSION['tiempo']=time();
+			}
 	}
 
 	public static function setCombo($label, $name, $value, $query)

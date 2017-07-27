@@ -39,5 +39,6 @@
 <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
 <!-- Importar materialiaze.js -->
 <script type="text/javascript" src="../js/materialize.min.js"></script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 <script type="text/javascript" src="js/myjs.js"></script>
 <script type="text/javascript" src="js/fb.js"></script>

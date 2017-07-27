@@ -1,0 +1,25 @@
+# BEGIN htaccess
+# Protect the htaccess file
+ 
+#order allow,deny
+#deny from all
+#Require ip 127.0.0.1
+
+# Disable directory browsing
+Options All -Indexes
+ 
+# Enable the following of symlinks
+#Options +FollowSymLinks
+ 
+ErrorDocument 404 /autosflash/404.html
+
+ErrorDocument 403 /autosflash/403.html
+
+RewriteEngine On
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^http?://localhost:8080/autosflash [NC]
+RewriteRule \.(jpg|gif|bmp|png) public/img/logo/logo.png [L]
+
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewritRule ^(.+)$ index.php [QSA,L]

@@ -1,0 +1,4 @@
+# BEGIN htaccess
+# Protect the htaccess file
+ 
+
