@@ -104,7 +104,7 @@ if(!empty($_POST)) {
 }
 ?>
     <!--inicia el formulario-->
-        <form method='post' enctype='multipart/form-data'>
+        <form method='post' enctype='multipart/form-data' autocomplete='off'>
             <div class='row'>
                 <h5>Foto de perfil</h5>
                 <!-- Muestra la foto actual -->

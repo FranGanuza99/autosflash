@@ -78,7 +78,7 @@
                         <br>
                         <p>Revice su correo e ingrese la clave enviada.</p>
                         <!--Inicio del formulario-->
-                        <form  method='post'>
+                        <form  method='post' autocomplete='off'>
                             <div class="input-field col s12">
                                 <input id="clave" name="clave" type="text" class="validate" required/>
                                 <label for="clave">Cadena:</label>

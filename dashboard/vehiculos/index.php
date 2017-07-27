@@ -47,9 +47,17 @@ if($data != null)
 		<div class='input-field col s6 m4'>
 			<button type='submit' class='btn waves-effect green'><i class='material-icons'>check_circle</i></button> 	
 		</div>
-		<div class='input-field col s12 m4'>
-			<a href='save.php' class='btn waves-effect indigo'><i class='material-icons'>add_circle</i></a>
-		</div>
+		<?php
+		global $agregar_vehiculo;
+		if ($agregar_vehiculo == 1){
+			print("
+				<div class='input-field col s12 m4'>
+					<a href='save.php' class='btn waves-effect indigo'><i class='material-icons'>add_circle</i></a>
+				</div>
+			");
+		}
+		?>
+		
 	</div>
 </form>
 <table class='striped'>

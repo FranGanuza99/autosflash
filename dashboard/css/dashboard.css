@@ -182,6 +182,7 @@ ul.side-nav.fixed li.active {
 ul.side-nav.fixed ul.collapsible-accordion .collapsible-body li a {
     font-weight: 400;
     padding: 0 0px 0 70px;
+    background-color: antiquewhite;
 }
 
 /*body::-webkit-scrollbar {

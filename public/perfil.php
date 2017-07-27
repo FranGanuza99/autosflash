@@ -45,7 +45,7 @@
             $direccion = $data['direccion_cliente'];
             $estado = $data['estado_cliente'];
             $foto = $data['foto'];
-            
+            $hash = $data['contrasenia'];
         }
         else{
              Page::showMessage(2, "Inicie sesion", "sesion.php");
@@ -85,23 +85,29 @@
                                             {
                                                 $foto = Validator::validateImageProfile($archivo);
                                             }
-                                            $sql = "UPDATE clientes SET nombre_cliente = ?, apellido_cliente = ?, correo_cliente = ?, dui_cliente = ?, nit_cliente = ?, telefono_cliente = ?, direccion_cliente = ?, estado_cliente = ?, foto = ? WHERE codigo_cliente = ?";
-                                            $params = array($nombres, $apellidos, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $id);
-                                            if(Database::executeRow($sql, $params))
+                                            if(password_verify($correo, $hash)) 
                                             {
-                                                Page::showMessage(1, "Operación satisfactoria", "index.php");
-                                                $_SESSION['nombre_cliente'] = $nombres." ".$apellidos;
-                                                $_SESSION['foto_cliente'] = $foto;
+                                                throw new Exception("Error al ingresar el correo.");
                                             }
-                                                
+                                            else 
+                                            {
+                                                $sql = "UPDATE clientes SET nombre_cliente = ?, apellido_cliente = ?, correo_cliente = ?, dui_cliente = ?, nit_cliente = ?, telefono_cliente = ?, direccion_cliente = ?, estado_cliente = ?, foto = ? WHERE codigo_cliente = ?";
+                                                $params = array($nombres, $apellidos, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $id);
+                                                if(Database::executeRow($sql, $params))
+                                                {
+                                                    Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                                    $_SESSION['nombre_cliente'] = $nombres." ".$apellidos;
+                                                    $_SESSION['foto_cliente'] = $foto;
+                                                }
+                                            }    
                                         }
-                                        else{
-                                                throw new Exception("Debe ingresar un correo valido");
-                                         }
-                                                
-                                            
+                                        else
+                                        {
+                                            throw new Exception("Debe ingresar un correo valido");
+                                        }    
                                     }
-                                    else {
+                                    else 
+                                    {
                                         throw new Exception("Debe ingresar su dirección");
                                     }
                                 }
@@ -152,7 +158,7 @@
                         
                         <!--inicio del form de registro-->
                         <!--nombre-->
-                        <form method='post' enctype='multipart/form-data'>
+                        <form method='post' enctype='multipart/form-data' autocomplete='off'>
                             <div class="row">
                                 <h5>Datos personales</h5>
                                 <div class="input-field col s6">

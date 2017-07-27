@@ -38,8 +38,14 @@ else
     $estado = $data['estado_cliente'];
     $foto = $data['foto'];
     $clave = $data['contrasenia'];
-      
 }
+
+//validando permisos
+global $modificar_cliente;
+if($modificar_cliente == 0 && !empty($_GET['id']))
+{
+    header("location: index.php");
+} 
 
 //valida si post esta vacio y enlaza las variables con el campo
 if(!empty($_POST))
@@ -101,12 +107,18 @@ if(!empty($_POST))
                                         {
                                             if($clave1 == $clave2)
                                             {
-                                                if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $clave1))
+                                                if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&.]).*$/", $clave1))
                                                 {
-                                                    //inserta datos nuevos
-                                                    $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                                    $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, correo_cliente, dui_cliente, nit_cliente, telefono_cliente, direccion_cliente, estado_cliente, foto, contrasenia, fecha_registro_cliente) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                                                    $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $registro);
+                                                    if ($clave1 != $correo){
+                                                        //inserta datos nuevos
+                                                        $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                                        $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, correo_cliente, dui_cliente, nit_cliente, telefono_cliente, direccion_cliente, estado_cliente, foto, contrasenia, fecha_registro_cliente, fecha_clave) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                        $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $registro, $registro);
+                                                    }
+                                                    else 
+                                                    {
+                                                        throw new Exception("El correo y la contraseña deben ser diferentes.");
+                                                    }
                                                 }
                                                 else 
                                                 {
@@ -127,8 +139,8 @@ if(!empty($_POST))
                                     else
                                     {
                                         //actializa un registro existente
-                                        $sql = "UPDATE clientes SET nombre_cliente = ?, apellido_cliente = ?, correo_cliente = ?, dui_cliente = ?, nit_cliente = ?, telefono_cliente = ?, direccion_cliente = ?, estado_cliente = ?, foto = ?, contrasenia = ? WHERE codigo_cliente = ?";
-                                        $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $clave, $id);
+                                        $sql = "UPDATE clientes SET nombre_cliente = ?, apellido_cliente = ?, correo_cliente = ?, dui_cliente = ?, nit_cliente = ?, telefono_cliente = ?, direccion_cliente = ?, estado_cliente = ?, foto = ? WHERE codigo_cliente = ?";
+                                        $params = array($nombre, $apellido, $correo, $dui, $nit, $telefono, $direccion, $estado, $foto, $id);
                                     }
                                     if(Database::executeRow($sql, $params))
                                     {
@@ -178,9 +190,7 @@ if(!empty($_POST))
 ?>
 
 <!-- Inicia el formulario -->
-<form method='post' enctype='multipart/form-data'>
-    
-
+<form method='post' enctype='multipart/form-data' autocomplete="off">
     <!-- Muestra la info personal -->
     <div class='row'>
         <h5>Datos personales</h5>
@@ -236,16 +246,25 @@ if(!empty($_POST))
             </div>
         </div>
 
-        <div class='input-field col s12 m6'>
-            <i class='material-icons prefix'>security</i>
-            <input id='clave1' type='password' name='clave1' class='validate' />
-            <label for='clave1'>Contraseña</label>
-        </div>
-        <div class='input-field col s12 m6'>
-            <i class='material-icons prefix'>security</i>
-            <input id='clave2' type='password' name='clave2' class='validate' />
-            <label for='clave2'>Confirmar contraseña</label>
-        </div>
+        <?php 
+        if($id == null)
+        {
+            print("
+                <div class='input-field col s12 m6'>
+                    <i class='material-icons prefix'>security</i>
+                    <input id='clave1' type='password' name='clave1' class='validate' />
+                    <label for='clave1'>Contraseña</label>
+                </div>
+                <div class='input-field col s12 m6'>
+                    <i class='material-icons prefix'>security</i>
+                    <input id='clave2' type='password' name='clave2' class='validate' />
+                    <label for='clave2'>Confirmar contraseña</label>
+                </div>
+            ");
+        }
+
+        ?>
+        
 
         <div class='input-field col s12 m6'>
             <h6>Estado:</h6>

@@ -75,13 +75,26 @@
                                                 {
                                                     if($clave1 == $clave2)
                                                     {
-                                                        //ingreso de datos de cliente
-                                                        $clave = password_hash($clave1, PASSWORD_DEFAULT);
-                                                        $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, dui_cliente, nit_cliente, telefono_cliente, correo_cliente, contrasenia, fecha_registro_cliente, direccion_cliente, foto) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                                                        $params = array($nombres, $apellidos, $dui, $nit, $telefono, $correo, $clave, $registro, $direccion, $foto);
-                                                        if(Database::executeRow($sql, $params))
+                                                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&.]).*$/", $clave1))
                                                         {
-                                                            Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                                            if ($clave1 != $correo){
+                                                                //ingreso de datos de cliente
+                                                                $clave = password_hash($clave1, PASSWORD_DEFAULT);
+                                                                $sql = "INSERT INTO clientes(nombre_cliente, apellido_cliente, dui_cliente, nit_cliente, telefono_cliente, correo_cliente, contrasenia, fecha_clave, fecha_registro_cliente, direccion_cliente, foto) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                                $params = array($nombres, $apellidos, $dui, $nit, $telefono, $correo, $clave, $registro, $registro, $direccion, $foto);
+                                                                if(Database::executeRow($sql, $params))
+                                                                {
+                                                                    Page::showMessage(1, "Operación satisfactoria", "index.php");
+                                                                }
+                                                            }
+                                                            else 
+                                                            {
+                                                                throw new Exception("El correo y la contraseña deben ser diferentes");
+                                                            }  
+                                                        }
+                                                        else 
+                                                        {
+                                                            throw new Exception("El formato de contraseña incorrecto. La contraseña debe contener por lo menos un número y un caracter especial (Ejemplo: Abcdef1#)");
                                                         }
                                                     }
                                                     else
@@ -161,7 +174,7 @@
                         
                         <!--inicio del form de registro-->
                         <!--nombre-->
-                        <form method='post' enctype='multipart/form-data'>
+                        <form method='post' enctype='multipart/form-data' autocomplete='off'>
                             <div class="row">
                                 <h5>Datos personales</h5>
                                 <div class="input-field col s6">

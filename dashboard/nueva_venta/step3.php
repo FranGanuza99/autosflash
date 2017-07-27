@@ -6,6 +6,12 @@ Page::header("Resumen de la venta");
 $fecha = null;
 $total = null;
 
+//validando permisos
+global $facturar;
+if($facturar == 0){
+	header("location: ../ventas/index.php");
+}
+
 if(empty($_GET['auto'])) 
 {
 	$marca = null;

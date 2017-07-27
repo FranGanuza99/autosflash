@@ -4,6 +4,12 @@ require("../lib/page.php");
 require("../../lib/zebra.php");
 Page::header("Realizar una venta");
 
+//validando permisos
+global $facturar;
+if($facturar == 0){
+	header("location: ../ventas/index.php");
+}
+
 //valida si el post esta vacio para la busqueda
 if(!empty($_POST))
 {

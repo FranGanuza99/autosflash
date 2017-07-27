@@ -1,7 +1,6 @@
 <?php
 ob_start();
 require("../lib/page.php");
-
 //valida si se ha recibido el id
 if(empty($_GET['id'])) 
 {
@@ -40,6 +39,19 @@ else
         $estado = $data['estado_usuario'];
         $hash = $data['contrasenia_usuario'];
     }  
+}
+
+//validando permisos
+global $agregar_usuario;
+global $modificar_usuario;
+if($agregar_usuario == 0 && empty($_GET['id']))
+{
+    header("location: index.php");
+} 
+
+if($modificar_usuario == 0 && !empty($_GET['id']))
+{
+    header("location: index.php");
 }
 
 $fecha = getdate();
@@ -99,7 +111,7 @@ if(!empty($_POST))
                                     {
                                         if($clave1 == $clave2)
                                         {
-                                            if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $clave1))
+                                            if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&]).*$/", $clave1))
                                             {
                                                 if ($usuario != $clave1){
                                                     //inserta datos nuevos
@@ -130,7 +142,9 @@ if(!empty($_POST))
                                     if(password_verify($usuario, $hash)) 
                                     { 
                                         throw new Exception("El usuario no puede ser modificado. Intente ingresando otro alias.");
-                                    } else {
+                                    } 
+                                    else 
+                                    {
                                         //actializa un registro existente
                                         $sql = "UPDATE usuarios SET nombre_usuario = ?, apellido_usuario = ?, correo_usuario = ?, usuario = ?, fecha_nacimiento = ?, codigo_cargo = ?, url_foto = ?, estado_usuario = ? WHERE codigo_usuario = ?";
                                         $params = array($nombre, $apellido, $correo, $usuario, $nacimiento, $cargo, $foto, $estado, $id);
@@ -179,7 +193,7 @@ if(!empty($_POST))
 ?>
 
 <!-- Inicia el formulario -->
-<form method='post' enctype='multipart/form-data'>
+<form method='post' enctype='multipart/form-data' autocomplete='off'>
     <div class='row'>
         <!-- Muestra la foto -->
         <h5>Foto de perfil</h5>

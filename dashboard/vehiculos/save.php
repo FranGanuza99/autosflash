@@ -1,9 +1,8 @@
 <?php
 ob_start();
 require("../lib/page.php");
-//se realiza la conexion
-//se captura el id en caso que se modifique
-//se crean las variables
+
+//verificacion de la variable id
 if(empty($_GET['id'])) 
 {
     Page::header("Agregar Vehiculo");
@@ -58,6 +57,12 @@ else
     $general3_vehiculo =  $data['general3_vehiculo'];
     $descuento_vehiculo =  $data['descuento_vehiculo'];
     $estado = $data['estado_vehiculo']; 
+}
+
+//validando permisos
+global $agregar_vehiculo;
+if ($agregar_vehiculo == 0 && empty($_GET['id'])){
+    header("location: index.php");  
 }
 
 if(!empty($_POST))
@@ -233,7 +238,7 @@ if(!empty($_POST))
     }
 }
 ?>
-<form method='post'>
+<form method='post' autocomplete='off'>
 <!--se crea formulario en el cual despues se capturan los datos y tambien se hace un select de las tablas padres-->
     <div class='row'>
         <div class='input-field col s12 m6'>
