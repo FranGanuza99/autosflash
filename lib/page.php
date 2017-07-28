@@ -65,5 +65,18 @@ class Page
 		}
 	}
 
+	public static function timer()
+	{
+		if ((time() - $_SESSION['tiempo']) > 300) {
+			//session_destroy();
+			/* Aquí redireccionas a la url especifica */
+			header("Location: ../public/logout.php");
+		}
+		else
+		{
+			$_SESSION['tiempo']=time();
+		}
+	}
+
 }
 ?>

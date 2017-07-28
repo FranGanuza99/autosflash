@@ -228,17 +228,18 @@ class Page
 		");
 		
 	}
+	
 	public static function timer()
 	{
-			if ((time() - $_SESSION['tiempo']) > 300) {
-				session_destroy();
-				/* Aquí redireccionas a la url especifica */
-				header("Location: logout.php");
-			}
-			else
-			{
-				$_SESSION['tiempo']=time();
-			}
+		if ((time() - $_SESSION['tiempo']) > 300) {
+			//session_destroy();
+			/* Aquí redireccionas a la url especifica */
+			header("Location: ../main/logout.php");
+		}
+		else
+		{
+			$_SESSION['tiempo']=time();
+		}
 	}
 
 	public static function setCombo($label, $name, $value, $query)
