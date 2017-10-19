@@ -94,7 +94,7 @@ if($data != null)
 } //Fin de if que comprueba la existencia de registros.
 else
 {
-	Page::showMessage(4, "No hay registros disponibles", "save.php");
+	Page::showMessage(4, "No hay registros disponibles", null);
 }
 
 //se muestra el footer

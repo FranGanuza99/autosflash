@@ -29,7 +29,7 @@ if(!empty($_POST)) {
                 {
                     if($clave1 == $clave2)
                     {
-                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/", $clave1))
+                        if (preg_match("/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#%&]).*$/", $clave1))
                         {
                             //Actualiza junto con la contraseña
                             if(password_verify($clave_antigua, $hash)) 

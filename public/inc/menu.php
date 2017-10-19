@@ -1,6 +1,5 @@
 <?php 
 session_start();
-Page::timer();
 
 ?>
 <ul id='dropdown1' class='dropdown-content dropstyle'>

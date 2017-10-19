@@ -74,32 +74,35 @@
             $vehiculo = null;
             $registro = null;
         }
-                
 
-
-
-
-        ?>
-        <?php
         //se inica la coneccion y se realiza una consulta con toda la informacion relaciona al id del vehiculo
-              ob_start();
-              
-              $id = $_GET['id'];
-              $data1 = null;
-              $sql = "SELECT nombre_vehiculo, precio_vehiculo, descripcion_vehiculo, anio_vehiculo, potencia_vehiculo, manejo_vehiculo,rueda_vehiculo, comodida_vehiculo, apariencia_vehiculo, ventana_vehiculo, general1_vehiculo, general2_vehiculo, general3_vehiculo, foto_general1, foto_general2, foto_general3  FROM vehiculos WHERE codigo_vehiculo = ?";
-              $params = array($id);
-              $data = Database::getRows($sql, $params);
-              if($data != null)
-              {
-                  foreach ($data as $row1) 
-                  {     
-                  }
-              }
-              else
-              {
-               throw new Exception("Vehiculo no encotrado");
-              }
-          ?>
+        ob_start();
+        
+        $id = $_GET['id'];
+        $data1 = null;
+        $sql = "SELECT nombre_vehiculo, precio_vehiculo, descripcion_vehiculo, anio_vehiculo, potencia_vehiculo, manejo_vehiculo,rueda_vehiculo, comodida_vehiculo, apariencia_vehiculo, ventana_vehiculo, general1_vehiculo, general2_vehiculo, general3_vehiculo, foto_general1, foto_general2, foto_general3  FROM vehiculos WHERE codigo_vehiculo = ?";
+        $params = array($id);
+        $data = Database::getRows($sql, $params);
+        if($data != null)
+        {
+            foreach($data as $row1){
+
+            }
+            $sql = "SELECT visto FROM vehiculos WHERE codigo_vehiculo = ?";
+            $params = array($id);
+            $data = Database::getRow($sql, $params);
+            $cantidad = $data['visto'];
+            $cantidad = $cantidad + 1;
+
+            $sql = "UPDATE vehiculos SET visto = ? WHERE codigo_vehiculo = ?";
+            $params = array($cantidad, $id);
+            Database::executeRow($sql, $params);
+        }
+        else
+        {
+          throw new Exception("Vehiculo no encotrado");
+        }
+        ?>
         <!--Aqui comienza la pagina-->
         <div class="container">
         <div class="slider">
@@ -108,6 +111,7 @@
               ob_start();
               //se inicia nuevamente la conexion pero se le cambia el nombre a la
               $sql2 = "SELECT fotos_vehiculos.url_foto FROM fotos_vehiculos,tipos_fotos WHERE  fotos_vehiculos.codigo_tipo_foto=3 AND tipos_fotos.codigo_tipo_foto= 3 AND fotos_vehiculos.codigo_vehiculo =?";
+              $params = array($id);
               $data2 = Database::getRows($sql2, $params);
               ?>
                <?php

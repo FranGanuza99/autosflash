@@ -38,8 +38,8 @@
                 if(!empty($_POST))
                 {
                     $_POST = validator::validateForm($_POST);
-                    $correo = $_POST['correo'];
-                    $clave = $_POST['clave'];
+                    $clave1 = $_POST['clave1'];
+                    $clave2 = $_POST['clave2'];
                     try
                     {
                         if($clave1 != "")
@@ -334,11 +334,13 @@
                                     
                                 
                                     <!--botones-->
-                                    <div class='center'>
-                                        <button type='submit' class='btn waves-effect'>Iniciar Sesion</button>
-                                        <button type='submit' class='btn waves-effect'>Cancelar</button>
-                                        <h6>¿Olvidaste tu contraseña?
-                                    <a href='recuperar1.php' class='waves-effect waves-light '>Haz clic aqui</a></h6>
+                                    <div class='row'>
+                                        <div class='center'>
+                                            <button type='submit' class='btn waves-effect'>Iniciar Sesion</button>
+                                            <button href='../index.php' class='btn waves-effect'>Cancelar</button>
+                                            <h6>¿Olvidaste tu contraseña?
+                                        <a href='recuperar1.php' class='waves-effect waves-light '>Haz clic aqui</a></h6>
+                                        </div>
                                     </div>
                                     <br>
                                 </form>

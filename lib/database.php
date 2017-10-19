@@ -67,6 +67,17 @@ class Database
         self::desconnect();
         return $statement->fetchAll(PDO::FETCH_BOTH);
     }
+
+    //se obtiene los campos con indices numericos
+    public static function getRowsNum($query, $values)
+    {
+        //se almacenan de forma orgaizada la data para luego mandarla donde se solicita
+        self::connect();
+        $statement = self::$connection->prepare($query);
+        $statement->execute($values);
+        self::desconnect();
+        return $statement->fetchAll(PDO::FETCH_NUM);
+    }
     //se capturan los errores de la base de datos sql para luego mandarlos en un mensaje mas comprensible
     public static function errorMessages($code){
         switch ($code) {

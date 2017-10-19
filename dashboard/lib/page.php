@@ -234,7 +234,7 @@ class Page
 		if ((time() - $_SESSION['tiempo']) > 300) {
 			//session_destroy();
 			/* Aquí redireccionas a la url especifica */
-			header("Location: ../main/logout.php");
+			header("location: ../main/logout.php");
 		}
 		else
 		{

@@ -42,7 +42,7 @@ ul.side-nav .profile-btn {
 
 .side-nav.fixed a {
     display: block;
-    color: #444;
+    color: mintcream;
 }
 
 .side-nav li a i {
@@ -222,6 +222,7 @@ ul.side-nav.fixed::-webkit-scrollbar-thumb
 .iconos-menu {
     position: fixed;
     margin: 8px 3px 9px 20px;
+    color: mintcream;
 }
 
 img#profile {
@@ -292,4 +293,8 @@ div#imagesv {
 
 .dropdown-content li a.options_menu {
     height: 100%;
+}
+
+.side-nav.fixed {
+    background-color: currentColor;
 }

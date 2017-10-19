@@ -13,6 +13,9 @@
         <!--  archivos css-->
         <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection"/>
         <link type="text/css" rel="stylesheet" href="css/mystyle-sheet.css" media="screen,projection"/>
+        <script src="../js/code/highcharts.js"></script>
+        <script src="../js/code/highcharts-3d.js"></script>
+        <script src="../js/code/modules/exporting.js"></script>
     </head>
     <body>
         <!--Aqui se muestra el menu-->
@@ -76,7 +79,7 @@
             $data = Database::getRows($sql, $params);
             //obtenemos el numero de filas y cantidad maxima
             $num_registros = count($data); 
-            $resul_x_pagina = 1; 
+            $resul_x_pagina = 9; 
 
             //instanciando la clase y enviando parametros
             $paginacion = new Zebra_Pagination(); 
@@ -120,7 +123,74 @@
           </div><!-- Fin de row -->
           <?php
           $paginacion->render();
+
+          // grafico sobre ventas de productos -->
+          $sql = "SELECT nombre_vehiculo, cantidad_disponible FROM vehiculos WHERE codigo_tipo_vehiculo = ?";
+          $params = array(1);
+          $data = Database::getRowsNum($sql, $params);
           ?>
+          <div id="tipo1" style=""></div>
+          <script type="text/javascript">
+
+          // declaracion del grafico
+          Highcharts.chart('tipo1', {
+              // especificacion del tipo de grafico
+              chart: {
+                  type: 'column'
+              },
+              title: {
+                  text: 'Cantidad disponible por auto'
+              },
+              xAxis: {
+                  //recorriendo valores de tipo texto e imprendolos
+                  categories: [
+                      <?php
+                          foreach($data as $row){
+                              print("'".$row[0]."',");
+                          }
+                      ?>
+                  ],
+                  crosshair: true
+              },
+              // valores a tomar en el eje Y 
+              yAxis: {
+                  min: 0,
+                  title: {
+                      text: 'Cantidad de reservas'
+                  }
+              },
+              //muestrando los valores del punto y el nombre de la serie
+              tooltip: {
+                  headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                  pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                      '<td style="padding:0"><b>{point.y:.1f} reservas</b></td></tr>',
+                  footerFormat: '</table>',
+                  shared: true,
+                  useHTML: true
+              },
+              //configuración para cada tipo de serie.
+              plotOptions: {
+                  column: {
+                      pointPadding: 0.2,
+                      borderWidth: 0
+                  }
+              },
+              //especificando las series y los datos de cada una
+              series: [{
+                  name: 'Reservas',
+                  color: '#F7A35C',
+                  data: [
+                      <?php 
+                          foreach ($data as $row){
+                              print($row[1].",");
+                          }
+                      ?>
+                  ]
+
+              }]
+          });
+          </script>
+
         <!--se inicia con el siguiente submenu-->
         </div>
         <div id="suv" class="col s12">
@@ -158,7 +228,7 @@
 
           //obtenemos el numero de filas y cantidad maxima
           $num_registros = count($data); 
-          $resul_x_pagina = 10; 
+          $resul_x_pagina = 9; 
 
           //instanciando la clase y enviando parametros
           $paginacion = new Zebra_Pagination(); 
@@ -202,7 +272,73 @@
           </div><!-- Fin de row -->
           <?php
           $paginacion->render();
+
+          // grafico sobre ventas de productos -->
+          $sql = "SELECT nombre_vehiculo, cantidad_disponible FROM vehiculos WHERE codigo_tipo_vehiculo = ?";
+          $params = array(2);
+          $data = Database::getRowsNum($sql, $params);
           ?>
+          <div id="tipo2" style=""></div>
+          <script type="text/javascript">
+
+          // declaracion del grafico
+          Highcharts.chart('tipo2', {
+              // especificacion del tipo de grafico
+              chart: {
+                  type: 'column'
+              },
+              title: {
+                  text: 'Cantidad disponible por auto'
+              },
+              xAxis: {
+                  //recorriendo valores de tipo texto e imprendolos
+                  categories: [
+                      <?php
+                          foreach($data as $row){
+                              print("'".$row[0]."',");
+                          }
+                      ?>
+                  ],
+                  crosshair: true
+              },
+              // valores a tomar en el eje Y 
+              yAxis: {
+                  min: 0,
+                  title: {
+                      text: 'Cantidad de reservas'
+                  }
+              },
+              //muestrando los valores del punto y el nombre de la serie
+              tooltip: {
+                  headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                  pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                      '<td style="padding:0"><b>{point.y:.1f} reservas</b></td></tr>',
+                  footerFormat: '</table>',
+                  shared: true,
+                  useHTML: true
+              },
+              //configuración para cada tipo de serie.
+              plotOptions: {
+                  column: {
+                      pointPadding: 0.2,
+                      borderWidth: 0
+                  }
+              },
+              //especificando las series y los datos de cada una
+              series: [{
+                  name: 'Reservas',
+                  color: '#F7A35C',
+                  data: [
+                      <?php 
+                          foreach ($data as $row){
+                              print($row[1].",");
+                          }
+                      ?>
+                  ]
+
+              }]
+          });
+          </script>
         </div>
         <!--Se inicia el siguiente submenu-->
         <div id="camion" class="col s12">
@@ -238,7 +374,7 @@
 
         //obtenemos el numero de filas y cantidad maxima
         $num_registros = count($data); 
-        $resul_x_pagina = 10; 
+        $resul_x_pagina = 9; 
 
         //instanciando la clase y enviando parametros
         $paginacion = new Zebra_Pagination(); 
@@ -282,7 +418,72 @@
       </div><!-- Fin de row -->
       <?php
       $paginacion->render();
-      ?>
+      // grafico sobre ventas de productos -->
+          $sql = "SELECT nombre_vehiculo, cantidad_disponible FROM vehiculos WHERE codigo_tipo_vehiculo = ?";
+          $params = array(3);
+          $data = Database::getRowsNum($sql, $params);
+          ?>
+          <div id="tipo3" style=""></div>
+          <script type="text/javascript">
+
+          // declaracion del grafico
+          Highcharts.chart('tipo3', {
+              // especificacion del tipo de grafico
+              chart: {
+                  type: 'column'
+              },
+              title: {
+                  text: 'Cantidad disponible por auto'
+              },
+              xAxis: {
+                  //recorriendo valores de tipo texto e imprendolos
+                  categories: [
+                      <?php
+                          foreach($data as $row){
+                              print("'".$row[0]."',");
+                          }
+                      ?>
+                  ],
+                  crosshair: true
+              },
+              // valores a tomar en el eje Y 
+              yAxis: {
+                  min: 0,
+                  title: {
+                      text: 'Cantidad de reservas'
+                  }
+              },
+              //muestrando los valores del punto y el nombre de la serie
+              tooltip: {
+                  headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                  pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                      '<td style="padding:0"><b>{point.y:.1f} reservas</b></td></tr>',
+                  footerFormat: '</table>',
+                  shared: true,
+                  useHTML: true
+              },
+              //configuración para cada tipo de serie.
+              plotOptions: {
+                  column: {
+                      pointPadding: 0.2,
+                      borderWidth: 0
+                  }
+              },
+              //especificando las series y los datos de cada una
+              series: [{
+                  name: 'Reservas',
+                  color: '#F7A35C',
+                  data: [
+                      <?php 
+                          foreach ($data as $row){
+                              print($row[1].",");
+                          }
+                      ?>
+                  ]
+
+              }]
+          });
+          </script>
     </div>
   
     <div id="hibrido" class="col s12">
@@ -322,7 +523,7 @@
 
       //obtenemos el numero de filas y cantidad maxima
       $num_registros = count($data); 
-      $resul_x_pagina = 10; 
+      $resul_x_pagina = 9; 
 
       //instanciando la clase y enviando parametros
       $paginacion = new Zebra_Pagination(); 
@@ -366,7 +567,72 @@
       
       <?php
       $paginacion->render();
-      ?>
+      // grafico sobre ventas de productos -->
+          $sql = "SELECT nombre_vehiculo, cantidad_disponible FROM vehiculos WHERE codigo_tipo_vehiculo = ?";
+          $params = array(4);
+          $data = Database::getRowsNum($sql, $params);
+          ?>
+          <div id="tipo4" style=""></div>
+          <script type="text/javascript">
+
+          // declaracion del grafico
+          Highcharts.chart('tipo4', {
+              // especificacion del tipo de grafico
+              chart: {
+                  type: 'column'
+              },
+              title: {
+                  text: 'Cantidad disponible por auto'
+              },
+              xAxis: {
+                  //recorriendo valores de tipo texto e imprendolos
+                  categories: [
+                      <?php
+                          foreach($data as $row){
+                              print("'".$row[0]."',");
+                          }
+                      ?>
+                  ],
+                  crosshair: true
+              },
+              // valores a tomar en el eje Y 
+              yAxis: {
+                  min: 0,
+                  title: {
+                      text: 'Cantidad de reservas'
+                  }
+              },
+              //muestrando los valores del punto y el nombre de la serie
+              tooltip: {
+                  headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                  pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                      '<td style="padding:0"><b>{point.y:.1f} reservas</b></td></tr>',
+                  footerFormat: '</table>',
+                  shared: true,
+                  useHTML: true
+              },
+              //configuración para cada tipo de serie.
+              plotOptions: {
+                  column: {
+                      pointPadding: 0.2,
+                      borderWidth: 0
+                  }
+              },
+              //especificando las series y los datos de cada una
+              series: [{
+                  name: 'Reservas',
+                  color: '#F7A35C',
+                  data: [
+                      <?php 
+                          foreach ($data as $row){
+                              print($row[1].",");
+                          }
+                      ?>
+                  ]
+
+              }]
+          });
+          </script>
 
     </div>
   </div>
